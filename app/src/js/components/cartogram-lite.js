@@ -110,7 +110,7 @@ export class CartogramLite {
         var constituency = this.constituencies[ons_id];
         var show = force !== undefined ? force : !constituency.show;
         if (constituency.show !== show) {
-            constituency.paths.forEach(p => p.setAttribute('style', 'opacity: ' + (show ? 1 : 0.5)));
+            constituency.paths.forEach(p => p.setAttribute('data-show', show));
             constituency.show = show;
         }
     }

@@ -5,10 +5,15 @@ svg {
 }
 
 .map-constituency {
+    fill: #B3B3B4;
     stroke: #fff;
     stroke-width: 1;
     stroke-opacity: 0.3;
-    fill: #B3B3B4;
+
+    opacity: 0.5;
+    &[data-show=true] {
+        opacity: 1;
+    }
     &[data-selected] {
         fill: #005689;
     }
