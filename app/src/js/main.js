@@ -11,12 +11,14 @@ const mbToken = 'pk.eyJ1IjoiZ3VhcmRpYW4iLCJhIjoiNHk1bnF4OCJ9.25tK75EuDdgq5GxQKyD
 
 const postcodeAreas = Object.keys(prices);
 const areasFeature = topojson.feature(areasTopo, areasTopo.objects.Areas);
+
+// TODO: pre-process features for England/Wales only
 areasFeature.features = areasFeature.features.filter(f => postcodeAreas.indexOf(f.id) !== -1);
 
 function init(el) {
     el.innerHTML = mainHTML;
 
-    var map = L.map('map').setView([51.505, -0.09], 7);
+    var map = L.map('map').setView([53, -2.3], 7);
 
     L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
         attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
