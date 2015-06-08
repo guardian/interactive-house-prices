@@ -1,12 +1,12 @@
 # House prices
 
-## Convert shp to TopoJSON
+## Convert Shapefile to TopoJSON
 
 ```topojson --id-property name --simplify-proportion 0.1 Areas.shp > areas-topo.json```
 
 ## Queries
 
-NOTE: The table `houseprice_2015` has a reduced dataset for testing, use instead of `houseprice` for
+NOTE: The table `houseprice_test` has a reduced dataset for testing, use instead of `houseprice` for
 faster results
 
 House prices broken down by postcode area
