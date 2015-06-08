@@ -9,7 +9,7 @@ const postcodeAreas = Object.keys(prices);
 const areasFeature = topojson.feature(areasTopo, areasTopo.objects.Areas);
 areasFeature.features = areasFeature.features.filter(f => postcodeAreas.indexOf(f.id) !== -1);
 
-const years = [2015];
+const years = [2014, 2015];
 
 console.log(areasFeature);
 
@@ -42,7 +42,7 @@ function initTime(el, areasLayer) {
         changeTime(year, month);
     });
 
-    changeTime(2015, 1);
+    changeTime(2014, 1);
 }
 
 function initConstituencies(el, map) {
