@@ -1,4 +1,4 @@
-import prices from '../data/prices.json!json'
+import prices from '../data/areas-prices.json!json'
 
 const years = [2014, 2015];
 

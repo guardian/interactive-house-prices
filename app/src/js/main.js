@@ -4,7 +4,7 @@ import topojson from 'mbostock/topojson'
 import ChangeTime from './components/changeTime'
 
 import mainHTML from './text/main.html!text'
-import prices from './data/prices.json!json'
+import prices from './data/areas-prices.json!json'
 import areasTopo from './data/areas-topo.json!json'
 
 const mbToken = 'pk.eyJ1IjoiZ3VhcmRpYW4iLCJhIjoiNHk1bnF4OCJ9.25tK75EuDdgq5GxQKyD6Fg';
