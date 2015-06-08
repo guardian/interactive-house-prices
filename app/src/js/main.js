@@ -3,64 +3,35 @@ import topojson from 'mbostock/topojson'
 
 import mainHTML from './text/main.html!text'
 import areasTopo from './data/areas-topo.json!json'
-//import prices from './data/prices.json!json'
-//import wages from './data/wages.json!json'
+import prices from './data/prices.json!json'
 
-//const years = Object.keys(prices.mins).sort();
-//const constituencies = Object.keys(prices.constituencies).filter(c => c[0] === 'E');
+const postcodeAreas = Object.keys(prices);
+const areasFeature = topojson.feature(areasTopo, areasTopo.objects.Areas);
+areasFeature.features = areasFeature.features.filter(f => postcodeAreas.indexOf(f.id) !== -1);
+
+const years = [2015];
+
+console.log(areasFeature);
 
 var selectedConstituency;
 
-function initTime(el, map) {
+function initTime(el, areasLayer) {
     var statusEl = el.querySelector('#status');
     var timeEl = el.querySelector('#slider');
     var yearEl = el.querySelector('#year');
     var monthEl = el.querySelector('#month');
 
     function changeTime(year, month) {
-        var constituencyPrices = constituencies.map(ons_id => {
-                var price = prices.constituencies[ons_id];
-                var theyear = year;
-                var themonth = month;
-                while (!(price[''+theyear] && price[''+theyear][''+themonth])) {
-                    themonth--;
-                    if (themonth === 0) {
-                        theyear--;
-                        themonth = 12;
-                    }
-                }
-
-                return {
-                    'id': ons_id,
-                    'value': price[''+theyear][''+themonth] / wages[year]
-                };
-            });
-
         yearEl.textContent = year;
         monthEl.textContent = month < 10 ? '0' + month : month;
 
-        constituencyPrices.forEach(constituency => {
-            map.toggleConstituency(constituency.id, constituency.value < 6);
+        areasLayer.setStyle(area => {
+            var price = prices[area.id][year][month] / 25000;
+            var c = Math.floor((1 - Math.min(1, price / 10)) * 255);
+            return {
+                'color': `rgb(${c}, ${c}, ${c})`
+            };
         });
-
-        if (selectedConstituency) {
-            let availableConstituencies = constituencyPrices.filter(c => c.value < 6);
-
-            if (availableConstituencies.map(c => c.id).indexOf(selectedConstituency) !== -1) {
-                statusEl.textContent = 'You can live here!';
-            } else {
-                var distances = availableConstituencies.map(constituency => {
-                    return {
-                        'id': constituency.id,
-                        'd': map.getDistance(constituency.id, selectedConstituency)
-                    };
-                });
-                var minD = distances.reduce((a, b) => a.d < b.d ? a : b);
-                console.log(minD);
-                map.lineBetween(selectedConstituency, minD.id);
-                statusEl.textContent = 'You need more $$$';
-            }
-        }
     }
 
     timeEl.addEventListener('input', evt => {
@@ -71,7 +42,7 @@ function initTime(el, map) {
         changeTime(year, month);
     });
 
-    changeTime(1995, 1);
+    changeTime(2015, 1);
 }
 
 function initConstituencies(el, map) {
@@ -104,10 +75,10 @@ function init(el) {
         accessToken: 'pk.eyJ1Ijoid3BmNTAwIiwiYSI6ImUwY2JiYmEzYzFhMjM1NDNmN2U3NDgxOTA0NDZkY2MwIn0.AheQI8clLR9rK_Auf7r8Sw'
     }).addTo(map);
 
-    var feature = topojson.feature(areasTopo, areasTopo.objects.Areas);
-    L.geoJson(feature).addTo(map);
+    var areasLayer = L.geoJson(undefined, {'className': 'map-area'}).addTo(map);
+    areasLayer.addData(areasFeature);
 
-    //initTime(el, map);
+    initTime(el, areasLayer);
     //initConstituencies(el, map);
 }
 

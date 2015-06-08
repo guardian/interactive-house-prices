@@ -1,31 +1,9 @@
-.map-constituency {
+.map-area {
     fill: #B3B3B4;
+    fill-opacity: 1;
     stroke: #fff;
     stroke-width: 1;
     stroke-opacity: 0.3;
 
-    opacity: 0.5;
-    &[data-show=true] {
-        opacity: 1;
-    }
-    &[data-selected] {
-        fill: #005689;
-    }
-}
-
-.map-region {
-    font-size: 12px;
-    text-anchor: middle;
-    fill: white;
-    stroke-width: 0.2;
-    &.map-region--below {
-        stroke: #333;
-        opacity: 0.25;
-        stroke-width: 4px;
-        stroke-linejoin: round;
-    }
-}
-
-path {
-    stroke-width: 1;
+    opacity: 1;
 }
