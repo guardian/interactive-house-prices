@@ -1,4 +1,4 @@
-import L from 'leaflet'
+import L from './lib/leaflet'
 import topojson from 'mbostock/topojson'
 
 import mainHTML from './text/main.html!text'
