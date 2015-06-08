@@ -1,4 +1,4 @@
-import { CartogramLite } from './components/cartogram-lite'
+import L from 'leaflet'
 
 import mainHTML from './text/main.html!text'
 import prices from './data/prices.json!json'
@@ -34,12 +34,14 @@ function initTime(el, map) {
                 };
             });
 
+        yearEl.textContent = year;
+        monthEl.textContent = month < 10 ? '0' + month : month;
+
+        return;
+
         constituencyPrices.forEach(constituency => {
             map.toggleConstituency(constituency.id, constituency.value < 6);
         });
-
-        yearEl.textContent = year;
-        monthEl.textContent = month < 10 ? '0' + month : month;
 
         if (selectedConstituency) {
             let availableConstituencies = constituencyPrices.filter(c => c.value < 6);
@@ -83,7 +85,7 @@ function initConstituencies(el, map) {
 
     constituencyEl.addEventListener('change', evt => {
         if (evt.target.value) {
-            map.focusConstituency(evt.target.value);
+            //map.focusConstituency(evt.target.value);
         }
         selectedConstituency = evt.target.value;
     });
@@ -93,8 +95,14 @@ function initConstituencies(el, map) {
 function init(el) {
     el.innerHTML = mainHTML;
 
-    var map = new CartogramLite(el.querySelector('#map'), 1000, 1000);
-    map.focusConstituency('E14000625', false);
+    var map = L.map('map').setView([51.505, -0.09], 7);
+    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+        attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+        minZoom: 7,
+        maxZoom: 17,
+        id: 'wpf500.9a8b026d',
+        accessToken: 'pk.eyJ1Ijoid3BmNTAwIiwiYSI6ImUwY2JiYmEzYzFhMjM1NDNmN2U3NDgxOTA0NDZkY2MwIn0.AheQI8clLR9rK_Auf7r8Sw'
+    }).addTo(map);
 
     initTime(el, map);
     initConstituencies(el, map);
