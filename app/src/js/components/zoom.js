@@ -49,8 +49,6 @@ export default class Zoom {
                     changingLayers[id].forEach(l => this.areasLayer.removeLayer(l));
                     // TODO: deduplicate the shapes
                     this.areasLayer.addData(data.geo);
-                } else {
-                    console.log('rejected', id);
                 }
             });
         });
