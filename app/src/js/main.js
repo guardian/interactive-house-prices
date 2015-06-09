@@ -36,6 +36,7 @@ function init(el, config) {
     }).addTo(map);
 
     var changeTime = new ChangeTime(el, map, areasLayer);
+    var zoom = new Zoom(el, map, areasLayer);
 }
 
 (window.define || System.amdDefine)(function() { return {init: init}; });
