@@ -10,7 +10,11 @@ define([], function() {
     }
 
     return {
-        boot: function(el, context, config, mediator) {
+        boot: function(el) {
+
+            var config = {
+                assetPath: '<%= assetPath %>'
+            };
 
             // Loading message while we fetch JS / CSS
             el.innerHTML = '<div style="font-size: 24px; text-align: center; padding: 72px 0; font-family: \'Guardian Egyptian Web\',Georgia,serif;">Loading…</div>';
@@ -22,7 +26,7 @@ define([], function() {
 
             // Load JS and init
             require(['<%= assetPath %>/main.js'], function(main) {
-                main.init(el, context, config, mediator);
+                main.init(el, config);
             }, function(err) { console.error('Error loading boot.', err); });
         }
     };

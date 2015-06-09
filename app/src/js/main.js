@@ -1,21 +1,17 @@
 import L from './lib/leaflet'
 import topojson from 'mbostock/topojson'
 
+import { set as setConfig } from './lib/cfg'
 import ChangeTime from './components/changeTime'
+import Zoom from './components/zoom'
 
 import mainHTML from './text/main.html!text'
-import prices from './data/areas-prices.json!json'
-import areasTopo from './data/areas-topo.json!json'
 
 const mbToken = 'pk.eyJ1IjoiZ3VhcmRpYW4iLCJhIjoiNHk1bnF4OCJ9.25tK75EuDdgq5GxQKyD6Fg';
 
-const postcodeAreas = Object.keys(prices);
-const areasFeature = topojson.feature(areasTopo, areasTopo.objects.Areas);
+function init(el, config) {
+    setConfig(config);
 
-// TODO: pre-process features for England/Wales only
-areasFeature.features = areasFeature.features.filter(f => postcodeAreas.indexOf(f.id) !== -1);
-
-function init(el) {
     el.innerHTML = mainHTML;
 
     var map = L.map('map').setView([53, -2.3], 7);
@@ -29,7 +25,6 @@ function init(el) {
     }).addTo(map);
 
     var areasLayer = L.geoJson(undefined, {'className': 'map-area'}).addTo(map);
-    areasLayer.addData(areasFeature);
 
     L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
         pane: 'overlayPane',
