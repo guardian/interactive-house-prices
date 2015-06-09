@@ -28,9 +28,7 @@
     "configFile": "src/js/config.js",
     "dependencies": {
       "guardian/iframe-messenger": "github:guardian/iframe-messenger@master",
-      "jashkenas/underscore": "github:jashkenas/underscore@^1.8.3",
       "json": "github:systemjs/plugin-json@^0.1.0",
-      "leaflet": "npm:leaflet@^0.7.3",
       "mbostock/topojson": "github:mbostock/topojson@^1.6.19",
       "reqwest": "github:ded/reqwest@^1.1.5",
       "text": "github:systemjs/plugin-text@^0.0.2"
