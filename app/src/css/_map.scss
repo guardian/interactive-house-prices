@@ -8,3 +8,15 @@
 
     opacity: 1;
 }
+
+.map-event {
+    stroke: white; 
+    stroke-opacity: 0.5;
+    stroke-width: 0.5;
+    fill: transparent;
+    fill-opacity: 0;
+
+    &:hover {
+    stroke-width: 2;
+    stroke-opacity: 0.75;
+}}

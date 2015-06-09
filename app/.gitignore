@@ -5,3 +5,4 @@ bower_components
 build
 deploy
 cfg/aws-keys.json
+*.swp
