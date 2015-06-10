@@ -18,3 +18,11 @@ FROM houseprice WHERE postcode_area != ''
 GROUP BY year, month, postcode_area
 ORDER BY year, month
 ```
+```
+SELECT EXTRACT(year FROM date_of_sale) AS year,
+       postcode_area, AVG(price), MIN(price), MAX(price), COUNT(*),
+       median(price) AS median_value
+FROM houseprice_test WHERE postcode_area != ''
+GROUP BY year, postcode_area
+ORDER BY year
+```
