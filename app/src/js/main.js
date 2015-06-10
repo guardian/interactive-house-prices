@@ -2,6 +2,7 @@ import L from './lib/leaflet'
 import topojson from 'mbostock/topojson'
 
 import { set as setConfig } from './lib/cfg'
+import './lib/pointer-events'
 import ChangeTime from './components/changeTime'
 import Zoom from './components/zoom'
 
