@@ -26,7 +26,7 @@ function init(el, config) {
 
     var areasLayer = L.geoJson(undefined, {'className': 'map-area'}).addTo(map);
 
-    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+    var tiles = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
         pane: 'overlayPane',
         attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
         minZoom: 7,
@@ -34,6 +34,8 @@ function init(el, config) {
         id: 'guardian.8c876c82',
         accessToken: mbToken
     }).addTo(map);
+
+    tiles.getContainer().className += ' map-labels';
 
     var changeTime = new ChangeTime(el, map, areasLayer);
     var zoom = new Zoom(el, map, areasLayer);
