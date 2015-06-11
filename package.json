@@ -1,0 +1,26 @@
+{
+  "name": "house-prices",
+  "version": "0.0.0",
+  "description": "## Convert Shapefile to TopoJSON",
+  "main": "process.js",
+  "dependencies": {
+    "csv": "^0.4.4",
+    "humanize": "0.0.9",
+    "lodash": "^3.9.3",
+    "topojson": "^1.6.19"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/guardian/interactive-house-prices.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/guardian/interactive-house-prices/issues"
+  },
+  "homepage": "https://github.com/guardian/interactive-house-prices"
+}

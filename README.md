@@ -1,5 +1,10 @@
 # House prices
 
+```
+unzip data.zip
+node process.js
+```
+
 ## Convert Shapefile to TopoJSON
 
 ```topojson --id-property name --simplify-proportion 0.1 Areas.shp > areas-topo.json```

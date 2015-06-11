@@ -1,3 +1,4 @@
 /data/
 /mapbox/
 *.DS_Store
+/node_modules/
