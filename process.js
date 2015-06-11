@@ -17,6 +17,20 @@ function readCSV(file) {
         });
 }
 
+function geo2topo(features) {
+    var geo = {'shapes': {'features': features, 'type': 'FeatureCollection'}};
+    var options = {
+        'id': function (d) { return d.properties.name; },
+        'pre-quantization': 1e8,
+        'post-quantization': 1e4,
+        'retain-proportion': 0.1
+    };
+    var topo = topojson.topology(geo, options);
+    topojson.simplify(topo, options);
+    topojson.filter(topo, options);
+    return topo;
+};
+
 var types = {
     'areas': function () { return 'areas'; },
     'districts': function (id) { return id.replace(/[0-9].*/, ''); }, // AA9A -> AA
@@ -28,6 +42,8 @@ _.forEach(types, function (groupFn, type) {
 
     var geo = JSON.parse(fs.readFileSync('data/' + type + '.json'));
     var prices = readCSV('data/' + type + '.csv');
+
+    var ids = _(prices).groupBy('id').keys().value();
 
     // Reduce prices to a flat object of id to prices
     // e.g. {'AA': [12345, ...], ...}
@@ -45,19 +61,14 @@ _.forEach(types, function (groupFn, type) {
         .mapValues(function (price) { return _.zipObject(price); });
 
     var geoGroups = _(geo.features)
+        .filter(function (feature) { return ids.indexOf(feature.properties.name) !== -1; })
         .groupBy(function (feature) { return groupFn(feature.properties.name); })
-        // Remove if we don't have price data
-        .pick(priceGroups.keys().value())
-        .mapValues(function (features) {
-            return topojson.topology({'shapes': {'features': features, 'type': 'FeatureCollection'}}, {
-                'id': function (d) { return d.properties.name; }
-            });
-        })
+        .mapValues(geo2topo)
         .value();
 
     // Write the files
     var files = priceGroups
-        .merge(geoGroups, function (prices, geo) { return {'prices': prices, 'geo': geo}; })
+        .merge(geoGroups, function (prices, topo) { return {'prices': prices, 'topo': topo}; })
         .mapValues(function (data, groupId) {
             var json = JSON.stringify(data);
             fs.writeFileSync(util.format('app/src/assets/%s/%s.json', type, groupId), json);
