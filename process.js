@@ -39,20 +39,35 @@ _.forEach(types, function (groupFn, type) {
                 .map(function (row) { return Number(parseFloat(row.avg).toFixed(2)); });
         });
 
-    // Group IDs ready for splitting into different files
-    var groups = pricesById.pairs()
+    // Split into groups of ids
+    var priceGroups = pricesById.pairs()
         .groupBy(function (price) { return groupFn(price[0]); })
         .mapValues(function (price) { return _.zipObject(price); });
 
+    var geoGroups = _(geo.features)
+        .groupBy(function (feature) { return groupFn(feature.properties.name); })
+        // Remove if we don't have price data
+        .pick(priceGroups.keys().value())
+        .mapValues(function (features) {
+            return topojson.topology({'shapes': {'features': features, 'type': 'FeatureCollection'}}, {
+                'id': function (d) { return d.properties.name; }
+            });
+        })
+        .value();
+
     // Write the files
-    var files = groups.mapValues(function (data, groupId) {
-        var json = JSON.stringify(data);
-        fs.writeFileSync(util.format('app/src/assets/%s/%s.json', type, groupId), json);
-        return {'raw': json.length, 'gzip': zlib.gzipSync(json).length};
-    });
+    var files = priceGroups
+        .merge(geoGroups, function (prices, geo) { return {'prices': prices, 'geo': geo}; })
+        .mapValues(function (data, groupId) {
+            var json = JSON.stringify(data);
+            fs.writeFileSync(util.format('app/src/assets/%s/%s.json', type, groupId), json);
+            return json;
+        });
 
     // Output the highest file sizes
-    files.pairs()
+    files
+        .mapValues(function (data) { return {'raw': data.length, 'gzip': zlib.gzipSync(data).length}; })
+        .pairs()
         .sortBy(function (file) { return -file[1].gzip; })
         .value()
         .slice(0, 10)
