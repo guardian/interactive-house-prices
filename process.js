@@ -16,7 +16,7 @@ var types = [
     {
         'name': 'areas',
         'groupFn': function () { return 'areas'; },
-        'simplify': 0.1
+        'simplify': 0.8
     },
     {
         'name': 'districts',
@@ -74,7 +74,6 @@ types.forEach(function (type) {
                 .indexBy(function (row) { return row.year + row.month; })
                 .mapValues(function (row) { return Number(parseFloat(row.avg).toFixed(2)); })
                 .value();
-            console.log(p);
             return dates.map(function (date) {
                 return p[date.format('YYYYM')] || 0;
             });
