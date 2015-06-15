@@ -1,17 +1,16 @@
 @import "lib/leaflet";
 
-.map-area {
+.map-regions {
     fill-opacity: 0.5;
     stroke: #fff;
     stroke-width: 1;
     stroke-opacity: 0.3;
 
-    opacity: 1;
-    
     &:hover {
-    stroke-width: 3;
-    stroke-opacity: 0.75;
-}}
+        stroke-width: 3;
+        stroke-opacity: 0.75;
+    }
+}
 
 .map-labels img {
     pointer-events: none;
