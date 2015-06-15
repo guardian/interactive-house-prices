@@ -1,12 +1,13 @@
 @import "lib/leaflet";
 
 .map-regions {
-    fill-opacity: 0.5;
-    stroke: #fff;
+    fill: #d61d00;
+    stroke: #d61d00;
     stroke-width: 1;
     stroke-opacity: 0.3;
 
     &:hover {
+        stroke: black;
         stroke-width: 3;
         stroke-opacity: 0.75;
     }

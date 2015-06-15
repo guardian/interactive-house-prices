@@ -5394,6 +5394,7 @@ L.Polyline = L.Path.extend({
 
 	// simplify each clipped part of the polyline for performance
 	_simplifyPoints: function () {
+        return;
 		var parts = this._parts,
 			tolerance = this.options.smoothFactor;
 

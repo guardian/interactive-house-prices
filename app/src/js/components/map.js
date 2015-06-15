@@ -1,6 +1,12 @@
 import L from '../lib/leaflet'
 import { getNewRegionId, getRegion } from '../lib/region'
 
+import Tooltip from './tooltip'
+
+const year = 0;
+const month = 6;
+const desiredPrice = 300000;
+
 function groupBy(objs, fn) {
     var ret = {};
     objs.forEach(function (obj) {
@@ -16,7 +22,7 @@ function tileLayer(id, pane='tilePane') {
         pane: pane,
         attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
         minZoom: 6,
-        maxZoom: 16,
+        maxZoom: 14,
         id: id,
         accessToken: 'pk.eyJ1IjoiZ3VhcmRpYW4iLCJhIjoiNHk1bnF4OCJ9.25tK75EuDdgq5GxQKyD6Fg'
     });
@@ -25,21 +31,28 @@ function tileLayer(id, pane='tilePane') {
 export default class Map {
     constructor(el) {
         this.map = L.map('map').setView([53, -2.3], 7);
+        this.tooltip = new Tooltip(el);
 
         // Map Layer
         tileLayer('guardian.cd3f3254').addTo(this.map);
 
         // Region layer
         this.regionLayer = L.geoJson(undefined, {
-            className: 'map-regions'/*,
-            TODO: delegate events
+            className: 'map-regions',
+            style: region => {
+                var price = region.properties.prices[year * 12 + month];
+                return {
+                    'fillOpacity': Math.min(1, price / desiredPrice)
+                };
+            },
             onEachFeature: (feature, layer) => {
                 layer.on({
-                    mouseover: tooltip.show,
-                    mouseout: tooltip.hide
+                    mouseover: evt => this.tooltip.show(evt),
+                    mouseout: () => this.tooltip.hide()
                 });
-            }*/
+            }
         }).addTo(this.map);
+
         getRegion('areas', 'areas').then(geo => this.regionLayer.addData(geo));
 
         // Label layer
@@ -51,7 +64,7 @@ export default class Map {
 
     getRegionType() {
         var zoom = this.map.getZoom();
-        return zoom > 11 ? 'sectors' : zoom > 8 ? 'districts' : 'areas';
+        return zoom > 20 ? 'sectors' : zoom > 8 ? 'districts' : 'areas';
     }
 
     getVisibleRegions() {
