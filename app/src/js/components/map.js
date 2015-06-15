@@ -54,18 +54,14 @@ export default class Map {
         return zoom > 11 ? 'sectors' : zoom > 8 ? 'districts' : 'areas';
     }
 
-    getBadRegions(regionType) {
+    getVisibleRegions() {
         var bounds = this.map.getBounds();
-        return this.regionLayer.getLayers().filter(l => {
-            var visible = bounds.overlaps(l.getBounds());
-            var badType = l.feature.properties.type !== regionType
-            return visible && badType;
-        });
+        return this.regionLayer.getLayers().filter(r => bounds.overlaps(r.getBounds()));
     }
 
     onMoveEnd() {
         var regionType = this.getRegionType();
-        var badRegions = this.getBadRegions(regionType);
+        var badRegions = this.getVisibleRegions().filter(r => r.feature.properties.type !== regionType);
         var newRegions = groupBy(badRegions, r => getNewRegionId(r.feature.id, regionType));
 
         // We can't cancel Promises from previous moveend events, so just use
@@ -74,7 +70,7 @@ export default class Map {
         Object.keys(newRegions).forEach(id => {
             getRegion(regionType, id).then(geo => {
                 if (requestTime === this.requestTime) {
-                    newRegions[id].forEach(l => this.regionLayer.removeLayer(l));
+                    newRegions[id].forEach(r => this.regionLayer.removeLayer(r));
                     // TODO: deduplicate the shapes
                     this.regionLayer.addData(geo);
                 }

@@ -8,7 +8,7 @@ var regions = {'areas': {}, 'districts': {}, 'sectors': {}};
 export function getNewRegionId(id, newType) {
     switch (newType) {
         case 'areas': return 'areas';
-        case 'districts': return id.length > 2 ? 'areas': id; // AA9A A -> areas or AA -> AA
+        case 'districts': return id.length > 2 ? id.replace(/[0-9].*/, '') : id; // AA9A A -> AA or AA -> AA
         case 'sectors': return id.replace(/[0-9].*/, ''); // AA9A 9 -> AA
     }
 }
