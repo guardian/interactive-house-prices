@@ -17,19 +17,15 @@ function readCSV(file) {
         });
 }
 
-function geo2topo(type, prices, features) {
+function geo2topo(features, simplify, propertyTransform) {
     var geo = {'shapes': {'features': features, 'type': 'FeatureCollection'}};
     var options = {
+        'coordinate-system': 'cartesian',
         'id': function (d) { return d.properties.name; },
-        'property-transform': function (d) {
-            return {
-                'type': type,
-                'prices': prices[d.properties.name]
-            };
-        },
+        'property-transform': propertyTransform,
         'pre-quantization': 1e8,
         'post-quantization': 1e4,
-        'retain-proportion': 0.1
+        'retain-proportion': simplify
     };
     var topo = topojson.topology(geo, options);
     topojson.simplify(topo, options);
@@ -37,17 +33,29 @@ function geo2topo(type, prices, features) {
     return topo;
 };
 
-var types = {
-    'areas': function () { return 'areas'; },
-    'districts': function (id) { return id.replace(/[0-9].*/, ''); }, // AA9A -> AA
-    'sectors': function (id) { return id.replace(/[0-9].*/, ''); } // AA9A 9 -> AA
-};
+var types = [
+    {
+        'name': 'areas',
+        'groupFn': function () { return 'areas'; },
+        'simplify': 0.1
+    },
+    {
+        'name': 'districts',
+        'groupFn': function (id) { return id.replace(/[0-9].*/, ''); }, // AA9A -> AA
+        'simplify': 0.5
+    },
+    {
+        'name': 'sectors',
+        'groupFn': function (id) { return id.replace(/[0-9].*/, ''); }, // AA9A 9 -> AA
+        'simplify': 0.5
+    }
+].filter(function (type) { return process.argv.length === 2 || process.argv.indexOf(type.name) !== -1 });
 
-_.forEach(types, function (groupFn, type) {
-    console.log('Processing ' + type);
+types.forEach(function (type) {
+    console.log('Processing ' + type.name);
 
-    var geo = JSON.parse(fs.readFileSync('data/' + type + '.json'));
-    var prices = readCSV('data/' + type + '.csv');
+    var geo = JSON.parse(fs.readFileSync('data/' + type.name + '.json'));
+    var prices = readCSV('data/' + type.name + '.csv');
 
     // Reduce prices to a flat object of id to prices
     // e.g. {'AA': [12345, ...], ...}
@@ -60,17 +68,33 @@ _.forEach(types, function (groupFn, type) {
         })
         .value();
 
+    // Remove any topologies that don't have associated prices
+    var features = _.filter(geo.features, function (feature) { return pricesById[feature.properties.name]; });
+
+    var topo = geo2topo(features, type.simplify, function (d) {
+        return {
+            'type': type.name,
+            'prices': pricesById[d.properties.name]
+        };
+    });
+    var arcs = _.cloneDeep(topo.arcs);
+
     // Split into groups of ids
-    var groups = _(geo.features)
-        // Remove any topologies that don't have associated prices
-        .filter(function (feature) { return pricesById[feature.properties.name]; })
-        .groupBy(function (feature) { return groupFn(feature.properties.name); })
-        .mapValues(geo2topo.bind(undefined, type, pricesById))
+    var groups = _(topo.objects.shapes.geometries)
+        .groupBy(function (geo) { return type.groupFn(geo.id); })
+        .mapValues(function (geos, id) {
+            // Filter out arcs that aren't used by this group
+            // NOTE: topojson modifies objects in place so reset the arcs each time
+            topo.arcs = arcs;
+            topo.objects.shapes.geometries = geos;
+            topojson.filter(topo, {'coordinate-system': 'cartesian'});
+            return _.cloneDeep(topo);
+        });
 
     // Write the files
     var files = groups.mapValues(function (geo, groupId) {
         var json = JSON.stringify(geo);
-        fs.writeFileSync(util.format('app/src/assets/%s/%s.json', type, groupId), json);
+        fs.writeFileSync(util.format('app/src/assets/%s/%s.json', type.name, groupId), json);
         return json;
     });
 
