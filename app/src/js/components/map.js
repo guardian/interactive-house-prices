@@ -32,6 +32,7 @@ export default class Map {
     constructor(el) {
         this.map = L.map('map').setView([53, -2.3], 7);
         this.tooltip = new Tooltip(el);
+        this.renderParams = {'year': year, 'month': month};
 
         // Map Layer
         tileLayer('guardian.cd3f3254').addTo(this.map);
@@ -39,12 +40,7 @@ export default class Map {
         // Region layer
         this.regionLayer = L.geoJson(undefined, {
             className: 'map-regions',
-            style: region => {
-                var price = region.properties.prices[year * 12 + month];
-                return {
-                    'fillOpacity': Math.min(1, price / desiredPrice)
-                };
-            },
+            style: this.setStyle.bind(this),
             onEachFeature: (feature, layer) => {
                 layer.on({
                     mouseover: evt => this.tooltip.show(evt),
@@ -56,15 +52,14 @@ export default class Map {
         getRegion('areas', 'areas').then(geo => this.regionLayer.addData(geo));
 
         // Label layer
-        var labelLayer = tileLayer('guardian.8c876c82', 'overlayPane').addTo(this.map);
-        labelLayer.getContainer().className += ' map-labels';
+        tileLayer('guardian.8c876c82', 'overlayPane').addTo(this.map);
 
         this.map.on('moveend', this.onMoveEnd.bind(this));
     }
 
     getRegionType() {
         var zoom = this.map.getZoom();
-        return zoom > 20 ? 'sectors' : zoom > 8 ? 'districts' : 'areas';
+        return zoom > 20 ? 'sectors' : zoom > 9 ? 'districts' : 'areas';
     }
 
     getVisibleRegions() {
@@ -89,5 +84,17 @@ export default class Map {
                 }
             });
         });
+    }
+
+    setStyle(region) {
+        var price = region.properties.prices[this.renderParams.year * 12 + this.renderParams.month];
+        return {
+            'fillOpacity': Math.min(1, price / desiredPrice)
+        };
+    }
+
+    update(renderParams) {
+        this.renderParams = renderParams;
+        this.regionLayer.setStyle(this.setStyle.bind(this));
     }
 }
