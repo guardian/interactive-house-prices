@@ -1,7 +1,8 @@
 @import "lib/leaflet";
 
 .map-regions {
-    fill: black;
+    //fill: #d61d00;
+    fill-opacity: 1;
     stroke: none;
 
     &:hover {
@@ -11,6 +12,10 @@
     }
 }
 
-.leaflet-overlay-pane img {
+.leaflet-label-pane img {
     pointer-events: none;
+}
+
+.leaflet-overlay-pane {
+    mix-blend-mode: screen;
 }

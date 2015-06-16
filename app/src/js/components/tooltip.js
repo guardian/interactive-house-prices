@@ -36,7 +36,7 @@ export default class Tooltip {
             range1 = Math.round(salary*6).toLocaleString(),
             range2 = Math.round(salary*12).toLocaleString();
 
-        this.regionEl.textContent = `${areaName[id.replace(/[0-9].*/, '')]} [${id}]`;
+        this.regionEl.textContent = `${areaName[id.replace(/[0-9].*/, '')]} area [${id}]`;
         this.resultEl.textContent = result;
         this.range1El.textContent = range1;
         this.range2El.textContent = range2;

@@ -3,9 +3,11 @@ import { getNewRegionId, getRegion } from '../lib/region'
 
 import Tooltip from './tooltip'
 
+const colors = ['rgb(208,28,139)','rgb(241,182,218)','rgb(184,225,134)','rgb(77,172,38)'].reverse();
+
 const year = 0;
 const month = 6;
-const desiredPrice = 300000;
+const desiredPrice = 80000;
 
 function groupBy(objs, fn) {
     var ret = {};
@@ -35,7 +37,7 @@ export default class Map {
         this.renderParams = {'year': year, 'month': month};
 
         // Map Layer
-        tileLayer('guardian.cd3f3254').addTo(this.map);
+        tileLayer('guardian.b71bdefa').addTo(this.map);
 
         // Region layer
         this.regionLayer = L.geoJson(undefined, {
@@ -52,7 +54,8 @@ export default class Map {
         getRegion('areas', 'areas').then(geo => this.regionLayer.addData(geo));
 
         // Label layer
-        tileLayer('guardian.8c876c82', 'overlayPane').addTo(this.map);
+        this.map.createPane('labelPane');
+        tileLayer('guardian.8c876c82', 'labelPane').addTo(this.map);
 
         this.map.on('moveend', this.onMoveEnd.bind(this));
     }
@@ -88,8 +91,14 @@ export default class Map {
 
     setStyle(region) {
         var price = region.properties.prices[this.renderParams.year * 12 + this.renderParams.month];
+        var ratio = price / desiredPrice;
+        var colorIndex = 0;
+        if (ratio > 2) colorIndex++;
+        if (ratio > 4) colorIndex++;
+        if (ratio > 6) colorIndex++;
+        if (ratio > 8) colorIndex++;
         return {
-            'fillOpacity': Math.min(1, price / desiredPrice)
+            'fillColor': colors[colorIndex]
         };
     }
 
