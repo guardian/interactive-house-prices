@@ -62,8 +62,7 @@ export default class Map {
     }
 
     getRegionType() {
-        var zoom = this.map.getZoom();
-        return zoom > 20 ? 'sectors' : zoom > 9 ? 'districts' : 'areas';
+        return this.map.getZoom() > 9 ? 'districts' : 'areas';
     }
 
     getVisibleRegions() {
