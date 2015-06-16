@@ -34,3 +34,9 @@ export function getRegion(type, id) {
         }
     });
 }
+
+const startYear = 2014;
+export function getRegionPrices(region, year, month) {
+    var [avg, min, max, med] = region.properties.prices[(year - startYear) * 12 + month];
+    return {'avg': avg, 'min': min, 'max': max, 'med': med};
+}

@@ -12,10 +12,7 @@ function init(el, config) {
     el.innerHTML = mainHTML;
 
     var map = new Map(el);
-    var changeTime = new ChangeTime(el, (year, month) => {
-        map.update({'year': year - 2014, 'month': month});
-    });
-    //var zoom = new Zoom(el, map, areasLayer);
+    var changeTime = new ChangeTime(el, map.update.bind(map));
 }
 
 (window.define || System.amdDefine)(function() { return {init: init}; });

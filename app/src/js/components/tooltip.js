@@ -1,8 +1,7 @@
+import { getRegionPrices } from '../lib/region'
+
 import areaName from '../data/areas-name.json!json'
 import wageYear from '../data/wages.json!json'
-
-const year = 0;
-const month = 6;
 
 const min = 7000;
 const max = 50000000;
@@ -21,30 +20,28 @@ export default class Tooltip {
         this.salaryEls = Array.from(el.querySelectorAll('.js-salary'));
     }
 
-    show(evt) {
-        var region = evt.target;
-        var id = region.feature.id;
+    show(evt, year, month) {
+        var region = evt.target.feature;
+        var prices = getRegionPrices(region, year, month);
 
-        var avg = region.feature.properties.prices[year * 12 + month];
-        var min, max, med; min = max = med = avg;
-        var fac = Math.round(med / wageYear[2014]); // TODO
+        var salary = Math.round(wageYear[year]);
+        var fac = Math.round(prices.med / salary);
 
-        this.el.style.transform = `translate(${evt.originalEvent.screenX}px, ${evt.originalEvent.screenY}px)`;
-
-        var salary = Math.round(wageYear[2014]),//[region],
-            result = Math.round(salary*fac).toLocaleString(),
+        var result = Math.round(salary*fac).toLocaleString(),
             range1 = Math.round(salary*6).toLocaleString(),
             range2 = Math.round(salary*12).toLocaleString();
 
-        this.regionEl.textContent = `${areaName[id.replace(/[0-9].*/, '')]} area [${id}]`;
+        this.regionEl.textContent = `${areaName[region.id.replace(/[0-9].*/, '')]} area [${region.id}]`;
         this.resultEl.textContent = result;
         this.range1El.textContent = range1;
         this.range2El.textContent = range2;
         this.factorEl.textContent = fac.toLocaleString();
-        this.minEl.textContent = min.toLocaleString();
-        this.avgEl.textContent = avg.toLocaleString();
-        this.maxEl.textContent = max.toLocaleString();
+        this.minEl.textContent = prices.min.toLocaleString();
+        this.avgEl.textContent = prices.avg.toLocaleString();
+        this.maxEl.textContent = prices.max.toLocaleString();
         this.salaryEls.forEach(el => el.textContent = salary.toLocaleString());
+
+        this.el.style.transform = `translate(${evt.originalEvent.screenX}px, ${evt.originalEvent.screenY}px)`;
     }
 
     hide() {

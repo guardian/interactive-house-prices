@@ -1,12 +1,10 @@
 import L from '../lib/leaflet'
-import { getNewRegionId, getRegion } from '../lib/region'
+import { getNewRegionId, getRegion, getRegionPrices } from '../lib/region'
 
 import Tooltip from './tooltip'
 
 const colors = ['#39a4d8', '#8ac7cd', '#daeac1', '#fff181', '#fdd09e', '#f58680', '#ed3d61'];
 
-const year = 0;
-const month = 6;
 const desiredPrice = 30000;
 
 function groupBy(objs, fn) {
@@ -37,10 +35,9 @@ export default class Map {
             'maxBounds': [[50, -6.5], [56, 1.8]],
             'zoom': 7
         });
+        this.map.on('moveend', this.onMoveEnd.bind(this));
 
         this.tooltip = new Tooltip(el);
-
-        this.renderParams = {'year': year, 'month': month};
 
         // Map Layer
         tileLayer('guardian.b71bdefa').addTo(this.map);
@@ -51,7 +48,7 @@ export default class Map {
             style: this.setStyle.bind(this),
             onEachFeature: (feature, layer) => {
                 layer.on({
-                    mouseover: evt => this.tooltip.show(evt),
+                    mouseover: evt => this.tooltip.show(evt, this._year, this._month),
                     mouseout: () => this.tooltip.hide()
                 });
             }
@@ -62,8 +59,6 @@ export default class Map {
         // Label layer
         this.map.createPane('labelPane');
         tileLayer('guardian.8c876c82', 'labelPane').addTo(this.map);
-
-        this.map.on('moveend', this.onMoveEnd.bind(this));
     }
 
     getRegionType() {
@@ -96,7 +91,7 @@ export default class Map {
     }
 
     setStyle(region) {
-        var price = region.properties.prices[this.renderParams.year * 12 + this.renderParams.month];
+        var price = getRegionPrices(region, this._year, this._month).avg;
         var ratio = price / desiredPrice;
         var colorIndex = 0;
         if (ratio > 4) colorIndex++;
@@ -111,8 +106,11 @@ export default class Map {
         };
     }
 
-    update(renderParams) {
-        this.renderParams = renderParams;
+    update(year, month) {
+        this._year = year;
+        this._month = month;
+
+        // Refresh regions
         this.regionLayer.setStyle(this.setStyle.bind(this));
     }
 }
