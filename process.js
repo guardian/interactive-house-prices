@@ -72,15 +72,15 @@ types.forEach(function (type) {
         .mapValues(function (price) {
             var p = _(price)
                 .indexBy(function (row) { return row.year + row.month; })
-                .mapValues(function (row) { return Number(parseFloat(row.avg).toFixed(2)); })
-                .value();
+                .mapValues(function (row) {
+                    return [row.avg, row.min, row.max, row.median].map(function (n) {
+                        return Number(parseFloat(n).toFixed(2));
+                    });
+                }).value();
             return dates.map(function (date) {
-                return p[date.format('YYYYM')] || 0;
+                return p[date.format('YYYYM')] || [0, 0, 0, 0];
             });
-            /*return _.sortBy(price, function (row) { return row.year + row.month; })
-                .map(function (row) { return Number(parseFloat(row.avg).toFixed(2)); });*/
-        })
-        .value();
+        }).value();
 
     // Remove any topologies that don't have associated prices
     var features = _.filter(geo.features, function (feature) { return pricesById[feature.properties.name]; });
