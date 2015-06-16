@@ -48,7 +48,7 @@ export default class Map {
             style: this.setStyle.bind(this),
             onEachFeature: (feature, layer) => {
                 layer.on({
-                    mouseover: evt => this.tooltip.show(evt, this._year, this._month),
+                    mouseover: evt => this.tooltip.show(evt, this.data),
                     mouseout: () => this.tooltip.hide()
                 });
             }
@@ -91,8 +91,9 @@ export default class Map {
     }
 
     setStyle(region) {
-        var price = getRegionPrices(region, this._year, this._month).avg;
-        var ratio = price / desiredPrice;
+        var price = getRegionPrices(region, this.data.year, this.data.month).avg;
+        var ratio = price / this.data.threshold;
+
         var colorIndex = 0;
         if (ratio > 4) colorIndex++;
         if (ratio > 6) colorIndex++;
@@ -106,10 +107,8 @@ export default class Map {
         };
     }
 
-    update(year, month) {
-        this._year = year;
-        this._month = month;
-
+    update(data) {
+        this.data = data;
         // Refresh regions
         this.regionLayer.setStyle(this.setStyle.bind(this));
     }

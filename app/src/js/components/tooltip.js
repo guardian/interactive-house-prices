@@ -20,11 +20,11 @@ export default class Tooltip {
         this.salaryEls = Array.from(el.querySelectorAll('.js-salary'));
     }
 
-    show(evt, year, month) {
+    show(evt, data) {
         var region = evt.target.feature;
-        var prices = getRegionPrices(region, year, month);
+        var prices = getRegionPrices(region, data.year, data.month);
 
-        var salary = Math.round(wageYear[year]);
+        var salary = data.threshold;
         var fac = Math.round(prices.med / salary);
 
         var result = Math.round(salary*fac).toLocaleString(),
