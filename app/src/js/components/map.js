@@ -3,11 +3,11 @@ import { getNewRegionId, getRegion } from '../lib/region'
 
 import Tooltip from './tooltip'
 
-const colors = ['rgb(208,28,139)','rgb(241,182,218)','rgb(184,225,134)','rgb(77,172,38)'].reverse();
+const colors = ['#39a4d8', '#8ac7cd', '#daeac1', '#fff181', '#fdd09e', '#f58680', '#ed3d61'];
 
 const year = 0;
 const month = 6;
-const desiredPrice = 80000;
+const desiredPrice = 30000;
 
 function groupBy(objs, fn) {
     var ret = {};
@@ -93,10 +93,13 @@ export default class Map {
         var price = region.properties.prices[this.renderParams.year * 12 + this.renderParams.month];
         var ratio = price / desiredPrice;
         var colorIndex = 0;
-        if (ratio > 2) colorIndex++;
         if (ratio > 4) colorIndex++;
         if (ratio > 6) colorIndex++;
+        if (ratio > 7) colorIndex++;
         if (ratio > 8) colorIndex++;
+        if (ratio > 9) colorIndex++;
+        if (ratio > 12) colorIndex++;
+
         return {
             'fillColor': colors[colorIndex]
         };
