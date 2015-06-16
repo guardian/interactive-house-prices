@@ -32,8 +32,14 @@ function tileLayer(id, pane='tilePane') {
 
 export default class Map {
     constructor(el) {
-        this.map = L.map('map').setView([53, -2.3], 7);
+        this.map = L.map('map', {
+            'center': [53, -2.3],
+            'maxBounds': [[50, -6.5], [56, 1.8]],
+            'zoom': 7
+        });
+
         this.tooltip = new Tooltip(el);
+
         this.renderParams = {'year': year, 'month': month};
 
         // Map Layer
