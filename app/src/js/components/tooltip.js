@@ -6,6 +6,9 @@ import wageYear from '../data/wages.json!json'
 const min = 7000;
 const max = 50000000;
 
+const tooltipWidth = 256;
+const tooltipHeight = 128;
+
 export default class Tooltip {
     constructor(el) {
         this.el = el.querySelector('.js-tooltip');
@@ -19,7 +22,23 @@ export default class Tooltip {
         this.maxEl = el.querySelector('.js-max');
         this.salaryEls = Array.from(el.querySelectorAll('.js-salary'));
 
-        this.hide();
+        var resize = (function () {
+            var timer;
+            return function () {
+                if (!this.hidden) this.hide();
+
+                if (timer) clearTimeout(timer);
+                timer = setTimeout(() => {
+                    window.requestAnimationFrame(() => {
+                        this.viewWidth = window.innerWidth;
+                        this.viewHeight = window.innerHeight;
+                    });
+                }, 100);
+            };
+        })();
+
+        window.addEventListener('resize', resize.bind(this));
+        resize.apply(this);
     }
 
     show(evt, data) {
@@ -43,10 +62,21 @@ export default class Tooltip {
         this.maxEl.textContent = prices.max.toLocaleString();
         this.salaryEls.forEach(el => el.textContent = salary.toLocaleString());
 
-        this.el.style.transform = `translate(${evt.originalEvent.screenX}px, ${evt.originalEvent.screenY}px)`;
+        var x = evt.originalEvent.screenX;
+        var y = evt.originalEvent.screenY - tooltipHeight;
+        if (x + tooltipWidth > this.viewWidth) {
+            x -= tooltipWidth;
+        }
+        if (y + tooltipHeight > this.viewHeight) {
+            y -= tooltipHeight;
+        }
+
+        this.hidden = false;
+        this.el.style.transform = `translate(${x}px, ${y}px)`;
     }
 
     hide() {
+        this.hidden = true;
         this.el.style.transform = 'translate(-1000px, -1000px)';
     }
 }
