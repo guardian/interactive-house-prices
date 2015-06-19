@@ -30,7 +30,7 @@ export default class Map {
     constructor(el) {
         this.map = L.map('map', {
             'center': [53, -2.3],
-            'maxBounds': [[50, -6.5], [56, 1.8]],
+            //'maxBounds': [[50, -6.5], [56, 1.8]],
             'zoom': 7
         });
         this.map.on('moveend', this.onMoveEnd.bind(this));
@@ -43,16 +43,17 @@ export default class Map {
         // Region layer
         this.regionLayer = L.geoJson(undefined, {
             className: 'map-regions',
+            renderer: L.canvas(),
             style: this.setStyle.bind(this),
             onEachFeature: (feature, layer) => {
                 layer.on({
-                    mouseover: evt => this.tooltip.show(evt, this.data),
-                    mouseout: () => this.tooltip.hide()
+                    mouseover: evt => this.tooltip.show(evt, this.data)
+                    //mouseout: () => this.tooltip.hide()
                 });
             }
         }).addTo(this.map);
 
-        getRegion('areas', 'areas').then(geo => this.regionLayer.addData(geo));
+        getRegion('districts', 'districts').then(geo => this.regionLayer.addData(geo));
 
         // Label layer
         this.map.createPane('labelPane');
@@ -100,9 +101,7 @@ export default class Map {
         if (ratio > 12) colorIndex++;
 
         return {
-            'color': 'black',
-            'opacity': 0.3,
-            'weight': 1,
+            'stroke': 0,
             'fillColor': colors[colorIndex],
             'fillOpacity': 1
         };

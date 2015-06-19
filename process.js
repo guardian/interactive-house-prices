@@ -20,14 +20,9 @@ var types = [
     },
     {
         'name': 'districts',
-        'groupFn': function (id) { return id.replace(/[0-9].*/, ''); }, // AA9A -> AA
-        'simplify': 0.8
-    }//,
-    //{
-    //    'name': 'sectors',
-    //    'groupFn': function (id) { return id.replace(/[0-9].*/, ''); }, // AA9A 9 -> AA
-    //    'simplify': 1
-    //}
+        'groupFn': function (id) { return 'districts'; },//return id.replace(/[0-9].*/, ''); }, // AA9A -> AA
+        'simplify': 0.1
+    }
 ].filter(function (type) { return process.argv.length === 2 || process.argv.indexOf(type.name) !== -1 });
 
 function readCSV(file) {
