@@ -18,6 +18,8 @@ export default class Tooltip {
         this.avgEl = el.querySelector('.js-avg');
         this.maxEl = el.querySelector('.js-max');
         this.salaryEls = Array.from(el.querySelectorAll('.js-salary'));
+
+        this.hide();
     }
 
     show(evt, data) {

@@ -16,7 +16,7 @@ var types = [
     {
         'name': 'areas',
         'groupFn': function () { return 'areas'; },
-        'simplify': 0.8
+        'simplify': 0.1
     },
     {
         'name': 'districts',

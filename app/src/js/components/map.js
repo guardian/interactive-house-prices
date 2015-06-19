@@ -5,8 +5,6 @@ import Tooltip from './tooltip'
 
 const colors = ['#39a4d8', '#8ac7cd', '#daeac1', '#fff181', '#fdd09e', '#f58680', '#ed3d61'];
 
-const desiredPrice = 30000;
-
 function groupBy(objs, fn) {
     var ret = {};
     objs.forEach(function (obj) {
@@ -102,7 +100,11 @@ export default class Map {
         if (ratio > 12) colorIndex++;
 
         return {
-            'fillColor': colors[colorIndex]
+            'color': 'black',
+            'opacity': 0.3,
+            'weight': 1,
+            'fillColor': colors[colorIndex],
+            'fillOpacity': 1
         };
     }
 
