@@ -11,24 +11,24 @@ const tooltipWidth = 256;
 const tooltipHeight = 128;
 
 export default class Tooltip {
-    constructor(el) {
-        this.el = el;
+    constructor(root) {
+        this.el = root.querySelector('.js-tooltip');
         this.el.innerHTML = template;
 
-        this.regionEl = el.querySelector('.js-region');
-        this.resultEl = el.querySelector('.js-result');
-        this.range1El = el.querySelector('.js-range1');
-        this.range2El = el.querySelector('.js-range2');
-        this.factorEl = el.querySelector('.js-factor');
-        this.minEl = el.querySelector('.js-min');
-        this.avgEl = el.querySelector('.js-avg');
-        this.maxEl = el.querySelector('.js-max');
-        this.salaryEls = Array.from(el.querySelectorAll('.js-salary'));
+        this.regionEl = this.el.querySelector('.js-region');
+        this.resultEl = this.el.querySelector('.js-result');
+        this.range1El = this.el.querySelector('.js-range1');
+        this.range2El = this.el.querySelector('.js-range2');
+        this.factorEl = this.el.querySelector('.js-factor');
+        this.minEl = this.el.querySelector('.js-min');
+        this.avgEl = this.el.querySelector('.js-avg');
+        this.maxEl = this.el.querySelector('.js-max');
+        this.salaryEls = Array.from(this.el.querySelectorAll('.js-salary'));
 
         var resize = debounce(function () {
             window.requestAnimationFrame(() => {
-                this.viewWidth = window.innerWidth;
-                this.viewHeight = window.innerHeight;
+                this.viewWidth = root.clientWidth;
+                this.viewHeight = root.clientHeight;
             });
         }.bind(this), 200);
 

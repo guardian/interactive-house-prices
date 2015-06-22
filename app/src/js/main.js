@@ -10,6 +10,10 @@ function init(el, config) {
     setConfig(config);
 
     el.innerHTML = mainHTML;
+
+    if (window.guardian) {
+        el.style.height = window.innerHeight - document.getElementById('maincontent').offsetTop + 'px';
+    }
     var map = new Map(el);
     var user = new User(el.querySelector('.js-user'), map.update.bind(map));
 }

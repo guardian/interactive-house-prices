@@ -35,7 +35,7 @@ export default class Map {
         });
         //this.map.on('moveend', this.onMoveEnd.bind(this));
 
-        this.tooltip = new Tooltip(el.querySelector('.js-tooltip'));
+        this.tooltip = new Tooltip(el);
 
         // Region layer
         this.regionLayer = L.geoJson(undefined, {
