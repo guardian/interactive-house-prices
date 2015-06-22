@@ -339,9 +339,6 @@ if(guardian.isModernBrowser){require(['bootstraps/app'],function(bootstrap){boot
 </div>
 <a class="u-h skip" href="#maincontent" data-link-name="skip : main content">Skip to main content</a>
 <div class="sticky-nav-mt-test">
-<div class="top-banner-ad-container top-banner-ad-container--desktop top-banner-ad-container--above-nav">
-<div id="dfp-ad--top-above-nav" class="js-ad-slot ad-slot ad-slot--dfp ad-slot--top-above-nav ad-slot--top-banner-ad" data-link-name="ad slot top-above-nav" data-test-id="ad-slot-top-above-nav" data-name="top-above-nav" data-mobile="1,1|88,70|728,90" data-desktop="1,1|88,70|728,90|940,230|900,250|970,250"> </div>
-</div>
 <header id="header" class="l-header u-cf  l-header--is-slim " role="banner" data-link-name="global navigation: header">
 <div class="js-navigation-header navigation-container navigation-container--collapsed">
 <div class="gs-container l-header__inner">
