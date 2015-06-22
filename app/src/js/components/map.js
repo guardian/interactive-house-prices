@@ -28,7 +28,7 @@ function tileLayer(id, pane='tilePane') {
 
 export default class Map {
     constructor(el) {
-        this.map = L.map('map', {
+        this.map = L.map(el.querySelector('.js-map'), {
             'center': [53, -2.3],
             //'maxBounds': [[50, -6.5], [56, 1.8]],
             'zoom': 7

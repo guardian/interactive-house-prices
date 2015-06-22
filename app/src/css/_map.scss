@@ -1,5 +1,10 @@
 @import "lib/leaflet";
 
+.map {
+    width: 100%;
+    height: 100%;
+}
+
 .leaflet-overlay-pane img {
     pointer-events: none;
 }

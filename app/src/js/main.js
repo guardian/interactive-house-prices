@@ -11,7 +11,7 @@ function init(el, config) {
 
     el.innerHTML = mainHTML;
     var map = new Map(el);
-    var user = new User(el, map.update.bind(map));
+    var user = new User(el.querySelector('.js-user'), map.update.bind(map));
 }
 
 (window.define || System.amdDefine)(function() { return {init: init}; });
