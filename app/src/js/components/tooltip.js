@@ -1,4 +1,5 @@
 import { getRegionPrices } from '../lib/region'
+import debounce from '../lib/debounce'
 
 import areaName from '../data/areas-name.json!json'
 import wageYear from '../data/wages.json!json'
@@ -22,23 +23,20 @@ export default class Tooltip {
         this.maxEl = el.querySelector('.js-max');
         this.salaryEls = Array.from(el.querySelectorAll('.js-salary'));
 
-        var resize = (function () {
-            var timer;
-            return function () {
-                if (!this.hidden) this.hide();
+        var resize = debounce(function () {
+            window.requestAnimationFrame(() => {
+                this.viewWidth = window.innerWidth;
+                this.viewHeight = window.innerHeight;
+            });
+        }.bind(this), 200);
 
-                if (timer) clearTimeout(timer);
-                timer = setTimeout(() => {
-                    window.requestAnimationFrame(() => {
-                        this.viewWidth = window.innerWidth;
-                        this.viewHeight = window.innerHeight;
-                    });
-                }, 100);
-            };
-        })();
+        window.addEventListener('resize', () => {
+            if (!this.hidden) this.hide();
+            resize();
+        });
 
-        window.addEventListener('resize', resize.bind(this));
-        resize.apply(this);
+        resize();
+        this.hide();
     }
 
     show(evt, data) {

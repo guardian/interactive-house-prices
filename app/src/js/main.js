@@ -8,12 +8,8 @@ import mainHTML from './text/main.html!text'
 
 function init(el, config) {
     setConfig(config);
+
     el.innerHTML = mainHTML;
-
-    if (!('mix-blend-mode' in document.documentElement.style)) {
-        el.className += ' no-blend-mode';
-    }
-
     var map = new Map(el);
     var user = new User(el, map.update.bind(map));
 }

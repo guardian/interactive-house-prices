@@ -4,6 +4,9 @@ var zlib = require('zlib');
 var _ = require('lodash');
 var humanize = require('humanize');
 var topojson = require('topojson');
+var d3 = require('d3');
+require("d3-geo-projection")(d3);
+
 var moment = require('moment');
 require('moment-range');
 
@@ -13,15 +16,15 @@ moment.range('2014-01-01', '2015-03-01').by('months', function (d) {
 });
 
 var types = [
-    {
+    /*{
         'name': 'areas',
         'groupFn': function () { return 'areas'; },
         'simplify': 0.1
-    },
+    },*/
     {
         'name': 'districts',
         'groupFn': function (id) { return 'districts'; },//return id.replace(/[0-9].*/, ''); }, // AA9A -> AA
-        'simplify': 0.1
+        'simplify': 0.5
     }
 ].filter(function (type) { return process.argv.length === 2 || process.argv.indexOf(type.name) !== -1 });
 
@@ -37,19 +40,33 @@ function readCSV(file) {
         });
 }
 
+function cartesianTriangleArea(triangle) {
+    var a = triangle[0], b = triangle[1], c = triangle[2];
+    return Math.abs((a[0] - c[0]) * (b[1] - a[1]) - (a[0] - b[0]) * (c[1] - a[1]));
+}
+
 function geo2topo(features, simplify, propertyTransform) {
     var geo = {'shapes': {'features': features, 'type': 'FeatureCollection'}};
     var options = {
-        'coordinate-system': 'cartesian',
         'id': function (d) { return d.properties.name; },
+        'coordinate-system': 'cartesian',
         'property-transform': propertyTransform,
         'pre-quantization': 1e8,
         'post-quantization': 1e4,
         'retain-proportion': simplify
     };
+
+    //geo.shapes = d3.geo.project(geo.shapes, d3.geo.mercator());
     var topo = topojson.topology(geo, options);
+    //topojson.scale(topo, {'width': 900, 'height': 900, 'invert': false});
     topojson.simplify(topo, options);
     topojson.filter(topo, options);
+    /*topojson.presimplify(topo, function (triangle) {
+        var area = cartesianTriangleArea(triangle);
+        // TODO: quantize
+        return area;
+    });*/
+    delete topo.bbox;
     return topo;
 };
 
@@ -61,7 +78,6 @@ types.forEach(function (type) {
 
     // Reduce prices to a flat object of id to prices
     // e.g. {'AA': [12345, ...], ...}
-    // TODO: add missing months
     var pricesById = _(prices)
         .groupBy('id')
         .mapValues(function (price) {
@@ -86,7 +102,7 @@ types.forEach(function (type) {
             'prices': pricesById[d.properties.name]
         };
     });
-    var arcs = topo.arcs//_.cloneDeep(topo.arcs);
+    var arcs = topo.arcs;
 
     // Split into groups and write files
     var groups = _(topo.objects.shapes.geometries)

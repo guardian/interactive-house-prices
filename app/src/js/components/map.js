@@ -5,7 +5,7 @@ import Tooltip from './tooltip'
 
 const colors = ['#39a4d8', '#8ac7cd', '#daeac1', '#fff181', '#fdd09e', '#f58680', '#ed3d61'];
 
-function groupBy(objs, fn) {
+/*function groupBy(objs, fn) {
     var ret = {};
     objs.forEach(function (obj) {
         var k = fn(obj);
@@ -13,7 +13,7 @@ function groupBy(objs, fn) {
         ret[k].push(obj);
     });
     return ret;
-}
+}*/
 
 function tileLayer(id, pane='tilePane') {
     return L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
@@ -27,25 +27,23 @@ function tileLayer(id, pane='tilePane') {
 }
 
 export default class Map {
-    constructor(el) {
-        this.map = L.map('map', {
+    constructor(root) {
+        var el = root.querySelector('#map');
+        this.map = L.map(el, {
             'center': [53, -2.3],
             //'maxBounds': [[50, -6.5], [56, 1.8]],
             'zoom': 7
         });
-        this.map.on('moveend', this.onMoveEnd.bind(this));
+        //this.map.on('moveend', this.onMoveEnd.bind(this));
 
-        this.tooltip = new Tooltip(el);
-
-        // Map Layer
-        tileLayer('guardian.b71bdefa').addTo(this.map);
+        this.tooltip = new Tooltip(root);
 
         // Region layer
         this.regionLayer = L.geoJson(undefined, {
             className: 'map-regions',
             renderer: L.canvas(),
-            style: this.setStyle.bind(this),
             onEachFeature: (feature, layer) => {
+                // TODO: stop tooltip hiding
                 layer.on({
                     mouseover: evt => this.tooltip.show(evt, this.data)
                     //mouseout: () => this.tooltip.hide()
@@ -56,10 +54,10 @@ export default class Map {
         getRegion('districts', 'districts').then(geo => this.regionLayer.addData(geo));
 
         // Label layer
-        this.map.createPane('labelPane');
-        tileLayer('guardian.8c876c82', 'labelPane').addTo(this.map);
+        tileLayer('guardian.b71bdefa', 'overlayPane').addTo(this.map);
     }
 
+    /*
     getRegionType() {
         return this.map.getZoom() > 9 ? 'districts' : 'areas';
     }
@@ -86,30 +84,28 @@ export default class Map {
                 }
             });
         });
-    }
-
-    setStyle(region) {
-        var price = getRegionPrices(region, this.data.year, this.data.month).avg;
-        var ratio = price / this.data.threshold;
-
-        var colorIndex = 0;
-        if (ratio > 4) colorIndex++;
-        if (ratio > 6) colorIndex++;
-        if (ratio > 7) colorIndex++;
-        if (ratio > 8) colorIndex++;
-        if (ratio > 9) colorIndex++;
-        if (ratio > 12) colorIndex++;
-
-        return {
-            'stroke': 0,
-            'fillColor': colors[colorIndex],
-            'fillOpacity': 1
-        };
-    }
+    }*/
 
     update(data) {
-        this.data = data;
-        // Refresh regions
-        this.regionLayer.setStyle(this.setStyle.bind(this));
+        this.regionLayer.options.style = function (region) {
+            var price = getRegionPrices(region, data.year, data.month).avg;
+            var ratio = price / data.threshold;
+
+            var colorIndex = 0;
+            if (ratio > 4) colorIndex++;
+            if (ratio > 6) colorIndex++;
+            if (ratio > 7) colorIndex++;
+            if (ratio > 8) colorIndex++;
+            if (ratio > 9) colorIndex++;
+            if (ratio > 12) colorIndex++;
+
+            return {
+                'stroke': 0,
+                'fillColor': colors[colorIndex],
+                'fillOpacity': 1
+            };
+        };
+
+        this.regionLayer.eachLayer(region => this.regionLayer.resetStyle(region));
     }
 }
