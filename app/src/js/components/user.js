@@ -31,6 +31,6 @@ export default class User {
         /*this.yearEl.textContent = year;
         this.monthEl.textContent = month < 10 ? '0' + month : month;*/
 
-        this.onUpdate({'year': year, 'month': month, 'threshold': 40000});
+        this.onUpdate({'year': year, 'month': month, 'threshold': 25000});
     }
 }

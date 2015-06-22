@@ -8,7 +8,7 @@ const min = 7000;
 const max = 50000000;
 
 const tooltipWidth = 256;
-const tooltipHeight = 128;
+const tooltipHeight = 200;
 
 export default class Tooltip {
     constructor(root) {
@@ -62,8 +62,8 @@ export default class Tooltip {
         this.maxEl.textContent = prices.max.toLocaleString();
         this.salaryEls.forEach(el => el.textContent = salary.toLocaleString());
 
-        var x = evt.originalEvent.screenX;
-        var y = evt.originalEvent.screenY - tooltipHeight;
+        var x = evt.containerPoint.x;
+        var y = evt.containerPoint.y;// - tooltipHeight;
         if (x + tooltipWidth > this.viewWidth) {
             x -= tooltipWidth;
         }

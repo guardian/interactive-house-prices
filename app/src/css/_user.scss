@@ -1,0 +1,64 @@
+.user {
+    @include f-bodyCopy;
+
+    position: absolute;
+    z-index: 10;
+    margin: 0 auto;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 0;
+
+    // TODO: the rest of the breakpoints
+    @include mq(wide) {
+        width: map-get($mq-breakpoints, wide);
+    }
+}
+
+.user__inner {
+    width: 400px;
+    margin: 0 0 0 auto;
+    background-color: rgba(255, 255, 255, 0.95);
+    padding: 20px;
+}
+
+.title {
+    @include f-bodyHeading;
+    font-weight: normal;
+    font-size: 38px;
+    line-height: 1;
+    margin-bottom: 20px;
+}
+
+.subtitle {
+    @include f-header;
+    font-size: 14px;
+    margin-bottom: 3px;
+}
+
+.madlib {
+    font-size: 20px;
+    color: #767676;
+}
+
+.madlib__input {
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: bold;
+    color: #333;
+    background: 0;
+    border: 0;
+    border-bottom: 2px dotted black;
+    margin: 0;
+    padding: 0 0 0 5px;
+    outline: 0;
+
+    &#your_wage {
+        width: 200px;
+    }
+
+    &#your_multiplier {
+        width: 100px;
+    }
+}
+
