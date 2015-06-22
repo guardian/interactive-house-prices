@@ -5229,7 +5229,7 @@ L.Polyline = L.Path.extend({
 		var minDistance = Infinity,
 		    minPoint = null,
 		    closest = L.LineUtil._sqClosestPointOnSegment,
-		    p1, p2;
+		    p1, p2;p
 
 		for (var j = 0, jLen = this._parts.length; j < jLen; j++) {
 			var points = this._parts[j];
@@ -5361,15 +5361,19 @@ L.Polyline = L.Path.extend({
 
 	// clip polyline by renderer bounds so that we have less to render for performance
 	_clipPoints: function () {
+        var bounds = this._renderer._bounds;
+
+		this._parts = [];
+		if (!this._pxBounds || !this._pxBounds.intersects(bounds)) {
+			return;
+		}
+
 		if (this.options.noClip) {
 			this._parts = this._rings;
 			return;
 		}
 
-		this._parts = [];
-
 		var parts = this._parts,
-		    bounds = this._renderer._bounds,
 		    i, j, k, len, len2, segment, points;
 
 		for (i = 0, k = 0, len = this._rings.length; i < len; i++) {
@@ -5394,7 +5398,6 @@ L.Polyline = L.Path.extend({
 
 	// simplify each clipped part of the polyline for performance
 	_simplifyPoints: function () {
-        return;
 		var parts = this._parts,
 			tolerance = this.options.smoothFactor;
 
@@ -5407,8 +5410,10 @@ L.Polyline = L.Path.extend({
 		if (!this._map) { return; }
 
 		this._clipPoints();
-		this._simplifyPoints();
-		this._updatePath();
+        if (this._parts.length !== 0) {
+            this._simplifyPoints();
+            this._updatePath();
+        }
 	},
 
 	_updatePath: function () {
@@ -6288,7 +6293,13 @@ L.Canvas = L.Renderer.extend({
 	_handleHover: function (layer, e, point) {
 		if (!layer.options.interactive) { return; }
 
-		if (layer._containsPoint(point)) {
+        var contains = layer._containsPoint(point);
+        if (!contains && layer._mouseInside) {
+			// if we're leaving the layer, fire mouseout
+			L.DomUtil.removeClass(this._container, 'leaflet-interactive');
+			this._fireEvent(layer, e, 'mouseout');
+			layer._mouseInside = false;
+        } else if (contains) {
 			// if we just got inside the layer, fire mouseover
 			if (!layer._mouseInside) {
 				L.DomUtil.addClass(this._container, 'leaflet-interactive'); // change cursor
@@ -6297,12 +6308,6 @@ L.Canvas = L.Renderer.extend({
 			}
 			// fire mousemove
 			this._fireEvent(layer, e);
-
-		} else if (layer._mouseInside) {
-			// if we're leaving the layer, fire mouseout
-			L.DomUtil.removeClass(this._container, 'leaflet-interactive');
-			this._fireEvent(layer, e, 'mouseout');
-			layer._mouseInside = false;
 		}
 	},
 

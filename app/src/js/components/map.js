@@ -27,16 +27,15 @@ function tileLayer(id, pane='tilePane') {
 }
 
 export default class Map {
-    constructor(root) {
-        var el = root.querySelector('#map');
-        this.map = L.map(el, {
+    constructor(el) {
+        this.map = L.map('map', {
             'center': [53, -2.3],
             //'maxBounds': [[50, -6.5], [56, 1.8]],
             'zoom': 7
         });
         //this.map.on('moveend', this.onMoveEnd.bind(this));
 
-        this.tooltip = new Tooltip(root);
+        this.tooltip = new Tooltip(el);
 
         // Region layer
         this.regionLayer = L.geoJson(undefined, {
