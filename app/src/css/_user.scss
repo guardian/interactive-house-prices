@@ -62,3 +62,34 @@
     }
 }
 
+.result {
+    @include f-header;
+    font-weight: bold;
+}
+
+.result__color {
+    .result--bad & {
+        color: #ed3d61;
+    }
+    .result--good & {
+        color: #39a4d8;
+    }
+}
+
+.share-container {
+    @include f-textSans;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 30px;
+
+    border-top: 1px solid #dfdfdf;
+    padding-top: 10px;
+
+    p {
+        margin: 0;
+    }
+}
+
+.share {
+    float: right;
+}
