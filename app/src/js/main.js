@@ -4,7 +4,7 @@ import './lib/pointer-events'
 import Map from './components/map'
 import User from './components/user'
 
-import mainHTML from './text/main.html!text'
+import mainHTML from './templates/main.html!text'
 
 function init(el, config) {
     setConfig(config);
