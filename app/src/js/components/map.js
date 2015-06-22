@@ -35,7 +35,7 @@ export default class Map {
         });
         //this.map.on('moveend', this.onMoveEnd.bind(this));
 
-        this.tooltip = new Tooltip(el);
+        this.tooltip = new Tooltip(el.querySelector('.js-tooltip'));
 
         // Region layer
         this.regionLayer = L.geoJson(undefined, {
@@ -86,6 +86,8 @@ export default class Map {
     }*/
 
     update(data) {
+        this.data = data;
+
         this.regionLayer.options.style = function (region) {
             var price = getRegionPrices(region, data.year, data.month).avg;
             var ratio = price / data.threshold;
@@ -105,6 +107,7 @@ export default class Map {
             };
         };
 
+        // TODO: only update regions that need updating
         this.regionLayer.eachLayer(region => this.regionLayer.resetStyle(region));
     }
 }

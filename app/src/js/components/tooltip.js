@@ -1,8 +1,8 @@
 import { getRegionPrices } from '../lib/region'
 import debounce from '../lib/debounce'
 
+import template from './templates/tooltip.html!text'
 import areaName from '../data/areas-name.json!json'
-import wageYear from '../data/wages.json!json'
 
 const min = 7000;
 const max = 50000000;
@@ -12,7 +12,9 @@ const tooltipHeight = 128;
 
 export default class Tooltip {
     constructor(el) {
-        this.el = el.querySelector('.js-tooltip');
+        this.el = el;
+        this.el.innerHTML = template;
+
         this.regionEl = el.querySelector('.js-region');
         this.resultEl = el.querySelector('.js-result');
         this.range1El = el.querySelector('.js-range1');
