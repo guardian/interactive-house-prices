@@ -8,3 +8,57 @@
 .leaflet-overlay-pane img {
     pointer-events: none;
 }
+
+.range {
+    @include fs-textSans(2);
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.8);
+    z-index: 10;
+    bottom: 20px;
+    left: 20px;
+    width: 200px;
+}
+
+.range__desc {
+    font-weight: bold;
+    margin: 0;
+    padding: 3px;
+}
+
+$pips: (
+    0: #39a4d8,
+    4: #8ac7cd,
+    6: #daeac1,
+    8: #fff181,
+    10: #fdd09e,
+    12: #f58680,
+    14: #ed3d61
+);
+
+.range__pips {
+    margin-bottom: 25px;
+}
+
+.range__pips__pip {
+    position: relative;
+    float: left;
+    height: 6px;
+    width: (100% / length($pips));
+    color: #767676;
+}
+
+@each $no, $color in $pips {
+    .range__pips__pip[data-range='#{$no}'] {
+        background-color: $color;
+        @if $no != 0 {
+            &::after {
+                position: absolute;
+                left: -100%;
+                right: 0;
+                top: 8px;
+                text-align: center;
+                content: "#{$no}";
+            }
+        }
+    }
+}
