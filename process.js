@@ -58,7 +58,6 @@ function geo2topo(features, simplify, propertyTransform) {
 
     //geo.shapes = d3.geo.project(geo.shapes, d3.geo.mercator());
     var topo = topojson.topology(geo, options);
-    //topojson.scale(topo, {'width': 900, 'height': 900, 'invert': false});
     topojson.simplify(topo, options);
     topojson.filter(topo, options);
     /*topojson.presimplify(topo, function (triangle) {
