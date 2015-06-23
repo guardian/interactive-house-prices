@@ -14,10 +14,8 @@ L.LineUtil.simplify = function (points, tolerance) {
 }.bind(this);
 
 L.Polyline.prototype._projectLatlngs = function (latlngs, result) {
-    var flat = latlngs[0] instanceof L.LatLng,
-        zoom = this._map.getZoom();
-
-    if (flat) {
+    var zoom = this._map.getZoom();
+    if (latlngs[0] instanceof L.LatLng) {
         latlngs = latlngs.filter((latlng) => !latlng.alt || latlng.alt <= zoom);
     }
     projectLatlngs.call(this, latlngs, result);
