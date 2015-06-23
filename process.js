@@ -24,7 +24,7 @@ var types = [
     {
         'name': 'districts',
         'groupFn': function (id) { return 'districts'; },//return id.replace(/[0-9].*/, ''); }, // AA9A -> AA
-        'simplify': 0.5
+        'simplify': 0.4
     }
 ].filter(function (type) { return process.argv.length === 2 || process.argv.indexOf(type.name) !== -1 });
 
@@ -56,15 +56,33 @@ function geo2topo(features, simplify, propertyTransform) {
         'retain-proportion': simplify
     };
 
+    var zooms = {};
+
     //geo.shapes = d3.geo.project(geo.shapes, d3.geo.mercator());
     var topo = topojson.topology(geo, options);
     topojson.simplify(topo, options);
     topojson.filter(topo, options);
-    /*topojson.presimplify(topo, function (triangle) {
+    topojson.presimplify(topo, function (triangle) {
         var area = cartesianTriangleArea(triangle);
-        // TODO: quantize
-        return area;
-    });*/
+        var zoom = 4;
+        while ((1 / Math.pow(10, zoom)) > area && zoom <= 9) {
+            zoom++;
+        }
+
+        if (zoom > 4) {
+            zoom += 1;
+        }
+
+        zoom += 3; // Base zoom is 7
+
+        if (!zooms[zoom]) zooms[zoom] = 0;
+        zooms[zoom]++;
+
+        return zoom;
+    });
+
+    console.log(zooms);
+
     delete topo.bbox;
     return topo;
 };

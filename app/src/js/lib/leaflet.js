@@ -1,5 +1,5 @@
 /*
- Leaflet 1.0-dev (a5f82ea), a JS library for interactive maps. http://leafletjs.com
+ Leaflet 1.0-dev (1c9c2df), a JS library for interactive maps. http://leafletjs.com
  (c) 2010-2015 Vladimir Agafonkin, (c) 2010-2011 CloudMade
 */
 (function (window, document, undefined) {
@@ -5229,7 +5229,7 @@ L.Polyline = L.Path.extend({
 		var minDistance = Infinity,
 		    minPoint = null,
 		    closest = L.LineUtil._sqClosestPointOnSegment,
-		    p1, p2;p
+		    p1, p2;
 
 		for (var j = 0, jLen = this._parts.length; j < jLen; j++) {
 			var points = this._parts[j];
@@ -5361,7 +5361,7 @@ L.Polyline = L.Path.extend({
 
 	// clip polyline by renderer bounds so that we have less to render for performance
 	_clipPoints: function () {
-        var bounds = this._renderer._bounds;
+		var bounds = this._renderer._bounds;
 
 		this._parts = [];
 		if (!this._pxBounds || !this._pxBounds.intersects(bounds)) {
@@ -5410,10 +5410,8 @@ L.Polyline = L.Path.extend({
 		if (!this._map) { return; }
 
 		this._clipPoints();
-        if (this._parts.length !== 0) {
-            this._simplifyPoints();
-            this._updatePath();
-        }
+		this._simplifyPoints();
+		this._updatePath();
 	},
 
 	_updatePath: function () {
@@ -5553,11 +5551,6 @@ L.Polygon = L.Polyline.extend({
 	},
 
 	_clipPoints: function () {
-		if (this.options.noClip) {
-			this._parts = this._rings;
-			return;
-		}
-
 		// polygons need a different clipping algorithm so we redefine that
 
 		var bounds = this._renderer._bounds,
@@ -5569,6 +5562,11 @@ L.Polygon = L.Polyline.extend({
 
 		this._parts = [];
 		if (!this._pxBounds || !this._pxBounds.intersects(bounds)) {
+			return;
+		}
+
+		if (this.options.noClip) {
+			this._parts = this._rings;
 			return;
 		}
 
@@ -5987,7 +5985,10 @@ L.SVG.include(!L.Browser.vml ? {} : {
 	_addPath: function (layer) {
 		var container = layer._container;
 		this._container.appendChild(container);
-		layer.addInteractiveTarget(container);
+
+		if (layer.options.interactive) {
+			layer.addInteractiveTarget(container);
+		}
 	},
 
 	_removePath: function (layer) {
@@ -6100,7 +6101,7 @@ L.Canvas = L.Renderer.extend({
 		var container = this._container = document.createElement('canvas');
 
 		L.DomEvent
-			.on(container, 'mousemove', this._onMouseMove, this)
+			.on(container, 'mousemove', L.Util.throttle(this._onMouseMove, 66, this), this)
 			.on(container, 'click dblclick mousedown mouseup contextmenu', this._onClick, this);
 
 		this._ctx = container.getContext('2d');
@@ -6109,27 +6110,10 @@ L.Canvas = L.Renderer.extend({
 	_update: function () {
 		if (this._map._animatingZoom && this._bounds) { return; }
 
+		this._fills = {};
+		this._drawnLayers = [];
+
 		L.Renderer.prototype._update.call(this);
-
-		var b = this._bounds,
-		    container = this._container,
-		    size = b.getSize(),
-		    m = L.Browser.retina ? 2 : 1;
-
-		L.DomUtil.setPosition(container, b.min);
-
-		// set canvas size (also clearing it); use double size on retina
-		container.width = m * size.x;
-		container.height = m * size.y;
-		container.style.width = size.x + 'px';
-		container.style.height = size.y + 'px';
-
-		if (L.Browser.retina) {
-			this._ctx.scale(2, 2);
-		}
-
-		// translate so we use the same path coordinates after canvas element moves
-		this._ctx.translate(-b.min.x, -b.min.y);
 	},
 
 	_initPath: function (layer) {
@@ -6190,30 +6174,70 @@ L.Canvas = L.Renderer.extend({
 		}
 	},
 
+	_deferredUpdate: function () {
+		var container = this._container,
+			b = this._bounds,
+		    size = b.getSize(),
+		    m = L.Browser.retina ? 2 : 1;
+
+		// set canvas size (also clearing it); use double size on retina
+		container.width = m * size.x;
+		container.height = m * size.y;
+		container.style.width = size.x + 'px';
+		container.style.height = size.y + 'px';
+
+		L.DomUtil.setPosition(this._container, b.min);
+
+		if (L.Browser.retina) {
+			this._ctx.scale(2, 2);
+		}
+
+		// translate so we use the same path coordinates after canvas element moves
+		this._ctx.translate(-b.min.x, -b.min.y);
+
+		for (var color in this._fills) {
+			this._updatePolys(color, this._fills[color]);
+		}
+
+		this._deferredUpdateRequest = null;
+	},
+
+	_updatePolys: function (color, polys) {
+		var ctx = this._ctx;
+		var polyI, polyLen = polys.length;
+		var parts, partsI, partsLen, partI, partLen, p;
+
+		ctx.fillStyle = color;
+
+		for (polyI = 0; polyI < polyLen; polyI++) {
+			ctx.beginPath();
+			parts = polys[polyI]._parts;
+			partsLen = parts.length;
+			for (partsI = 0; partsI < partsLen; partsI++) {
+				for (partI = 0, partLen = parts[partsI].length; partI < partLen; partI++) {
+					p = parts[partsI][partI];
+					ctx[partI ? 'lineTo' : 'moveTo'](p.x, p.y);
+				}
+				ctx.closePath();
+			}
+			ctx.fill();
+		}
+	},
+
 	_updatePoly: function (layer, closed) {
 
-		var i, j, len2, p,
-		    parts = layer._parts,
-		    len = parts.length,
-		    ctx = this._ctx;
+		var parts = layer._parts,
+		    len = parts.length;
 
 		if (!len) { return; }
 
-		ctx.beginPath();
+		var color = layer.options.fillColor;
+		if (!this._fills[color]) { this._fills[color] = []; }
+		this._fills[color].push(layer);
 
-		for (i = 0; i < len; i++) {
-			for (j = 0, len2 = parts[i].length; j < len2; j++) {
-				p = parts[i][j];
-				ctx[j ? 'lineTo' : 'moveTo'](p.x, p.y);
-			}
-			if (closed) {
-				ctx.closePath();
-			}
-		}
+		this._deferredUpdateRequest = this._deferredUpdateRequest || L.Util.requestAnimFrame(this._deferredUpdate, this);
 
-		this._fillStroke(ctx, layer);
-
-		// TODO optimization: 1 fill/stroke for all features with equal style instead of 1 for each feature
+		this._drawnLayers.push(layer);
 	},
 
 	_updateCircle: function (layer) {
@@ -6280,26 +6304,19 @@ L.Canvas = L.Renderer.extend({
 	},
 
 	_onMouseMove: function (e) {
-		if (!this._map || this._map._animatingZoom) { return; }
+		if (!this._map || this._map.dragging._draggable._moving || this._map._animatingZoom) { return; }
 
 		var point = this._map.mouseEventToLayerPoint(e);
 
-		// TODO don't do on each move event, throttle since it's expensive
-		for (var id in this._layers) {
-			this._handleHover(this._layers[id], e, point);
+		for (var id in this._drawnLayers) {
+			this._handleHover(this._drawnLayers[id], e, point);
 		}
 	},
 
 	_handleHover: function (layer, e, point) {
 		if (!layer.options.interactive) { return; }
 
-        var contains = layer._containsPoint(point);
-        if (!contains && layer._mouseInside) {
-			// if we're leaving the layer, fire mouseout
-			L.DomUtil.removeClass(this._container, 'leaflet-interactive');
-			this._fireEvent(layer, e, 'mouseout');
-			layer._mouseInside = false;
-        } else if (contains) {
+		if (layer._containsPoint(point)) {
 			// if we just got inside the layer, fire mouseover
 			if (!layer._mouseInside) {
 				L.DomUtil.addClass(this._container, 'leaflet-interactive'); // change cursor
@@ -6308,6 +6325,12 @@ L.Canvas = L.Renderer.extend({
 			}
 			// fire mousemove
 			this._fireEvent(layer, e);
+
+		} else if (layer._mouseInside) {
+			// if we're leaving the layer, fire mouseout
+			L.DomUtil.removeClass(this._container, 'leaflet-interactive');
+			this._fireEvent(layer, e, 'mouseout');
+			layer._mouseInside = false;
 		}
 	},
 
