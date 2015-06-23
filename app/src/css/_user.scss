@@ -9,8 +9,11 @@
     right: 0;
     height: 0;
 
+    display: none;
+
     // TODO: the rest of the breakpoints
     @include mq(wide) {
+        display: block;
         width: map-get($mq-breakpoints, wide);
     }
 }

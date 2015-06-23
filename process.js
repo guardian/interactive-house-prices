@@ -45,7 +45,7 @@ function cartesianTriangleArea(triangle) {
     return Math.abs((a[0] - c[0]) * (b[1] - a[1]) - (a[0] - b[0]) * (c[1] - a[1]));
 }
 
-function geo2topo(features, simplify, propertyTransform) {
+function geo2topo(features, retainProportion, propertyTransform) {
     var geo = {'shapes': {'features': features, 'type': 'FeatureCollection'}};
     var options = {
         'id': function (d) { return d.properties.name; },
@@ -53,35 +53,32 @@ function geo2topo(features, simplify, propertyTransform) {
         'property-transform': propertyTransform,
         'pre-quantization': 1e8,
         'post-quantization': 1e4,
-        'retain-proportion': simplify
+        'retain-proportion': retainProportion
     };
 
-    var zooms = {};
-
+    // TODO: preproject?
     //geo.shapes = d3.geo.project(geo.shapes, d3.geo.mercator());
+
     var topo = topojson.topology(geo, options);
     topojson.simplify(topo, options);
     topojson.filter(topo, options);
     topojson.presimplify(topo, function (triangle) {
         var area = cartesianTriangleArea(triangle);
+
+        // This might all look a bit arbitrary, thats because it pretty much is
         var zoom = 4;
         while ((1 / Math.pow(10, zoom)) > area && zoom <= 9) {
             zoom++;
         }
 
+        // Basically don't allow zoom 5, because 4 and 5 are the same view (before the
+        // buildup is overlaid) so it makes sense to keep them the same
         if (zoom > 4) {
             zoom += 1;
         }
 
-        zoom += 3; // Base zoom is 7
-
-        if (!zooms[zoom]) zooms[zoom] = 0;
-        zooms[zoom]++;
-
-        return zoom;
+        return zoom + 3; // The base map zoom is 7
     });
-
-    console.log(zooms);
 
     delete topo.bbox;
     return topo;
