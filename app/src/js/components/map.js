@@ -6,9 +6,10 @@ import User from './user'
 
 const colors = ['#39a4d8', '#8ac7cd', '#daeac1', '#fff181', '#fdd09e', '#f58680', '#ed3d61'];
 
-var projectLatlngs = L.Polyline.prototype._projectLatlngs;
 
 // Hacky way of using presimplified TopoJSON
+var projectLatlngs = L.Polyline.prototype._projectLatlngs;
+
 L.LineUtil.simplify = function (points, tolerance) {
     return points;
 }.bind(this);
@@ -16,7 +17,7 @@ L.LineUtil.simplify = function (points, tolerance) {
 L.Polyline.prototype._projectLatlngs = function (latlngs, result) {
     var zoom = this._map.getZoom();
     if (latlngs[0] instanceof L.LatLng) {
-        latlngs = latlngs.filter((latlng) => !latlng.alt || latlng.alt <= zoom);
+        latlngs = latlngs.filter(latlng => !latlng.alt || latlng.alt <= zoom);
     }
     projectLatlngs.call(this, latlngs, result);
 };
@@ -34,7 +35,7 @@ export default class Map {
         this.regionLayer = L.geoJson(undefined, {
             renderer: L.canvas(),
             onEachFeature: (feature, layer) => {
-                // TODO: stop tooltip hiding
+                // TODO: tooltip hiding
                 layer.on({
                     mouseover: evt => this.tooltip.show(evt, this.data)
                     //mouseout: () => this.tooltip.hide()

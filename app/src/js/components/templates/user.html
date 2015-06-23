@@ -3,7 +3,7 @@
     <h1 class="title">Unaffordable country</h1>
     <p class="madlib">
         If you earned
-        <input class="madlib__input" id="your_wage" type="text" />
+        <input class="madlib__input" id="wage" type="text" />
         and wanted to buy a house
     </p>
     <p class="result result--bad">
@@ -11,6 +11,10 @@
             XX% of the country</span>,
         which has gone up by <span class="result__color">XX%</span> since 1995
     </p>
+
+    <div class="daterange">
+        <input type="range" min="0" max="100" value="0" id="date" />
+    </div>
 
     <div class="share-container">
         <button class="share share--mail"></button>
