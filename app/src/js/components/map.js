@@ -64,7 +64,7 @@ export default class Map {
         this.data = data;
 
         this.regionLayer.options.style = function (region) {
-            var price = getRegionPrices(region, data.year, data.month).avg;
+            var price = getRegionPrices(region, data.year, data.month).med;
             var ratio = price / data.threshold;
 
             var colorIndex = 0;
