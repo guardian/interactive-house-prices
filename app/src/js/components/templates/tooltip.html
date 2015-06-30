@@ -1,20 +1,35 @@
-<p class="region js-region"></p>
-<div class="detail">
-    <div class="legend"></div>
-    <span class="js-min"></span>
-    <span class="js-avg"></span>
-    <span class="js-max f-r"></span>
+<h3 class="bb">
+    <span class="fz-24 c-grey3 js-district"></span> |
+    <span class="fz-16 js-area"></span>
+</h3>
+
+<p><b>number of sales: </b><span class="js-num">XX</span></p>
+
+<p><b>summary: </b></p>
+<div class="chart mt-15">
+    <!-- hack for extra space using inline-block -->
+    <div class="range-pipe-l"></div
+   ><div class="range-pipe-s"></div
+   ><div class="range-pipe-r"></div>
+    <!-- markers -->
+    <div class="marker-salary"></div>
+    <div class="marker-med"></div>
+    <div class="marker-min"></div>
+    <div class="marker-max"></div>
 </div>
-<p class="compte">
-    <span class="js-salary"></span> X 6 =
-    <span class="js-range1"></span>
+<div class="chart-label">
+    <div class="f-l">
+        <span class="js-salary"></span> * 
+    </div> 
+    <div class="f-r"> |
+        <span class="js-min"></span> - 
+        <span class="js-med"></span> - 
+        <span class="js-max"></span> |
+    </div>
+</div>
+<p><b>mortgage factor: </b><br>
+    <span class="js-med"></span> (med) /
+    <span class="js-salary"></span> (salary) =
+    <span class="js-factor"></span>
 </p>
-<p class="compte">
-    <span class="js-salary"></span> X
-    <span class="js-factor"></span> =
-    <span class="js-result"></span>
-</p>
-<p class="compte">
-    <span class="js-salary"></span> X 12 =
-    <span class="js-range2"></span>
-</p>
+

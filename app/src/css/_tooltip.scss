@@ -1,39 +1,80 @@
+$c-neutral-2: #767676;
+$c-neutral-3: #bdbdbd;
+$c-neutral-5: #dfdfdf;
+
+
 // atomic
+.c-grey3 { color: $c-neutral-3; }
+
+.fz-16 { font-size: 16px; }
+.fz-24 { font-size: 24px; }
+
+.f-l { float: left; }
 .f-r { float: right; }
+
+.bb { border-bottom: 1px solid $c-neutral-5; }
+
+.mt-15 { margin-top: 15px; }
+
 
 // tooptip
 .tooltip {
-    font-family: $f-data;
+    @include fs-textSans(2);
     background-color: rgba(255,255,255,0.8);
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 256px;
+
+    width: 300px;
     height: 200px;
     box-sizing: border-box;
     padding: 10px;
-    z-index: 5;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 11; //range is 10 
+
     pointer-events: none;
     user-select: none; 
 
-    p {
-        margin: 0; 
+    h3 { margin: .5em 0; }
+    p  { margin: 0; }
+    
+    .chart {
+        overflow: hidden;
+        white-space: nowrap;
+        position: relative;
+    }    
+    .chart-label {
+        height: 30px;    
     }
-}
 
-.legend {
-    //background-image: linear-gradient(to right, #69d1ca, #ffce4b, #dc2a7d);
-    background-image: linear-gradient(to right, #f6f6f6, #bdbdbd, #767676, #333);
-    height: 10px;
-}
-.region {
-    font-weight: bold;
-}
-.detail {
-    color: #767676; //neural-2
-    font-size: 12px;
-    margin: 10px 0;
-}
-.compte {
-    font-size: 14px;
+    [class^="range-pipe"] {
+        height: 10px;
+        display: inline-block;
+    }
+    .range-pipe-l {
+        background-color: #39a4d8;
+    }
+    .range-pipe-r {
+        width: 100%;
+        background-color: #ed3d61;
+    }
+    .range-pipe-s {
+        transition: all 0.25s ease;
+        background-image: linear-gradient(90deg,
+            #8ac7cd  0%, #8ac7cd 20%,
+            #daeac1 20%, #daeac1 40%, 
+            #fff181 40%, #fff181 60%,
+            #fdd09e 60%, #fdd09e 80%, 
+            #f58680 80%, #f58680 100%
+        );
+    } 
+
+    [class^="marker"] {
+        border-left: 1px solid black;        
+        height: 20px;
+        position: absolute;
+        top: 0;
+    }
+    .marker-max {
+        left: 99.8%;
+    }
 }
