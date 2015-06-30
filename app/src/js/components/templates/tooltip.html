@@ -1,4 +1,4 @@
-<h3 class="bb">
+<h3 class="bb-s">
     <span class="fz-24 c-grey3 js-district"></span> |
     <span class="fz-16 js-area"></span>
 </h3>
@@ -6,30 +6,38 @@
 <p><b>number of sales: </b><span class="js-num">XX</span></p>
 
 <p><b>summary: </b></p>
-<div class="chart mt-15">
+<div class="chart">
+    <!-- labels -->
+    <div class="fz-11">
+        <span class="label-min js-min"></span> - 
+        <span class="f-r">- - <span class="js-max"></span></span>
+    </div>
+    <!-- ranges -->
     <!-- hack for extra space using inline-block -->
-    <div class="range-pipe-l"></div
-   ><div class="range-pipe-s"></div
-   ><div class="range-pipe-r"></div>
+    <div>
+        <div class="range-pipe-l"></div
+       ><div class="range-pipe-s"></div
+       ><div class="range-pipe-r"></div>
+    </div>
     <!-- markers -->
-    <div class="marker-salary"></div>
-    <div class="marker-med"></div>
-    <div class="marker-min"></div>
-    <div class="marker-max"></div>
-</div>
-<div class="chart-label">
-    <div class="f-l">
-        <span class="js-salary"></span> * 
-    </div> 
-    <div class="f-r"> |
-        <span class="js-min"></span> - 
-        <span class="js-med"></span> - 
-        <span class="js-max"></span> |
+    <div>
+        <div class="marker-salary"></div>
+        <div class="marker-med"></div>
+        <div class="marker-min"></div>
+        <div class="marker-max"></div>
+    </div>
+    <!-- labels -->
+    <div class="fz-11">
+        <span class="js-salary"></span> 
+        <span class="label-med p-a"> 
+            * <span class="js-factor bb-d"></span> 
+            = <span class="js-med"></span>
+        </span>
     </div>
 </div>
-<p><b>mortgage factor: </b><br>
-    <span class="js-med"></span> (med) /
-    <span class="js-salary"></span> (salary) =
-    <span class="js-factor"></span>
-</p>
 
+<p><b>mortgage factor: </b><br>
+    <span class="js-med"></span><span class="fz-11"> (house)</span> /
+    <span class="js-salary"></span><span class="fz-11"> (salary)</span> =
+    <span class="js-factor bb-d"></span>
+</p>

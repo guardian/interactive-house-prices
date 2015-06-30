@@ -18,22 +18,23 @@ export default class Tooltip {
         this.areaEl = this.el.querySelector('.js-area');
         this.districtEl = this.el.querySelector('.js-district');
         
-        this.factorEl = this.el.querySelector('.js-factor');
         this.salaryEls = Array.from(this.el.querySelectorAll('.js-salary'));
+        this.factorEls = Array.from(this.el.querySelectorAll('.js-factor'));
         this.medEls = Array.from(this.el.querySelectorAll('.js-med'));
         
         this.minEl = this.el.querySelector('.js-min');
         this.maxEl = this.el.querySelector('.js-max');
         this.avgEl = this.el.querySelector('.js-avg');
         
-        this.range1El = this.el.querySelector('.range-pipe-l');
-        this.range2El = this.el.querySelector('.range-pipe-s');
-        this.range3El = this.el.querySelector('.range-pipe-r');
+        this.range1El = this.el.querySelector('.range-pipe-l'); //blue
+        this.range2El = this.el.querySelector('.range-pipe-s'); //pipes
         
         this.marker1El = this.el.querySelector('.marker-salary');
         this.marker2El = this.el.querySelector('.marker-med');
         this.marker3El = this.el.querySelector('.marker-min');
-        //this.markerEls = Array.from(this.el.querySelectorAll('.marker'));
+        
+        this.labelMinEl = this.el.querySelector('.label-min');
+        this.labelMedEl = this.el.querySelector('.label-med');
 
         var resize = debounce(function () {
             window.requestAnimationFrame(() => {
@@ -59,12 +60,13 @@ export default class Tooltip {
         
         var prices = getRegionPrices(districtObj, data.year, data.month),
             salary = data.threshold,
-            factor = prices.med / salary;
-
-        var ratio = 100 / prices.max,
-            range1 = ratio * salary * 4,
-            range2 = ratio * salary * 14,
-            range3 = 100 - range1 - range2;
+            factor = prices.med/salary;
+        
+        var ratio = 100/prices.max,
+            range1 = ratio*salary*4,
+            range2 = ratio*salary*14,
+            min = ratio*prices.min,
+            med = ratio*prices.med;
         
         //console.log(district);
         //console.log(prices);
@@ -75,20 +77,32 @@ export default class Tooltip {
         
         // summary
         this.marker1El.style.left = ratio*salary + "%";        
-        this.marker2El.style.left = ratio*prices.med + "%";        
-        this.marker3El.style.left = ratio*prices.min + "%";        
+        this.marker2El.style.left = med + "%";        
+        this.marker2El.style.borderLeftWidth = Math.round(factor) + "px";        
+        this.marker3El.style.left = min + "%";        
+        
+        if (med > 65) {
+            this.labelMedEl.style.left = "auto";
+            this.labelMedEl.style.right = 0;
+        } else if (med > 35) {
+            this.labelMedEl.style.left = (med-8) + "%";
+            this.labelMedEl.style.right = "auto";
+        } else {
+            this.labelMedEl.style.left = "auto";
+            this.labelMedEl.style.right = "auto";
+        }
+        
+        this.labelMinEl.style.marginLeft = ((min < 50) ? min : 50) + "%";   
 
         this.minEl.textContent = prices.min.toLocaleString();
         this.maxEl.textContent = prices.max.toLocaleString();
-      //this.avgEl.textContent = prices.avg.toLocaleString();
-        this.factorEl.textContent = factor.toLocaleString();
         
         this.medEls.forEach(el => el.textContent = prices.med.toLocaleString());
         this.salaryEls.forEach(el => el.textContent = salary.toLocaleString());
+        this.factorEls.forEach(el => el.textContent = Math.round(factor*100)/100);
         
         this.range1El.style.width = range1 + "%";        
         this.range2El.style.width = range2 + "%";        
-        //this.range3El.style.width = range3 + "%";        
         
         var x = evt.containerPoint.x;
         var y = evt.containerPoint.y;// - tooltipHeight;
