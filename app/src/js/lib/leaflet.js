@@ -1,5 +1,5 @@
 /*
- Leaflet 1.0-dev (1c9c2df), a JS library for interactive maps. http://leafletjs.com
+ Leaflet 1.0-dev (ccc6108), a JS library for interactive maps. http://leafletjs.com
  (c) 2010-2015 Vladimir Agafonkin, (c) 2010-2011 CloudMade
 */
 (function (window, document, undefined) {
@@ -3033,6 +3033,16 @@ L.GridLayer = L.Layer.extend({
 		this._pruneTiles();
 	},
 
+	_getTiledPixelBounds: function (center, zoom, tileZoom) {
+		var map = this._map;
+
+		var scale = map.getZoomScale(zoom, tileZoom),
+			pixelCenter = map.project(center, tileZoom).floor(),
+			halfSize = map.getSize().divideBy(scale * 2);
+
+		return new L.Bounds(pixelCenter.subtract(halfSize), pixelCenter.add(halfSize));
+	},
+
 	_update: function (center, zoom) {
 
 		var map = this._map;
@@ -3045,13 +3055,11 @@ L.GridLayer = L.Layer.extend({
 		if (tileZoom > this.options.maxZoom ||
 			tileZoom < this.options.minZoom) { return; }
 
-		var scale = this._map.getZoomScale(zoom, tileZoom),
-		    pixelCenter = map.project(center, tileZoom).floor(),
-		    halfSize = map.getSize().divideBy(scale * 2),
-		    pixelBounds = new L.Bounds(pixelCenter.subtract(halfSize), pixelCenter.add(halfSize)),
-		    tileRange = this._pxBoundsToTileRange(pixelBounds),
-		    tileCenter = tileRange.getCenter(),
-		    queue = [];
+		var pixelBounds = this._getTiledPixelBounds(center, zoom, tileZoom);
+
+		var tileRange = this._pxBoundsToTileRange(pixelBounds),
+			tileCenter = tileRange.getCenter(),
+			queue = [];
 
 		for (var key in this._tiles) {
 			this._tiles[key].current = false;
@@ -6110,8 +6118,8 @@ L.Canvas = L.Renderer.extend({
 	_update: function () {
 		if (this._map._animatingZoom && this._bounds) { return; }
 
-		this._fills = {};
 		this._drawnLayers = [];
+		this._fills = {};
 
 		L.Renderer.prototype._update.call(this);
 	},
@@ -8794,8 +8802,13 @@ L.Control.Layers = L.Control.extend({
 		var name = document.createElement('span');
 		name.innerHTML = ' ' + obj.name;
 
-		label.appendChild(input);
-		label.appendChild(name);
+		// Helps from preventing layer control flicker when checkboxes are disabled
+		// https://github.com/Leaflet/Leaflet/issues/2771
+		var holder = document.createElement('div');
+
+		label.appendChild(holder);
+		holder.appendChild(input);
+		holder.appendChild(name);
 
 		var container = obj.overlay ? this._overlaysList : this._baseLayersList;
 		container.appendChild(label);
