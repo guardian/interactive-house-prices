@@ -1,5 +1,5 @@
 /*
- Leaflet 1.0-dev (ccc6108), a JS library for interactive maps. http://leafletjs.com
+ Leaflet 1.0-dev (00c5e46), a JS library for interactive maps. http://leafletjs.com
  (c) 2010-2015 Vladimir Agafonkin, (c) 2010-2011 CloudMade
 */
 (function (window, document, undefined) {
@@ -6094,12 +6094,25 @@ if (L.Browser.vml) {
  * L.Canvas handles Canvas vector layers rendering and mouse events handling. All Canvas-specific code goes here.
  */
 
+var contextProps = ['fill', 'fillOpacity', 'fillColor', 'fillRule', 'color', 'stroke', 'weight',
+	'lineCap', 'lineJoin'];
+var contextPropsLen = contextProps.length;
+
+function getContextHash(layer, closed) {
+	var hash = closed;
+	for (var i = 0; i < contextPropsLen; i++) {
+		hash += '|' + layer.options[contextProps[i]];
+	}
+	return hash;
+}
+
 L.Canvas = L.Renderer.extend({
 
 	onAdd: function () {
 		L.Renderer.prototype.onAdd.call(this);
 
 		this._layers = this._layers || {};
+		this._deferredUpdates = {};
 
 		// redraw vectors since canvas is cleared upon removal
 		this._draw();
@@ -6118,8 +6131,7 @@ L.Canvas = L.Renderer.extend({
 	_update: function () {
 		if (this._map._animatingZoom && this._bounds) { return; }
 
-		this._drawnLayers = [];
-		this._fills = {};
+		this._drawnLayers = {};
 
 		L.Renderer.prototype._update.call(this);
 	},
@@ -6182,6 +6194,30 @@ L.Canvas = L.Renderer.extend({
 		}
 	},
 
+	_deferredDraw: function (draw) {
+		var ctx = this._ctx;
+		var polys = draw.polys, parts, p;
+		var i, j, k, len, len2, len3;
+
+		this._prePath(draw.options);
+
+		for (i = 0, len = polys.length; i < len; i++) {
+			ctx.beginPath();
+			parts = polys[i]._parts;
+			for (j = 0, len2 = parts.length; j < len2; j++) {
+				for (k = 0, len3 = parts[j].length; k < len3; k++) {
+					p = parts[j][k];
+					ctx[k ? 'lineTo' : 'moveTo'](p.x, p.y);
+				}
+				if (draw.closed) {
+					ctx.closePath();
+				}
+			}
+
+			this._postPath(draw.options);
+		}
+	},
+
 	_deferredUpdate: function () {
 		var container = this._container,
 			b = this._bounds,
@@ -6203,50 +6239,27 @@ L.Canvas = L.Renderer.extend({
 		// translate so we use the same path coordinates after canvas element moves
 		this._ctx.translate(-b.min.x, -b.min.y);
 
-		for (var color in this._fills) {
-			this._updatePolys(color, this._fills[color]);
+		for (var hash in this._deferredUpdates) {
+			this._deferredDraw(this._deferredUpdates[hash]);
 		}
 
-		this._fills = {};
+		this._deferredUpdates = {};
 		this._deferredUpdateRequest = null;
 	},
 
-	_updatePolys: function (color, polys) {
-		var ctx = this._ctx;
-		var polyI, polyLen = polys.length;
-		var parts, partsI, partsLen, partI, partLen, p;
-
-		ctx.fillStyle = color;
-
-		for (polyI = 0; polyI < polyLen; polyI++) {
-			ctx.beginPath();
-			parts = polys[polyI]._parts;
-			partsLen = parts.length;
-			for (partsI = 0; partsI < partsLen; partsI++) {
-				for (partI = 0, partLen = parts[partsI].length; partI < partLen; partI++) {
-					p = parts[partsI][partI];
-					ctx[partI ? 'lineTo' : 'moveTo'](p.x, p.y);
-				}
-				ctx.closePath();
-			}
-			ctx.fill();
-		}
-	},
-
 	_updatePoly: function (layer, closed) {
+		if (!layer._parts.length) { return; }
 
-		var parts = layer._parts,
-		    len = parts.length;
-
-		if (!len) { return; }
-
-		var color = layer.options.fillColor;
-		if (!this._fills[color]) { this._fills[color] = []; }
-		this._fills[color].push(layer);
+		var hash = getContextHash(layer, closed);
+		if (this._deferredUpdates[hash]) {
+			this._deferredUpdates[hash].polys.push(layer);
+		} else {
+			this._deferredUpdates[hash] = {options: layer.options, closed: closed, polys: [layer]};
+		}
 
 		this._deferredUpdateRequest = this._deferredUpdateRequest || L.Util.requestAnimFrame(this._deferredUpdate, this);
 
-		this._drawnLayers.push(layer);
+		this._drawnLayers[layer._leaflet_id] = layer;
 	},
 
 	_updateCircle: function (layer) {
@@ -6257,6 +6270,8 @@ L.Canvas = L.Renderer.extend({
 		    ctx = this._ctx,
 		    r = layer._radius,
 		    s = (layer._radiusY || r) / r;
+
+		this._prePath(layer.options);
 
 		if (s !== 1) {
 			ctx.save();
@@ -6270,30 +6285,39 @@ L.Canvas = L.Renderer.extend({
 			ctx.restore();
 		}
 
-		this._fillStroke(ctx, layer);
+		this._postPath(layer.options);
 	},
 
-	_fillStroke: function (ctx, layer) {
-		var clear = this._clear,
-		    options = layer.options;
+	_prePath: function (options) {
+		var ctx = this._ctx,
+		    clear = this._clear;
 
 		ctx.globalCompositeOperation = clear ? 'destination-out' : 'source-over';
 
 		if (options.fill) {
 			ctx.globalAlpha = clear ? 1 : options.fillOpacity;
 			ctx.fillStyle = options.fillColor || options.color;
-			ctx.fill(options.fillRule || 'evenodd');
 		}
 
 		if (options.stroke && options.weight !== 0) {
 			ctx.globalAlpha = clear ? 1 : options.opacity;
 
 			// if clearing shape, do it with the previously drawn line width
-			layer._prevWeight = ctx.lineWidth = clear ? layer._prevWeight + 1 : options.weight;
+			options._prevWeight = ctx.lineWidth = clear ? options._prevWeight + 1 : options.weight;
 
 			ctx.strokeStyle = options.color;
 			ctx.lineCap = options.lineCap;
 			ctx.lineJoin = options.lineJoin;
+		}
+	},
+
+	_postPath: function (options) {
+		var ctx = this._ctx;
+
+		if (options.fill) {
+			ctx.fill(options.fillRule || 'evenodd');
+		}
+		if (options.stroke && options.weight !== 0) {
 			ctx.stroke();
 		}
 	},

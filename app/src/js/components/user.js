@@ -19,7 +19,7 @@ export default class User {
             var month = Math.floor(date % 12) + 1;
 
             this.changeTime(year, month);
-        }.bind(this), 100));
+        }.bind(this), 50));
 
         /*
         this.statusEl = el.querySelector('#status');
