@@ -31,13 +31,33 @@ export default class Map {
             'fadeAnimation': false
         });
 
+        var renderer = L.canvas();
+        renderer._initContainer();
+        renderer._container.className += ' map__highlight';
+
+        var highlightLayer = L.geoJson(undefined, {
+            renderer: renderer,
+            style: {
+                fill: false,
+                stroke: true,
+                color: '#333',
+                weight: 2
+            }
+        }).addTo(this.map);
+
         // Region layer
         this.regionLayer = L.geoJson(undefined, {
             renderer: L.canvas(),
             onEachFeature: (feature, layer) => {
                 // TODO: tooltip hiding
                 layer.on({
-                    mouseover: evt => this.tooltip.show(evt, this.data)
+                    mouseover: evt => {
+                        console.log(layer);
+                        highlightLayer.clearLayers();
+                        highlightLayer.addData([feature]);
+
+                        this.tooltip.show(evt, this.data)
+                    }
                     //mouseout: () => this.tooltip.hide()
                 });
             },

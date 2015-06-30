@@ -9,6 +9,12 @@
     pointer-events: none;
 }
 
+.map__highlight {
+    pointer-events: none;
+    opacity: 0.5;
+    z-index: 20 !important;
+}
+
 .range {
     @include fs-textSans(2);
     position: absolute;
