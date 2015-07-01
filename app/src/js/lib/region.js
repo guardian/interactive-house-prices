@@ -29,6 +29,6 @@ export function getRegion(type, id) {
 
 const startYear = 2014;
 export function getRegionPrices(region, year, month) {
-    var [avg, min, max, med] = region.properties.prices[(year - startYear) * 12 + month];
-    return {avg, min, max, med};
+    var [avg, min, max, med, count] = region.properties.prices[(year - startYear) * 12 + month];
+    return {avg, min, max, med, count};
 }

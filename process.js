@@ -98,7 +98,7 @@ types.forEach(function (type) {
             var p = _(price)
                 .indexBy(function (row) { return row.year + row.month; })
                 .mapValues(function (row) {
-                    return [row.avg, row.min, row.max, row.median].map(function (n) {
+                    return [row.avg, row.min, row.max, row.median, row.count].map(function (n) {
                         return Number(parseFloat(n).toFixed(2));
                     });
                 }).value();

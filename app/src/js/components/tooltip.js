@@ -22,11 +22,12 @@ export default class Tooltip {
         this.factorEls = Array.from(this.el.querySelectorAll('.js-factor'));
         this.medEls = Array.from(this.el.querySelectorAll('.js-med'));
         
+        this.numEl = this.el.querySelector('.js-num');
         this.minEl = this.el.querySelector('.js-min');
         this.maxEl = this.el.querySelector('.js-max');
         this.avgEl = this.el.querySelector('.js-avg');
         
-        this.range1El = this.el.querySelector('.range-pipe-l'); //blue
+        //this.range1El = this.el.querySelector('.range-pipe-l'); //blue
         this.range2El = this.el.querySelector('.range-pipe-s'); //pipes
         
         this.marker1El = this.el.querySelector('.marker-salary');
@@ -64,7 +65,7 @@ export default class Tooltip {
         
         var ratio = 100/prices.max,
             range1 = ratio*salary*4,
-            range2 = ratio*salary*14,
+            range2 = ratio*salary*16,
             min = ratio*prices.min,
             med = ratio*prices.med;
         
@@ -93,7 +94,8 @@ export default class Tooltip {
         }
         
         this.labelMinEl.style.marginLeft = ((min < 50) ? min : 50) + "%";   
-
+        console.log(prices.count);
+        this.numEl.textContent = prices.count || 0;
         this.minEl.textContent = prices.min.toLocaleString();
         this.maxEl.textContent = prices.max.toLocaleString();
         
@@ -101,7 +103,7 @@ export default class Tooltip {
         this.salaryEls.forEach(el => el.textContent = salary.toLocaleString());
         this.factorEls.forEach(el => el.textContent = Math.round(factor*100)/100);
         
-        this.range1El.style.width = range1 + "%";        
+        //this.range1El.style.width = range1 + "%";        
         this.range2El.style.width = range2 + "%";        
         
         var x = evt.containerPoint.x;

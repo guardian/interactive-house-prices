@@ -27,7 +27,7 @@ $c-neutral-5: #dfdfdf;
 // tooptip
 .tooltip {
     @include fs-textSans(2);
-    background-color: rgba(255,255,255,0.8);
+    background-color: rgba(255,255,255,0.9);
 
     width: 300px;
     height: 200px;
@@ -65,13 +65,25 @@ $c-neutral-5: #dfdfdf;
     .range-pipe-s {
         transition: width 0.25s ease;
         background-image: linear-gradient(90deg,
+            #39a4d8  0%,   #39a4d8 25%,
+            #8ac7cd 25%,   #8ac7cd 37.5%,
+            #daeac1 37.5%, #daeac1 50%, 
+            #fff181 50%,   #fff181 62.5%,
+            #fdd09e 62.5%, #fdd09e 75%, 
+            #f58680 75%,   #f58680 87.5%,
+            #ed3d62 87.5%, #ed3d61 100%
+        );
+    }   
+    /*.range-pipe-s {
+        transition: width 0.25s ease;
+        background-image: linear-gradient(90deg,
             #8ac7cd  0%, #8ac7cd 20%,
             #daeac1 20%, #daeac1 40%, 
             #fff181 40%, #fff181 60%,
             #fdd09e 60%, #fdd09e 80%, 
             #f58680 80%, #f58680 100%
         );
-    } 
+    }*/ 
 
     [class^="marker"] {
         border-left: 1px solid $c-neutral-1; 
