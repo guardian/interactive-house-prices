@@ -49,7 +49,6 @@ export default class Map {
         this.regionLayer = L.geoJson(undefined, {
             renderer: L.canvas(),
             onEachFeature: (feature, layer) => {
-                // TODO: tooltip hiding
                 layer.on({
                     mouseover: evt => {
                         highlightLayer.addData([feature]);
