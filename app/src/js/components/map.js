@@ -52,13 +52,13 @@ export default class Map {
                 // TODO: tooltip hiding
                 layer.on({
                     mouseover: evt => {
-                        console.log(layer);
-                        highlightLayer.clearLayers();
                         highlightLayer.addData([feature]);
-
                         this.tooltip.show(evt, this.data)
+                    },
+                    mouseout: () => {
+                        highlightLayer.clearLayers();
+                        this.tooltip.hide();
                     }
-                    //mouseout: () => this.tooltip.hide()
                 });
             },
             noClip: true
