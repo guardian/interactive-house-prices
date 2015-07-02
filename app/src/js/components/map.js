@@ -4,7 +4,7 @@ import { getDistricts, getRegionPrices } from '../lib/region'
 import Tooltip from './tooltip'
 import User from './user'
 
-const colors = ['#39a4d8', '#8ac7cd', '#daeac1', '#fff181', '#fdd09e', '#f58680', '#ed3d61'];
+const colors = ['#39a4d8', '#8ac7cd', '#daeac1', '#fdd09e', '#f58680', '#ed3d61'];
 
 
 // Hacky way of using presimplified TopoJSON
@@ -87,12 +87,11 @@ export default class Map {
             var ratio = price / data.threshold;
 
             var colorIndex = 0;
+            if (ratio > 2) colorIndex++;
+            if (ratio > 3) colorIndex++;
             if (ratio > 4) colorIndex++;
+            if (ratio > 5) colorIndex++;
             if (ratio > 6) colorIndex++;
-            if (ratio > 8) colorIndex++;
-            if (ratio > 10) colorIndex++;
-            if (ratio > 12) colorIndex++;
-            if (ratio > 14) colorIndex++;
 
             return {
                 'stroke': 0,

@@ -37,13 +37,13 @@
 
 $pips: (
     0: #39a4d8,
-    4: #8ac7cd,
-    6: #daeac1,
-    8: #fff181,
-    10: #fdd09e,
-    12: #f58680,
-    '14+': #ed3d61
+    2: #8ac7cd,
+    3: #daeac1,
+    4: #fdd09e,
+    5: #f58680,
+    '6+': #ed3d61
 );
+$pips-width: 100% / (length($pips) + 2);
 
 .range__pips {
     margin-bottom: 25px;
@@ -53,7 +53,7 @@ $pips: (
     position: relative;
     float: left;
     height: 6px;
-    width: (100% / length($pips));
+    width: $pips-width;
     color: #767676;
 }
 
@@ -71,4 +71,9 @@ $pips: (
             }
         }
     }
+}
+
+.range__pips__pip[data-range='0'],
+.range__pips__pip[data-range='6+'] {
+    width: ($pips-width * 2);
 }
