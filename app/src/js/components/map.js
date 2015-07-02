@@ -1,5 +1,5 @@
 import L from '../lib/leaflet'
-import { getRegion, getRegionPrices } from '../lib/region'
+import { getDistricts, getRegionPrices } from '../lib/region'
 
 import Tooltip from './tooltip'
 import User from './user'
@@ -73,7 +73,7 @@ export default class Map {
             accessToken: 'pk.eyJ1IjoiZ3VhcmRpYW4iLCJhIjoiNHk1bnF4OCJ9.25tK75EuDdgq5GxQKyD6Fg'
         }).addTo(this.map);
 
-        getRegion('districts', 'districts').then(geo => this.regionLayer.addData(geo));
+        getDistricts().then(geo => this.regionLayer.addData(geo));
 
         this.tooltip = new Tooltip(el);
         this.user = new User(el.querySelector('.js-user'), this.update.bind(this));

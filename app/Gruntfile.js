@@ -11,7 +11,7 @@ module.exports = function(grunt) {
         watch: {
             js: {
                 files: ['src/js/**/*'],
-                tasks: ['shell:interactive'],
+                tasks: ['shell:interactive', 'copy:districts'],
             },
             css: {
                 files: ['src/css/**/*'],
@@ -84,6 +84,12 @@ module.exports = function(grunt) {
                     {expand: true, cwd: 'harness/', src: ['curl.js', 'index.html'], dest: 'build'},
                 ]
             },
+            districts: {
+                files: [
+                    {src: 'src/js/districts.js', dest: 'build/districts.js'},
+                    {src: 'src/js/jspm_packages/github/mbostock/topojson@1.6.19/topojson.min.js', dest: 'build/topojson.js'}
+                ]
+            },
             assets: {
                 files: [
                     {expand: true, cwd: 'src/', src: ['assets/**/*'], dest: 'build'},
@@ -98,7 +104,7 @@ module.exports = function(grunt) {
                     },
                     { // ASSETS
                         expand: true, cwd: 'build/',
-                        src: ['main.js', 'main.css', 'main.js.map', 'main.css.map', 'assets/**/*'],
+                        src: ['main.js', 'districts.js', 'main.css', 'main.js.map', 'main.css.map', 'assets/**/*'],
                         dest: 'deploy/<%= visuals.timestamp %>/<%= visuals.timestamp %>'
                     }
                 ]
@@ -220,7 +226,7 @@ module.exports = function(grunt) {
     })
 
     grunt.registerTask('harness', ['copy:harness', 'template:harness', 'sass:harness', 'symlink:fonts'])
-    grunt.registerTask('interactive', ['shell:interactive', 'template:bootjs', 'sass:interactive', 'copy:assets'])
+    grunt.registerTask('interactive', ['shell:interactive', 'copy:districts', 'template:bootjs', 'sass:interactive', 'copy:assets'])
     grunt.registerTask('default', ['clean', 'harness', 'interactive', 'connect', 'watch']);
     grunt.registerTask('build', ['clean', 'interactive']);
     grunt.registerTask('deploy', ['loadDeployConfig', 'prompt:visuals', 'build', 'copy:deploy', 'aws_s3', 'boot_url']);

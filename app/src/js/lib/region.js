@@ -3,27 +3,27 @@ import topojson from 'mbostock/topojson'
 
 import { config } from './cfg'
 
-var regions = {'areas': {}, 'districts': {}, 'sectors': {}};
-
-export function getRegion(type, id) {
+export function getDistricts() {
     return new Promise((resolve, reject) => {
-        if (regions[type][id]) {
-            resolve(regions[type][id]);
-        } else {
-            reqwest({
-                url: `${config.assetPath}/assets/${type}/${id}.json`,
-                type: 'json',
-                crossOrigin: true,
-                success: topo => {
-                    regions[type][id] = topojson.feature(topo, topo.objects.shapes);
-                    resolve(regions[type][id]);
-                },
-                error: err => {
-                    console.log(`Could not load data for ${type}/${id}`);
-                    reject(err);
+        reqwest({
+            url: config.assetPath + '/assets/districts/districts.json',
+            type: 'html', // force JSON parsing to be done in worker
+            crossOrigin: true,
+            success: text => {
+                if (window.Worker) {
+                    var worker = new Worker(config.assetPath + '/districts.js');
+                    worker.addEventListener('message', function (e) { resolve(e.data); } );
+                    worker.postMessage(text);
+                } else {
+                    var topo = JSON.parse(text);
+                    resolve(topojson.feature(topo, topo.objects.shapes));
                 }
-            });
-        }
+            },
+            error: err => {
+                console.log('Could not load districts data');
+                reject(err);
+            }
+        });
     });
 }
 
