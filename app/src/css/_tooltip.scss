@@ -8,8 +8,7 @@ $c-neutral-5: #dfdfdf;
 .c-grey3 { color: $c-neutral-3; }
 
 .fz-11 { font-size: 11px; }
-.fz-16 { font-size: 16px; }
-.fz-24 { font-size: 24px; }
+.fz-18 { font-size: 18px; }
 
 .f-l { float: left; }
 .f-r { float: right; }
@@ -23,6 +22,16 @@ $c-neutral-5: #dfdfdf;
 .p-a {
     position: absolute;
 }
+
+.f-truncate {
+    display: inline-block;
+    width: 100%; // check the tweak
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: bottom;
+}
+
 
 // tooptip
 .tooltip {
@@ -41,74 +50,60 @@ $c-neutral-5: #dfdfdf;
     pointer-events: none;
     user-select: none; 
 
-    h3 { margin: .5em 0; }
+    h3 { margin: .25em 0; }
     p  { margin: 0; }
-    
+
     .chart {
-        margin: 3px 0 9px 0;
+        margin-bottom: 5px;
         overflow: hidden;
         white-space: nowrap;
         position: relative;
-    }    
+}    
 
-    [class^="range-pipe"] {
-        height: 10px;
-        display: inline-block;
-    }
-    .range-pipe-l {
-        background-color: #39a4d8;
-    }
-    .range-pipe-r {
-        width: 100%;
-        background-color: #ed3d61;
-    }
-    .range-pipe-s {
-        transition: width 0.25s ease;
-        background-image: linear-gradient(90deg,
-            #39a4d8  0%,   #39a4d8 25%,
-            #8ac7cd 25%,   #8ac7cd 37.5%,
-            #daeac1 37.5%, #daeac1 50%, 
-            #fff181 50%,   #fff181 62.5%,
-            #fdd09e 62.5%, #fdd09e 75%, 
-            #f58680 75%,   #f58680 87.5%,
-            #ed3d62 87.5%, #ed3d61 100%
-        );
-    }   
-    /*.range-pipe-s {
-        transition: width 0.25s ease;
-        background-image: linear-gradient(90deg,
-            #8ac7cd  0%, #8ac7cd 20%,
-            #daeac1 20%, #daeac1 40%, 
-            #fff181 40%, #fff181 60%,
-            #fdd09e 60%, #fdd09e 80%, 
-            #f58680 80%, #f58680 100%
-        );
-    }*/ 
+[class^="range-"] {
+    height: 10px;
+    display: inline-block;
+}
+.range-extra {
+    width: 100%;
+    background-color: #ed3d61;
+}
+.range-pipes {
+    transition: width 0.25s ease;
+    background-image: linear-gradient(90deg,
+    #39a4d8  0%,   #39a4d8 25%,
+    #8ac7cd 25%,   #8ac7cd 37.5%,
+    #daeac1 37.5%, #daeac1 50%, 
+    #fdd09e 50%,   #fdd09e 62.5%,
+    #f58680 62.5%, #f58680 75%, 
+    #ed3d62 75%,   #ed3d61 100%
+    );
+}   
 
-    [class^="marker"] {
-        border-left: 1px solid $c-neutral-1; 
-        height: 14px;
-        position: absolute;
-        top: 17px;
-    }
-    .marker-med {
-        border-left: 3px solid $c-neutral-1;        
-        transition: left 0.25s ease;
-    }
-    .marker-min {
-        top: 17px;
-        height: 9px;
-        width: 3px;
-        border: 3px solid $c-neutral-1;
-        border-right: 0;
-        transition: left 0.25s ease;
-    }   
-    .marker-max {
-        right: 0;
-        top: 17px;
-        height: 9px;
-        width: 3px;
-        border: 3px solid $c-neutral-1;
-        border-left: 0;
-    }
+[class^="marker"] {
+    border-left: 1px solid $c-neutral-1; 
+    height: 14px;
+    position: absolute;
+    top: 17px;
+}
+.marker-med {
+    border-left: 3px solid $c-neutral-1;        
+    transition: left 0.25s ease;
+}
+.marker-min {
+    top: 17px;
+    height: 9px;
+    width: 3px;
+    border: 3px solid $c-neutral-1;
+    border-right: 0;
+    transition: left 0.25s ease;
+}   
+.marker-max {
+    right: 0;
+    top: 17px;
+    height: 9px;
+    width: 3px;
+    border: 3px solid $c-neutral-1;
+    border-left: 0;
+}
 }

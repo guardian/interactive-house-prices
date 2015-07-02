@@ -1,6 +1,6 @@
-import template from './templates/user.html!text'
-
-import throttle from '../lib/throttle'
+import template from './templates/user.html!text';
+import Tooltip from './tooltip';
+import throttle from '../lib/throttle';
 
 const startYear = 2014;
 const months = 12 + 2; // TODO: actual values
@@ -9,7 +9,8 @@ export default class User {
     constructor(el, onUpdate) {
         this.el = el;
         this.el.innerHTML = template;
-
+        
+        //this.tooltip = new Tooltip(el);
         this.onUpdate = onUpdate;
 
         this.dateEl = el.querySelector('#date');
@@ -35,5 +36,9 @@ export default class User {
         this.monthEl.textContent = month < 10 ? '0' + month : month;*/
 
         this.onUpdate({'year': year, 'month': month, 'threshold': 25000});
+        
+        // update tooltip
+        //this.tooltip.hide();
+        /* TODO: show */
     }
 }

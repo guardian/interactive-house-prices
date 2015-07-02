@@ -1,6 +1,6 @@
-<h3 class="bb-s">
-    <span class="fz-24 c-grey3 js-district"></span> |
-    <span class="fz-16 js-area"></span>
+<h3 class="bb-s fz-18 f-truncate">
+    <span class="js-district"></span> | 
+    <span class="js-area"></span>
 </h3>
 
 <p><b>number of sales: </b><span class="js-num"></span></p>
@@ -9,15 +9,19 @@
 <div class="chart">
     <!-- labels -->
     <div class="fz-11">
-        <span class="label-min js-min"></span> - 
-        <span class="f-r">- - <span class="js-max"></span></span>
+        <span class="js-salary"></span> 
+        <span class="label-facmed p-a"> 
+            * <span class="js-factor bb-d"></span> 
+            = <span class="js-med"></span>
+        </span>
     </div>
     <!-- ranges -->
-    <!-- hack for extra space using inline-block -->
     <div>
-        <div class="range-pipe-s"></div
-       ><div class="range-pipe-r"></div>
-    </div>
+        <!-- hack for extra space using inline-block -->
+        <div class="range-pipes"></div
+       ><div class="range-extra"></div>
+        <!-- end of hack -->
+   </div>
     <!-- markers -->
     <div>
         <div class="marker-salary"></div>
@@ -27,16 +31,17 @@
     </div>
     <!-- labels -->
     <div class="fz-11">
-        <span class="js-salary"></span> 
-        <span class="label-med p-a"> 
-            * <span class="js-factor bb-d"></span> 
-            = <span class="js-med"></span>
-        </span>
+        <span class="label-min js-min"></span> - 
+        <span class="f-r">- - <span class="js-max"></span></span>
     </div>
 </div>
 
-<p><b>mortgage factor: </b><br>
-    <span class="js-med"></span><span class="fz-11"> (house)</span> /
+<p><!--b>mortgage factor: </b><br-->
+    The median house price in XXXX was 
+    <span class="js-factor label-fac bb-d"></span><b> times </b>
+    your salary. You would have been able to afford it in XXXX,
+    when it was just below 4.
+    <!--span class="js-med"></span><span class="fz-11"> (house)</span> /
     <span class="js-salary"></span><span class="fz-11"> (salary)</span> =
-    <span class="js-factor bb-d"></span>
+    <span class="js-factor label-fac bb-d"></span-->
 </p>

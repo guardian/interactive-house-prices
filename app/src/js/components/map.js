@@ -1,8 +1,8 @@
-import L from '../lib/leaflet'
-import { getDistricts, getRegionPrices } from '../lib/region'
+import L from '../lib/leaflet';
+import { getDistricts, getRegionPrices } from '../lib/region';
 
-import Tooltip from './tooltip'
-import User from './user'
+import Tooltip from './tooltip';
+import User from './user';
 
 const colors = ['#39a4d8', '#8ac7cd', '#daeac1', '#fdd09e', '#f58680', '#ed3d61'];
 

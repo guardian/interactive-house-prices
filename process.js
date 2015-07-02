@@ -98,15 +98,15 @@ types.forEach(function (type) {
             var p = _(price)
                 .indexBy(function (row) { return row.year + row.month; })
                 .mapValues(function (row) {
-                    return [row.avg, row.min, row.max, row.median, row.count].map(function (n) {
-                        return Number(parseFloat(n).toFixed(2));
+                    return [row.min, row.max, row.median, row.count, row.r0, row.r1, row.r2, row.r3, row.r4, row.r5, row.r6, row.r7, row.r8].map(function (n) {
+                        return parseInt(n);
                     });
                 }).value();
             return dates.map(function (date) {
-                return p[date.format('YYYYM')] || [0, 0, 0, 0];
+                return p[date.format('YYYYM')] || [0, 0, 0, 0, 0,0,0,0,0,0,0];
             });
         }).value();
-
+    
     // Remove any topologies that don't have associated prices
     var features = _.filter(geo.features, function (feature) { return pricesById[feature.properties.name]; });
 
