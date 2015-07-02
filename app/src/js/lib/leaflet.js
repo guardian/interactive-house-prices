@@ -1,5 +1,5 @@
 /*
- Leaflet 1.0-dev (678f658), a JS library for interactive maps. http://leafletjs.com
+ Leaflet 1.0-dev (320c46c), a JS library for interactive maps. http://leafletjs.com
  (c) 2010-2015 Vladimir Agafonkin, (c) 2010-2011 CloudMade
 */
 (function (window, document, undefined) {
@@ -677,6 +677,14 @@ L.Point.prototype = {
 		this.x *= num;
 		this.y *= num;
 		return this;
+	},
+
+	scaleBy: function(point) {
+		return new L.Point(this.x * point.x, this.y * point.y);
+	},
+
+	unscaleBy: function(point) {
+		return new L.Point(this.x / point.x, this.y / point.y);
 	},
 
 	round: function () {
@@ -2742,6 +2750,11 @@ L.GridLayer = L.Layer.extend({
 		return document.createElement('div');
 	},
 
+	getTileSize: function () {
+		var s = this.options.tileSize;
+		return s instanceof L.Point ? s : new L.Point(s, s);
+	},
+
 	_updateZIndex: function () {
 		if (this._container && this.options.zIndex !== undefined && this.options.zIndex !== null) {
 			this._container.style.zIndex = this.options.zIndex;
@@ -3004,7 +3017,7 @@ L.GridLayer = L.Layer.extend({
 	_resetGrid: function () {
 		var map = this._map,
 		    crs = map.options.crs,
-		    tileSize = this._tileSize = this._getTileSize(),
+		    tileSize = this._tileSize = this.getTileSize(),
 		    tileZoom = this._tileZoom;
 
 		var bounds = this._map.getPixelWorldBounds(this._tileZoom);
@@ -3013,17 +3026,13 @@ L.GridLayer = L.Layer.extend({
 		}
 
 		this._wrapX = crs.wrapLng && [
-			Math.floor(map.project([0, crs.wrapLng[0]], tileZoom).x / tileSize),
-			Math.ceil(map.project([0, crs.wrapLng[1]], tileZoom).x / tileSize)
+			Math.floor(map.project([0, crs.wrapLng[0]], tileZoom).x / tileSize.x),
+			Math.ceil(map.project([0, crs.wrapLng[1]], tileZoom).x / tileSize.y)
 		];
 		this._wrapY = crs.wrapLat && [
-			Math.floor(map.project([crs.wrapLat[0], 0], tileZoom).y / tileSize),
-			Math.ceil(map.project([crs.wrapLat[1], 0], tileZoom).y / tileSize)
+			Math.floor(map.project([crs.wrapLat[0], 0], tileZoom).y / tileSize.x),
+			Math.ceil(map.project([crs.wrapLat[1], 0], tileZoom).y / tileSize.y)
 		];
-	},
-
-	_getTileSize: function () {
-		return this.options.tileSize;
 	},
 
 	_onMoveEnd: function () {
@@ -3130,10 +3139,10 @@ L.GridLayer = L.Layer.extend({
 	_tileCoordsToBounds: function (coords) {
 
 		var map = this._map,
-		    tileSize = this._getTileSize(),
+		    tileSize = this.getTileSize(),
 
-		    nwPoint = coords.multiplyBy(tileSize),
-		    sePoint = nwPoint.add([tileSize, tileSize]),
+		    nwPoint = coords.scaleBy(tileSize),
+		    sePoint = nwPoint.add(tileSize),
 
 		    nw = map.wrapLatLng(map.unproject(nwPoint, coords.z)),
 		    se = map.wrapLatLng(map.unproject(sePoint, coords.z));
@@ -3171,8 +3180,9 @@ L.GridLayer = L.Layer.extend({
 	_initTile: function (tile) {
 		L.DomUtil.addClass(tile, 'leaflet-tile');
 
-		tile.style.width = this._tileSize + 'px';
-		tile.style.height = this._tileSize + 'px';
+		var tileSize = this.getTileSize();
+		tile.style.width = tileSize.x + 'px';
+		tile.style.height = tileSize.y + 'px';
 
 		tile.onselectstart = L.Util.falseFn;
 		tile.onmousemove = L.Util.falseFn;
@@ -3262,7 +3272,7 @@ L.GridLayer = L.Layer.extend({
 	},
 
 	_getTilePos: function (coords) {
-		return coords.multiplyBy(this._tileSize).subtract(this._level.origin);
+		return coords.scaleBy(this.getTileSize()).subtract(this._level.origin);
 	},
 
 	_wrapCoords: function (coords) {
@@ -3274,9 +3284,10 @@ L.GridLayer = L.Layer.extend({
 	},
 
 	_pxBoundsToTileRange: function (bounds) {
+		var tileSize = this.getTileSize();
 		return new L.Bounds(
-			bounds.min.divideBy(this._tileSize).floor(),
-			bounds.max.divideBy(this._tileSize).ceil().subtract([1, 1]));
+			bounds.min.unscaleBy(tileSize).floor(),
+			bounds.max.unscaleBy(tileSize).ceil().subtract([1, 1]));
 	},
 
 	_noTilesToLoad: function () {
@@ -4489,6 +4500,9 @@ L.Layer.include({
 			this._popupHandlersAdded = true;
 		}
 
+		// save the originally passed offset
+		this._originalPopupOffset = this._popup.options.offset;
+
 		return this;
 	},
 
@@ -4523,9 +4537,16 @@ L.Layer.include({
 		}
 
 		if (this._popup && this._map) {
+			// set the popup offset for this layer
 			this._popup.options.offset = this._popupAnchor(layer);
+
+			// set popup source to this layer
 			this._popup._source = layer;
+
+			// update the popup (content, layout, ect...)
 			this._popup.update();
+
+			// open the popup on the map
 			this._map.openPopup(this._popup, latlng);
 		}
 
@@ -4589,8 +4610,14 @@ L.Layer.include({
 	},
 
 	_popupAnchor: function (layer) {
+		// where shold we anchor the popup on this layer?
 		var anchor = layer._getPopupAnchor ? layer._getPopupAnchor() : [0, 0];
-		return L.point(anchor).add(L.Popup.prototype.options.offset);
+
+		// add the users passed offset to that
+		var offsetToAdd = this._originalPopupOffset || L.Popup.prototype.options.offset;
+
+		// return the final point to anchor the popup
+		return L.point(anchor).add(offsetToAdd);
 	},
 
 	_movePopup: function (e) {
@@ -6094,25 +6121,12 @@ if (L.Browser.vml) {
  * L.Canvas handles Canvas vector layers rendering and mouse events handling. All Canvas-specific code goes here.
  */
 
-var contextProps = ['fill', 'fillOpacity', 'fillColor', 'fillRule', 'color', 'stroke', 'weight',
-	'lineCap', 'lineJoin'];
-var contextPropsLen = contextProps.length;
-
-function getContextHash(layer, closed) {
-	var hash = closed;
-	for (var i = 0; i < contextPropsLen; i++) {
-		hash += '|' + layer.options[contextProps[i]];
-	}
-	return hash;
-}
-
 L.Canvas = L.Renderer.extend({
 
 	onAdd: function () {
 		L.Renderer.prototype.onAdd.call(this);
 
 		this._layers = this._layers || {};
-		this._deferredUpdates = {};
 
 		// redraw vectors since canvas is cleared upon removal
 		this._draw();
@@ -6122,7 +6136,7 @@ L.Canvas = L.Renderer.extend({
 		var container = this._container = document.createElement('canvas');
 
 		L.DomEvent
-			.on(container, 'mousemove', L.Util.throttle(this._onMouseMove, 66, this), this)
+			.on(container, 'mousemove', this._onMouseMove, this)
 			.on(container, 'click dblclick mousedown mouseup contextmenu', this._onClick, this);
 
 		this._ctx = container.getContext('2d');
@@ -6131,9 +6145,27 @@ L.Canvas = L.Renderer.extend({
 	_update: function () {
 		if (this._map._animatingZoom && this._bounds) { return; }
 
-		this._drawnLayers = {};
-
 		L.Renderer.prototype._update.call(this);
+
+		var b = this._bounds,
+		    container = this._container,
+		    size = b.getSize(),
+		    m = L.Browser.retina ? 2 : 1;
+
+		L.DomUtil.setPosition(container, b.min);
+
+		// set canvas size (also clearing it); use double size on retina
+		container.width = m * size.x;
+		container.height = m * size.y;
+		container.style.width = size.x + 'px';
+		container.style.height = size.y + 'px';
+
+		if (L.Browser.retina) {
+			this._ctx.scale(2, 2);
+		}
+
+		// translate so we use the same path coordinates after canvas element moves
+		this._ctx.translate(-b.min.x, -b.min.y);
 	},
 
 	_initPath: function (layer) {
@@ -6194,72 +6226,30 @@ L.Canvas = L.Renderer.extend({
 		}
 	},
 
-	_deferredDraw: function (draw) {
-		var ctx = this._ctx;
-		var polys = draw.polys, parts, p;
-		var i, j, k, len, len2, len3;
-
-		this._prePath(draw.options);
-
-		for (i = 0, len = polys.length; i < len; i++) {
-			ctx.beginPath();
-			parts = polys[i]._parts;
-			for (j = 0, len2 = parts.length; j < len2; j++) {
-				for (k = 0, len3 = parts[j].length; k < len3; k++) {
-					p = parts[j][k];
-					ctx[k ? 'lineTo' : 'moveTo'](p.x, p.y);
-				}
-				if (draw.closed) {
-					ctx.closePath();
-				}
-			}
-
-			this._postPath(draw.options);
-		}
-	},
-
-	_deferredUpdate: function () {
-		var container = this._container,
-			b = this._bounds,
-		    size = b.getSize(),
-		    m = L.Browser.retina ? 2 : 1;
-
-		// set canvas size (also clearing it); use double size on retina
-		container.width = m * size.x;
-		container.height = m * size.y;
-		container.style.width = size.x + 'px';
-		container.style.height = size.y + 'px';
-
-		L.DomUtil.setPosition(this._container, b.min);
-
-		if (L.Browser.retina) {
-			this._ctx.scale(2, 2);
-		}
-
-		// translate so we use the same path coordinates after canvas element moves
-		this._ctx.translate(-b.min.x, -b.min.y);
-
-		for (var hash in this._deferredUpdates) {
-			this._deferredDraw(this._deferredUpdates[hash]);
-		}
-
-		this._deferredUpdates = {};
-		this._deferredUpdateRequest = null;
-	},
-
 	_updatePoly: function (layer, closed) {
-		if (!layer._parts.length) { return; }
 
-		var hash = getContextHash(layer, closed);
-		if (this._deferredUpdates[hash]) {
-			this._deferredUpdates[hash].polys.push(layer);
-		} else {
-			this._deferredUpdates[hash] = {options: layer.options, closed: closed, polys: [layer]};
+		var i, j, len2, p,
+		    parts = layer._parts,
+		    len = parts.length,
+		    ctx = this._ctx;
+
+		if (!len) { return; }
+
+		ctx.beginPath();
+
+		for (i = 0; i < len; i++) {
+			for (j = 0, len2 = parts[i].length; j < len2; j++) {
+				p = parts[i][j];
+				ctx[j ? 'lineTo' : 'moveTo'](p.x, p.y);
+			}
+			if (closed) {
+				ctx.closePath();
+			}
 		}
 
-		this._deferredUpdateRequest = this._deferredUpdateRequest || L.Util.requestAnimFrame(this._deferredUpdate, this);
+		this._fillStroke(ctx, layer);
 
-		this._drawnLayers[layer._leaflet_id] = layer;
+		// TODO optimization: 1 fill/stroke for all features with equal style instead of 1 for each feature
 	},
 
 	_updateCircle: function (layer) {
@@ -6270,8 +6260,6 @@ L.Canvas = L.Renderer.extend({
 		    ctx = this._ctx,
 		    r = layer._radius,
 		    s = (layer._radiusY || r) / r;
-
-		this._prePath(layer.options);
 
 		if (s !== 1) {
 			ctx.save();
@@ -6285,39 +6273,30 @@ L.Canvas = L.Renderer.extend({
 			ctx.restore();
 		}
 
-		this._postPath(layer.options);
+		this._fillStroke(ctx, layer);
 	},
 
-	_prePath: function (options) {
-		var ctx = this._ctx,
-		    clear = this._clear;
+	_fillStroke: function (ctx, layer) {
+		var clear = this._clear,
+		    options = layer.options;
 
 		ctx.globalCompositeOperation = clear ? 'destination-out' : 'source-over';
 
 		if (options.fill) {
 			ctx.globalAlpha = clear ? 1 : options.fillOpacity;
 			ctx.fillStyle = options.fillColor || options.color;
+			ctx.fill(options.fillRule || 'evenodd');
 		}
 
 		if (options.stroke && options.weight !== 0) {
 			ctx.globalAlpha = clear ? 1 : options.opacity;
 
 			// if clearing shape, do it with the previously drawn line width
-			options._prevWeight = ctx.lineWidth = clear ? options._prevWeight + 1 : options.weight;
+			layer._prevWeight = ctx.lineWidth = clear ? layer._prevWeight + 1 : options.weight;
 
 			ctx.strokeStyle = options.color;
 			ctx.lineCap = options.lineCap;
 			ctx.lineJoin = options.lineJoin;
-		}
-	},
-
-	_postPath: function (options) {
-		var ctx = this._ctx;
-
-		if (options.fill) {
-			ctx.fill(options.fillRule || 'evenodd');
-		}
-		if (options.stroke && options.weight !== 0) {
 			ctx.stroke();
 		}
 	},
@@ -6337,39 +6316,38 @@ L.Canvas = L.Renderer.extend({
 	},
 
 	_onMouseMove: function (e) {
-		if (!this._map || this._map.dragging._draggable._moving || this._map._animatingZoom) { return; }
+		if (!this._map || this._map._animatingZoom) { return; }
 
 		var point = this._map.mouseEventToLayerPoint(e);
-		var id;
-
-		for (id in this._drawnLayers) {
-			this._handleMouseOut(this._layers[id], e, point);
-		}
-
-		for (id in this._drawnLayers) {
-			this._handleMouseHover(this._layers[id], e, point);
-		}
+		this._handleMouseOut(e, point);
+		this._handleMouseHover(e, point);
 	},
 
-	_handleMouseOut: function (layer, e, point) {
-		if (layer.options.interactive && layer._mouseInside && !layer._containsPoint(point)) {
+	_handleMouseOut: function (e, point) {
+		var layer = this._hoveredLayer;
+		if (layer && !layer._containsPoint(point)) {
 			// if we're leaving the layer, fire mouseout
 			L.DomUtil.removeClass(this._container, 'leaflet-interactive');
 			this._fireEvent(layer, e, 'mouseout');
-			layer._mouseInside = false;
+			this._hoveredLayer = null;
 		}
 	},
 
-	_handleMouseHover: function (layer, e, point) {
-		if (layer.options.interactive && layer._containsPoint(point)) {
-			// if we just got inside the layer, fire mouseover
-			if (!layer._mouseInside) {
-				L.DomUtil.addClass(this._container, 'leaflet-interactive'); // change cursor
-				this._fireEvent(layer, e, 'mouseover');
-				layer._mouseInside = true;
+	_handleMouseHover: function (e, point) {
+		var id, layer;
+		if (!this._hoveredLayer) {
+			for (id in this._layers) {
+				layer = this._layers[id];
+				if (layer.options.interactive && layer._containsPoint(point)) {
+					L.DomUtil.addClass(this._container, 'leaflet-interactive'); // change cursor
+					this._fireEvent(layer, e, 'mouseover');
+					this._hoveredLayer = layer;
+					break;
+				}
 			}
-			// fire mousemove
-			this._fireEvent(layer, e);
+		}
+		if (this._hoveredLayer) {
+			this._fireEvent(this._hoveredLayer, e);
 		}
 	},
 
@@ -6477,6 +6455,9 @@ L.GeoJSON = L.FeatureGroup.extend({
 		if (options.filter && !options.filter(geojson)) { return this; }
 
 		var layer = L.GeoJSON.geometryToLayer(geojson, options);
+		if (!layer) {
+			return this;
+		}
 		layer.feature = L.GeoJSON.asFeature(geojson);
 
 		layer.defaultOptions = layer.options;
@@ -6516,11 +6497,15 @@ L.extend(L.GeoJSON, {
 	geometryToLayer: function (geojson, options) {
 
 		var geometry = geojson.type === 'Feature' ? geojson.geometry : geojson,
-		    coords = geometry.coordinates,
+		    coords = geometry ? geometry.coordinates : null,
 		    layers = [],
 		    pointToLayer = options && options.pointToLayer,
 		    coordsToLatLng = options && options.coordsToLatLng || this.coordsToLatLng,
 		    latlng, latlngs, i, len;
+
+		if (!coords && !geometry) {
+			return null;
+		}
 
 		switch (geometry.type) {
 		case 'Point':
@@ -6546,12 +6531,15 @@ L.extend(L.GeoJSON, {
 
 		case 'GeometryCollection':
 			for (i = 0, len = geometry.geometries.length; i < len; i++) {
-
-				layers.push(this.geometryToLayer({
+				var layer = this.geometryToLayer({
 					geometry: geometry.geometries[i],
 					type: 'Feature',
 					properties: geojson.properties
-				}, options));
+				}, options);
+
+				if (layer) {
+					layers.push(layer);
+				}
 			}
 			return new L.FeatureGroup(layers);
 
@@ -8882,6 +8870,12 @@ L.Control.Layers = L.Control.extend({
 
 	_expand: function () {
 		L.DomUtil.addClass(this._container, 'leaflet-control-layers-expanded');
+		var acceptableHeight = this._map._size.y - (this._container.offsetTop * 4);
+		if (acceptableHeight < this._form.clientHeight)
+		{
+			L.DomUtil.addClass(this._form, 'leaflet-control-layers-scrollbar');
+			this._form.style.height = acceptableHeight + 'px';
+		}
 	},
 
 	_collapse: function () {
