@@ -28,6 +28,7 @@ export default class Tooltip {
         this.factorEls = Array.from(this.el.querySelectorAll('.js-factor'));
        
         // add styles
+        this.emptyEl = this.el.querySelector('.range-empty');
         this.rangeEl = this.el.querySelector('.range-pipes');
         
         this.markerSalaryEl = this.el.querySelector('.marker-salary');
@@ -63,13 +64,23 @@ export default class Tooltip {
             salary = data.threshold,
             factor = prices.med/salary;
         
-        var ratio = 100/prices.max,
+        var empty = 0,
+            ratio = 100/prices.max,
             range = ratio*salary*8,
             min = ratio*prices.min,
             med = ratio*prices.med;
         
         // change styles
+        if (prices.count === 0) {
+            min = 0;
+            med = 50;
+            empty = 100;
+        } else if (prices.count ===1) {
+            min = 98;
+        }
+
         this.rangeEl.style.width = range + "%";        
+        this.emptyEl.style.width = empty + "%";
         
         this.markerSalaryEl.style.left = ratio*salary + "%";        
         this.markerMedEl.style.left = med + "%";        

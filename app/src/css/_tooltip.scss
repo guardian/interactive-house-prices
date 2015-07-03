@@ -45,7 +45,7 @@ $c-neutral-5: #dfdfdf;
     position: absolute;
     top: 0;
     left: 0;
-    z-index: 11; //range is 10 
+    z-index: 11; //legend of range is 10 
 
     pointer-events: none;
     user-select: none; 
@@ -63,6 +63,10 @@ $c-neutral-5: #dfdfdf;
 [class^="range-"] {
     height: 10px;
     display: inline-block;
+}
+.range-empty {
+    width: 100%;
+    background-color: $c-neutral-3;
 }
 .range-extra {
     width: 100%;
