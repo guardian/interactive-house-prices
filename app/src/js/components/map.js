@@ -52,7 +52,7 @@ export default class Map {
                 layer.on({
                     mouseover: evt => {
                         highlightLayer.addData([feature]);
-                        this.tooltip.show(evt, this.data)
+                        this.tooltip.show(evt, this.data);
                     },
                     mouseout: () => {
                         highlightLayer.clearLayers();

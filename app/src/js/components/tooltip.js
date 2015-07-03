@@ -1,13 +1,11 @@
 import { getRegionPrices } from '../lib/region';
 import debounce from '../lib/debounce';
+import Linechart from './linechart';
 
 import template from './templates/tooltip.html!text';
 import areaName from '../data/areas-name.json!json';
 
-const min = 7000;
-const max = 50000000;
-
-const tooltipWidth = 256;
+const tooltipWidth = 320;
 const tooltipHeight = 200;
 
 export default class Tooltip {
@@ -15,28 +13,31 @@ export default class Tooltip {
         this.el = root.querySelector('.js-tooltip');
         this.el.innerHTML = template;
         
-        // load from data
+        // els for datai
+        // header
         this.areaEl = this.el.querySelector('.js-area');
         this.districtEl = this.el.querySelector('.js-district');
-        
+        // body
         this.numEl = this.el.querySelector('.js-num'); //number of sales
         this.minEl = this.el.querySelector('.js-min');
         this.maxEl = this.el.querySelector('.js-max');
-        
         this.medEls = Array.from(this.el.querySelectorAll('.js-med'));
         this.salaryEls = Array.from(this.el.querySelectorAll('.js-salary'));
         this.factorEls = Array.from(this.el.querySelectorAll('.js-factor'));
        
-        // add styles
+        // els for styles
         this.emptyEl = this.el.querySelector('.range-empty');
         this.rangeEl = this.el.querySelector('.range-pipes');
-        
         this.markerSalaryEl = this.el.querySelector('.marker-salary');
         this.markerMedEl = this.el.querySelector('.marker-med');
         this.markerMinEl = this.el.querySelector('.marker-min');
         this.labelMinEl = this.el.querySelector('.label-min');
         this.labelFacMedEl = this.el.querySelector('.label-facmed');
         this.labelFacEl = this.el.querySelector('.label-fac');
+        
+        // init line chart
+        this.linechart = new Linechart();
+        
 
         var resize = debounce(function () {
             window.requestAnimationFrame(() => {
@@ -66,42 +67,42 @@ export default class Tooltip {
         
         var empty = 0,
             ratio = 100/prices.max,
-            range = ratio*salary*8,
-            min = ratio*prices.min,
-            med = ratio*prices.med;
+            ratioMin = ratio*prices.min,
+            ratioMed = ratio*prices.med,
+            ratioSalary = ratio*salary,
+            range = ratioSalary*8;
         
         // change styles
         if (prices.count === 0) {
-            min = 0;
-            med = 50;
+            ratioMin = 0;
+            ratioMed = 50;
             empty = 100;
         } else if (prices.count ===1) {
-            min = 98;
+            ratioMin = 98;
         }
 
         this.rangeEl.style.width = range + "%";        
         this.emptyEl.style.width = empty + "%";
         
-        this.markerSalaryEl.style.left = ratio*salary + "%";        
-        this.markerMedEl.style.left = med + "%";        
-        this.markerMinEl.style.left = min + "%";        
+        this.markerSalaryEl.style.left = ratioSalary + "%";        
+        this.markerMedEl.style.left = ratioMed + "%";        
+        this.markerMinEl.style.left = ratioMin + "%";        
         
-        this.labelMinEl.style.marginLeft = ((min < 50) ? min : 50) + "%";   
+        this.labelMinEl.style.marginLeft = ((ratioMin < 50) ? ratioMin : 50) + "%";   
         this.labelFacEl.style.fontSize = 8 + ((factor<24)?factor:24) + "px"; 
 
-        if (med > 65) {
+        if (ratioMed > 65) {
             this.labelFacMedEl.style.left = "auto";
             this.labelFacMedEl.style.right = 0;
-        } else if (med > 35) {
-            this.labelFacMedEl.style.left = (med-5) + "%";
+        } else if (ratioMed > 35) {
+            this.labelFacMedEl.style.left = (ratioMed-5) + "%";
             this.labelFacMedEl.style.right = "auto";
         } else {
             this.labelFacMedEl.style.left = "auto";
             this.labelFacMedEl.style.right = "auto";
         }
         
-        
-        // load from data
+        // load data
         this.areaEl.textContent = area; 
         this.districtEl.textContent = district; 
         
@@ -113,7 +114,18 @@ export default class Tooltip {
         this.salaryEls.forEach(el => el.textContent = salary.toLocaleString());
         this.factorEls.forEach(el => el.textContent = Math.round(factor*10)/10);
         
-        
+        // update line chart
+        var lines = prices.range.map((l, i, arr) => {
+            var c = l;
+            if (i!==0 && i!==8) { c = l - arr[i-1]; } //temp fix
+            //console.log(i*2+1, c);
+            return {
+                count: c,
+                range: (i*2+0.5)*ratioSalary*2.8
+            };
+        });
+        this.linechart.update(lines);
+
         var x = evt.containerPoint.x;
         var y = evt.containerPoint.y;// - tooltipHeight;
         if (x + tooltipWidth > this.viewWidth) {

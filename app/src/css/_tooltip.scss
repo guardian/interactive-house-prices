@@ -50,8 +50,7 @@ $c-neutral-5: #dfdfdf;
     pointer-events: none;
     user-select: none; 
 
-    h3 { margin: .25em 0; }
-    p  { margin: 0; }
+    h3, p  { margin: 0; }
 
     .chart {
         margin-bottom: 5px;
