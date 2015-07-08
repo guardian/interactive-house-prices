@@ -13,12 +13,9 @@ moment.range('2014-01-01', '2015-03-01').by('months', function (d) {
 
 console.log('Processing districts');
 
-var geo = JSON.parse(fs.readFileSync('data/districts.json'));
-var prices = common.readCSV('data/districts.csv');
-
 // Reduce prices to a flat object of id to prices
 // e.g. {'AA': [12345, ...], ...}
-var pricesById = _(prices)
+var pricesById = _(common.prices)
     .groupBy('id')
     .mapValues(function (price) {
         var prices = _(price)
@@ -33,7 +30,7 @@ var pricesById = _(prices)
     }).value();
 
 // Remove any topologies that don't have associated prices
-var features = _.filter(geo.features, function (feature) { return pricesById[feature.properties.name]; });
+var features = _.filter(common.geo.features, function (feature) { return pricesById[feature.properties.name]; });
 
 var topo = common.geo2topo(features, 0.4, function (d) { return { 'prices': pricesById[d.properties.name] }; });
 var json = JSON.stringify(topo);

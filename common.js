@@ -60,7 +60,11 @@ function geo2topo(features, retainProportion, propertyTransform) {
     return topo;
 }
 
+var geo = JSON.parse(fs.readFileSync('data/districts.json'));
+var prices = readCSV('data/districts.csv');
+
 module.exports = {
-    'readCSV': readCSV,
+    'geo': geo,
+    'prices': prices,
     'geo2topo': geo2topo
 }
