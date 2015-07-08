@@ -34,7 +34,7 @@ function render(ctx, features, color) {
 var canvas = new Canvas(IMG_WIDTH * common.dates.length, IMG_HEIGHT),
     ctx = canvas.getContext('2d'),
     stream = canvas.pngStream(),
-    out = fs.createWriteStream('test.png');
+    out = fs.createWriteStream('out.png');
 
 canvas.pngStream().on('data', function (chunk) { out.write(chunk); });
 

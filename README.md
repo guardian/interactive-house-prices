@@ -5,6 +5,14 @@ unzip data.zip
 node process.js
 ```
 
+## Generate PNG sprite
+
+You need to install pngquant, then run:
+```
+./generate.sh`
+
+```
+
 ## Convert Shapefile to TopoJSON
 
 ```topojson --id-property name --simplify-proportion 0.1 Areas.shp > areas-topo.json```
