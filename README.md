@@ -7,9 +7,9 @@ node process.js
 
 ## Generate PNG sprite
 
-You need to install pngquant, then run:
+You need to install `pngquant`, then run:
 ```
-./generate.sh`
+./generate.sh
 ```
 
 ## Convert Shapefile to TopoJSON
