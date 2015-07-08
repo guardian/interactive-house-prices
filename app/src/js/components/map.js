@@ -1,8 +1,9 @@
 import L from '../lib/leaflet';
-import { getDistricts, getRegionPrices } from '../lib/region';
+import { getDistricts, getRegionPrices, getCountryMedian } from '../lib/region';
 
 import Tooltip from './tooltip';
 import User from './user';
+import Linechart from './linechart';
 
 const colors = ['#39a4d8', '#8ac7cd', '#daeac1', '#fdd09e', '#f58680', '#ed3d61'];
 
@@ -73,15 +74,21 @@ export default class Map {
             accessToken: 'pk.eyJ1IjoiZ3VhcmRpYW4iLCJhIjoiNHk1bnF4OCJ9.25tK75EuDdgq5GxQKyD6Fg'
         }).addTo(this.map);
 
-        getDistricts().then(geo => this.regionLayer.addData(geo));
-
+        getDistricts().then(geo => { 
+            this.regionLayer.addData(geo);
+            
+            this.lines = getCountryMedian(geo.features);
+            this.linechart = new Linechart(".js-line", 400, 30);
+            this.linechart.update(this.lines, 400, 100);
+        });
+        
         this.tooltip = new Tooltip(el);
         this.user = new User(el.querySelector('.js-user'), this.update.bind(this));
     }
 
     update(data) {
         this.data = data;
-
+         
         this.regionLayer.options.style = function (region) {
             var price = getRegionPrices(region, data.year, data.month).med;
             var ratio = price / data.threshold;

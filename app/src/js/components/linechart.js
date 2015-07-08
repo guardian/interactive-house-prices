@@ -1,14 +1,16 @@
 import d3 from '../lib/d3';
 
-const width = 280;
-const height = 15;
+const Width = 280;
+const Height = 15;
 
 export default class Linechart {
-    constructor() {
+    constructor(el, width, height) {
         //this.el = root.querySelector('.js-linechart');
         //this.el.innerHTML = template;
         
-        this.svg = d3.select(".lines")
+        //this.svg = d3.select("body"));
+        this.svg = d3.select(el)
+                     //.transition()
                      .append("svg")
                      .attr("width", width)
                      .attr("height", height);
@@ -25,8 +27,8 @@ export default class Linechart {
 
         // Define the line
         this.valueline = d3.svg.line()
-                           .x(function(d) { return this.x(d.range); })
-                           .y(function(d) { return this.y(d.count); });
+                           .x(function(d) { return this.x(d.x); })
+                           .y(function(d) { return this.y(d.y); });
     
         this.svg
         .append("path")
@@ -43,18 +45,23 @@ export default class Linechart {
         */
     }
 
-    update(data) {
-        var maxX = d3.max(data, function(d) { return d.range; });
+    update(data, width, height) {
+        var maxX = d3.max(data, function(d) { return d.x; }),
+            maxY = d3.max(data, function(d) { return d.y; }),
+            rangeX = width || maxX/*,
+            rangeY = height || 0*/;
 
         // Select the section we want to apply our changes to
-        //this.svg = d3.select("body").transition();
-        
         this.x.domain([0, maxX]);
-        this.y.domain([0, d3.max(data, function(d) { return d.count; })]);
+        this.y.domain([0, maxY]);
         
-        this.x.range([0, maxX]);
+        this.x.range([0, rangeX]);
         this.xAxis.scale(this.x);
-        
+        /*if (rangeY !== 0) {
+            this.y.range([0, rangeY]);
+            this.yAxis.scale(this.y);
+        }*/
+
         this.svg
         .select("path")
         //.duration(500)

@@ -1,5 +1,5 @@
 import template from './templates/user.html!text';
-import Tooltip from './tooltip';
+import Linechart from './linechart';
 import throttle from '../lib/throttle';
 
 const startYear = 2014;
@@ -10,7 +10,7 @@ export default class User {
         this.el = el;
         this.el.innerHTML = template;
         
-        //this.tooltip = new Tooltip(el);
+        //this.linechart = new Linechart();
         this.onUpdate = onUpdate;
 
         this.dateEl = el.querySelector('#date');

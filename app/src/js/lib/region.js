@@ -1,7 +1,7 @@
-import reqwest from 'ded/reqwest'
-import topojson from 'mbostock/topojson'
+import reqwest from 'ded/reqwest';
+import topojson from 'mbostock/topojson';
 
-import { config } from './cfg'
+import { config } from './cfg';
 
 export function getDistricts() {
     return new Promise((resolve, reject) => {
@@ -31,4 +31,36 @@ const startYear = 2014;
 export function getRegionPrices(region, year, month) {
     var [min, max, med, count, r0, r1, r2, r3, r4, r5, r6, r7, r8] = region.properties.prices[(year - startYear) * 12 + month];
     return {min, max, med, count, range:[r0, r1, r2, r3, r4, r5, r6, r7, r8]};
+}
+
+export function getCountryMedian(districts) {
+    var data = [],
+        medians = [], 
+        wage = 25000,
+        yearCount = districts[0].properties.prices.length, 
+        distCount = districts.length;
+
+    for(var i = 0; i < yearCount; i++){
+        medians[i] = [];
+    }
+
+    // group district med by year
+    districts.forEach((d, i) => {
+        d.properties.prices.forEach((p, j) => {
+            medians[j][i] = p[2];
+        });
+    });
+    
+    // calc med house price lower than med salary
+    medians.forEach((meds, i) => { 
+        var affordableCount = meds.filter(m => m <= wage*4).length;
+        var nosalesCount = meds.filter(m => m === 0).length;
+        var ratio = (affordableCount-nosalesCount) / (distCount-nosalesCount);
+        data[i] = {
+            x: i,
+            y: Math.round(ratio*10000)/100
+        }; 
+    });
+    
+    return data;
 }

@@ -36,7 +36,7 @@ export default class Tooltip {
         this.labelFacEl = this.el.querySelector('.label-fac');
         
         // init line chart
-        this.linechart = new Linechart();
+        this.linechart = new Linechart(".js-lines", 280, 15);
         
 
         var resize = debounce(function () {
@@ -120,8 +120,8 @@ export default class Tooltip {
             if (i!==0 && i!==8) { c = l - arr[i-1]; } //temp fix
             //console.log(i*2+1, c);
             return {
-                count: c,
-                range: (i*2+0.5)*ratioSalary*2.8
+                y: c,                           // count
+                x: (i*2+0.5)*ratioSalary*2.8    // range
             };
         });
         this.linechart.update(lines);
