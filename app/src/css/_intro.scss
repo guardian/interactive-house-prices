@@ -1,0 +1,17 @@
+.intro {
+    position: absolute;
+    z-index: 2000;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #66091c;
+}
+
+.intro__step {
+    float: left;
+    background: url('assets/intro.png');
+    background-size: cover;
+    width: 25%;
+    padding-bottom: 30%;
+}
