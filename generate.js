@@ -2,13 +2,11 @@ var common = require('./common');
 var fs = require('fs');
 var _ = require('lodash');
 var Canvas = require('canvas');
-var GIFEncoder = require('gifencoder');
 var d3 = require('d3');
 require("d3-geo-projection")(d3);
 
 var IMG_WIDTH = 400;
-var IMG_HEIGHT = 500;
-var IMG_COUNT = 4;
+var IMG_HEIGHT = 480;
 var THRESHOLD = 25000 * 4;
 
 var projection = d3.geo.mercator().scale(1).translate([0, 0]);
@@ -18,7 +16,7 @@ var b = path.bounds(common.geo),
     s = .95 / Math.max((b[1][0] - b[0][0]) / IMG_WIDTH, (b[1][1] - b[0][1]) / IMG_HEIGHT),
     t = [(IMG_WIDTH - s * (b[1][0] + b[0][0])) / 2, (IMG_HEIGHT - s * (b[1][1] + b[0][1])) / 2];
 
-projection.scale(s).translate(t);
+projection.scale(s);
 
 function render(ctx, features, color) {
     var ctxPath = path.context(ctx);
@@ -33,36 +31,31 @@ function render(ctx, features, color) {
     });
 }
 
-var dateI = 0;
-_.chunk(common.dates, Math.ceil(common.dates.length / IMG_COUNT)).forEach(function (dates, imgNo) {
-    console.log('Generating ' + imgNo);
+var canvas = new Canvas(IMG_WIDTH * common.dates.length, IMG_HEIGHT),
+    ctx = canvas.getContext('2d'),
+    stream = canvas.pngStream(),
+    out = fs.createWriteStream('test.png');
 
-    var encoder = new GIFEncoder(IMG_WIDTH, IMG_HEIGHT);
-    encoder.createReadStream().pipe(fs.createWriteStream('test' + imgNo + '.gif'));
+canvas.pngStream().on('data', function (chunk) { out.write(chunk); });
 
-    encoder.start();
-    encoder.setDelay(500);
+ctx.fillStyle = '#66091c';
+ctx.fillRect(0, 0, IMG_WIDTH * common.dates.length, IMG_HEIGHT);
 
-    var canvas = new Canvas(IMG_WIDTH, IMG_HEIGHT),
-        ctx = canvas.getContext('2d');
+common.dates.forEach(function (date, dateI) {
+    projection.translate([t[0] + dateI * IMG_WIDTH, t[1]]);
 
-    dates.forEach(function (date) {
-        ctx.fillStyle = '#66091c';
-        ctx.fillRect(0, 0, IMG_WIDTH, IMG_HEIGHT);
+    var features = common.geo.features;
 
-        var features = _.groupBy(common.geo.features, function (feature) {
-            if (dateI > 0 && common.prices[feature.properties.name][dateI - 1][2] > THRESHOLD) {
-                return 'gone';
-            }
-            return common.prices[feature.properties.name][dateI][2] > THRESHOLD ? 'going' : 'staying';
+    if (dateI > 0) {
+        features = features.filter(function (feature) {
+            return common.prices[feature.properties.name][dateI - 1][2] <= THRESHOLD;
         });
+    }
 
-        render(ctx, features.staying, '#CCCCCC');
-        render(ctx, features.going, '#ed3d61');
-
-        encoder.addFrame(ctx);
-        dateI++;
+    features = _.groupBy(features, function (feature) {
+        return common.prices[feature.properties.name][dateI][2] > THRESHOLD ? 'going' : 'staying';
     });
 
-    encoder.finish();
+    render(ctx, features.staying, '#CCCCCC');
+    render(ctx, features.going, '#ed3d61');
 });
