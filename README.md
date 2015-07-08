@@ -10,7 +10,6 @@ node process.js
 You need to install pngquant, then run:
 ```
 ./generate.sh`
-
 ```
 
 ## Convert Shapefile to TopoJSON
