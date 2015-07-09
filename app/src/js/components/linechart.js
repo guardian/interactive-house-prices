@@ -11,7 +11,7 @@ export default class Linechart {
         this.svg = d3.select(el)
                      .append("svg")
                      .attr("width", width)
-                     .attr("height", height);
+                     .attr("height", height+2);
 
         // Set the ranges
         this.x = d3.scale.linear().range([0, width]);

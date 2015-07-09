@@ -115,13 +115,12 @@ export default class Tooltip {
         this.factorEls.forEach(el => el.textContent = Math.round(factor*10)/10);
         
         // update line chart
+        var diff = (100 - ratioMin)/6; 
+        console.log(prices.range);
         var lines = prices.range.map((l, i, arr) => {
-            var c = l;
-            if (i!==0 && i!==8) { c = l - arr[i-1]; } //temp fix
-            //console.log(i*2+1, c);
             return {
-                y: c,                           // count
-                x: (i*2+0.5)*ratioSalary*2.8    // range
+                y: l,                            // count
+                x: (ratioMin + diff*(i+0.5))*2.8 // range
             };
         });
         this.linechart.update(lines);

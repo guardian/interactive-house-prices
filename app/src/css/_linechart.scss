@@ -20,3 +20,8 @@
     margin-top: 20px;
     margin-bottom: -5px;
 }
+.line-distribution {
+    @extend .lines;
+    margin-top: 2px;
+    margin-bottom: -6px;
+}
