@@ -1,17 +1,44 @@
-.intro {
+.intro-container {
     position: absolute;
     z-index: 2000;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: #66091c;
+    background-color: #a60947;
 }
 
-.intro__step {
+.intro {
+    margin: 0 auto;
+    box-sizing: border-box;
+    padding: 10px;
+
+    @include mq(mobileLandscape) {
+        padding: 20px;
+    }
+    @include mq(tablet) {
+        max-width: 740px;
+    }
+    @include mq(desktop) {
+        max-width: 980px;
+    }
+    @include mq(leftCol) {
+        max-width: 1140px;
+    }
+    @include mq(wide) {
+        max-width: 1300px;
+    }
+}
+
+.intro__img {
     float: left;
+    width: 25%;
     background: url('assets/intro.png');
     background-size: cover;
-    width: 25%;
     padding-bottom: 30%;
+}
+
+.intro__year {
+    float: left;
+    width: 25%;
 }
