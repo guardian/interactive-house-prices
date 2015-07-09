@@ -1,38 +1,3 @@
-$c-neutral-1: #333;
-$c-neutral-2: #767676;
-$c-neutral-3: #bdbdbd;
-$c-neutral-5: #dfdfdf;
-
-
-// atomic
-.c-grey3 { color: $c-neutral-3; }
-
-.fz-11 { font-size: 11px; }
-.fz-18 { font-size: 18px; }
-
-.f-l { float: left; }
-.f-r { float: right; }
-
-.bb-s { border-bottom: 1px solid $c-neutral-5; }
-.bb-d { border-bottom: 1px dotted $c-neutral-1; }
-
-.mr-5  { margin-right: 5px; }
-.mt-15 { margin-top: 15px; }
-
-.p-a {
-    position: absolute;
-}
-
-.f-truncate {
-    display: inline-block;
-    width: 100%; // check the tweak
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    vertical-align: bottom;
-}
-
-
 // tooptip
 .tooltip {
     @include fs-textSans(2);

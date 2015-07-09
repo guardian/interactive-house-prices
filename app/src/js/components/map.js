@@ -78,12 +78,11 @@ export default class Map {
             this.regionLayer.addData(geo);
             
             this.lines = getCountryMedian(geo.features);
+            this.user = new User(el.querySelector('.js-user'), this.lines,  this.update.bind(this));
             this.linechart = new Linechart(".js-line", 400, 30);
             this.linechart.update(this.lines, 400, 100);
         });
-        
         this.tooltip = new Tooltip(el);
-        this.user = new User(el.querySelector('.js-user'), this.update.bind(this));
     }
 
     update(data) {

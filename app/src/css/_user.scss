@@ -15,7 +15,7 @@
     @include mq(wide) {
         display: block;
         width: map-get($mq-breakpoints, wide);
-    }
+}
 }
 
 .user__inner {
@@ -58,7 +58,7 @@
 
     &#your_wage {
         width: 200px;
-    }
+}
 }
 
 .result {
@@ -69,16 +69,16 @@
 .result__color {
     .result--bad & {
         color: #ed3d61;
-    }
-    .result--good & {
-        color: #39a4d8;
-    }
+}
+.result--good & {
+    color: #39a4d8;
+}
 }
 
 .daterange {
     input {
         width: 100%;
-    }
+}
 }
 
 .share-container {
@@ -92,9 +92,26 @@
 
     p {
         margin: 0;
-    }
+}
 }
 
 .share {
     float: right;
+}
+
+// marker for line chart
+.shape-triangle {
+    top: 45px; //temp
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 8px solid #ed3d61;
+}
+.pos-r-user {
+    @extend .pos-r;
+    top: -52px;
+    margin-left: 2px;
+    width: calc(100% - 14px);
+
+    font-family: $f-data;
+    font-size: 12px;
 }

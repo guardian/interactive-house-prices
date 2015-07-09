@@ -8,9 +8,7 @@ export default class Linechart {
         //this.el = root.querySelector('.js-linechart');
         //this.el.innerHTML = template;
         
-        //this.svg = d3.select("body"));
         this.svg = d3.select(el)
-                     //.transition()
                      .append("svg")
                      .attr("width", width)
                      .attr("height", height);
@@ -51,7 +49,6 @@ export default class Linechart {
             rangeX = width || maxX/*,
             rangeY = height || 0*/;
 
-        // Select the section we want to apply our changes to
         this.x.domain([0, maxX]);
         this.y.domain([0, maxY]);
         
@@ -64,7 +61,8 @@ export default class Linechart {
 
         this.svg
         .select("path")
-        //.duration(500)
+        .transition()
+        .duration(250)
         .attr("d", this.valueline(data));
     }
 }
