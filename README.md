@@ -1,15 +1,8 @@
 # House prices
 
-```
-unzip data.zip
-node process.js
-```
-
-## Generate PNG sprite
-
 You need to install `pngquant`, then run:
 ```
-./generate.sh
+./start.sh
 ```
 
 ## Queries
