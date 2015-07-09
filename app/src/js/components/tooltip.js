@@ -61,7 +61,7 @@ export default class Tooltip {
             district = districtObj.id,
             area = areaName[district.replace(/[0-9].*/,'')] + " area";
         
-        var prices = getRegionPrices(districtObj, data.year, data.month),
+        var prices = getRegionPrices(districtObj, data.year),
             salary = data.threshold,
             factor = prices.med/salary;
         

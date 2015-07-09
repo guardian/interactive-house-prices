@@ -2,40 +2,29 @@ import template from './templates/user.html!text';
 import Linechart from './linechart';
 import throttle from '../lib/throttle';
 
-const startYear = 2014;
-const months = 12 + 2; // TODO: actual values
+const startYear = 1995;
+const endYear = 2014;
 
 export default class User {
     constructor(el, onUpdate) {
         this.el = el;
         this.el.innerHTML = template;
-        
+
         //this.linechart = new Linechart();
         this.onUpdate = onUpdate;
 
         this.dateEl = el.querySelector('#date');
+        this.dateEl.max = endYear - startYear;
         this.dateEl.addEventListener('input', throttle(function () {
-            var date = this.dateEl.value / 100 * months;
-            var year = Math.floor(date / 12) + parseInt(startYear);
-            var month = Math.floor(date % 12) + 1;
-
-            this.changeTime(year, month);
+            var year = startYear + parseInt(this.dateEl.value);
+            this.changeTime(year);
         }.bind(this), 50));
 
-        /*
-        this.statusEl = el.querySelector('#status');
-        this.timeEl = el.querySelector('#slider');
-        this.yearEl = el.querySelector('#year');
-        this.monthEl = el.querySelector('#month');*/
-
-        this.changeTime(2014, 1);
+        this.changeTime(startYear);
     }
 
-    changeTime(year, month) {
-        /*this.yearEl.textContent = year;
-        this.monthEl.textContent = month < 10 ? '0' + month : month;*/
-
-        this.onUpdate({'year': year, 'month': month, 'threshold': 25000});
+    changeTime(year) {
+        this.onUpdate({'year': year, 'threshold': 25000});
         
         // update tooltip
         //this.tooltip.hide();

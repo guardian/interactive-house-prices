@@ -5,8 +5,8 @@ var Canvas = require('canvas');
 var d3 = require('d3');
 require("d3-geo-projection")(d3);
 
-var IMG_WIDTH = 400;
-var IMG_HEIGHT = 480;
+var IMG_WIDTH = 315;
+var IMG_HEIGHT = 378;
 var THRESHOLD = 25000 * 4;
 
 var projection = d3.geo.mercator().scale(1).translate([0, 0]);
@@ -38,7 +38,7 @@ var canvas = new Canvas(IMG_WIDTH * common.dates.length, IMG_HEIGHT),
 
 canvas.pngStream().on('data', function (chunk) { out.write(chunk); });
 
-ctx.fillStyle = '#66091c';
+ctx.fillStyle = '#a60947';
 ctx.fillRect(0, 0, IMG_WIDTH * common.dates.length, IMG_HEIGHT);
 
 common.dates.forEach(function (date, dateI) {
@@ -56,6 +56,6 @@ common.dates.forEach(function (date, dateI) {
         return common.prices[feature.properties.name][dateI][2] > THRESHOLD ? 'going' : 'staying';
     });
 
-    render(ctx, features.staying, '#CCCCCC');
-    render(ctx, features.going, '#ed3d61');
+    render(ctx, features.staying, '#e0e0e0');
+    render(ctx, features.going, '#ca2354');
 });
