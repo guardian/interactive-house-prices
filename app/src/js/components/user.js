@@ -1,9 +1,7 @@
 import template from './templates/user.html!text';
 import Linechart from './linechart';
 import throttle from '../lib/throttle';
-
-const startYear = 1995;
-const endYear = 2014;
+import { startYear, endYear } from '../lib/region';
 
 export default class User {
     constructor(el, onUpdate) {

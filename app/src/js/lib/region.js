@@ -3,6 +3,9 @@ import topojson from 'mbostock/topojson';
 
 import { config } from './cfg';
 
+export const startYear = 1995;
+export const endYear = 2014;
+
 export function getDistricts() {
     return new Promise((resolve, reject) => {
         reqwest({
@@ -27,7 +30,6 @@ export function getDistricts() {
     });
 }
 
-const startYear = 1995;
 export function getRegionPrices(region, year) {
     var [min, max, med, count, r0, r1, r2, r3, r4, r5, r6, r7, r8] = region.properties.prices[year - startYear];
     return {min, max, med, count, range: [r0, r1, r2, r3, r4, r5, r6, r7, r8]};

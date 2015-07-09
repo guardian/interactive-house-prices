@@ -1,5 +1,6 @@
 import { set as setConfig } from './lib/cfg'
 import './lib/pointer-events'
+import './lib/raf'
 
 import Intro from './components/intro';
 import Map from './components/map'

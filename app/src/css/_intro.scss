@@ -31,14 +31,28 @@
 }
 
 .intro__img {
+    position: relative;
+    display: none;
     float: left;
-    width: 25%;
+    width: 50%;
     background: url('assets/intro.png');
     background-size: cover;
-    padding-bottom: 30%;
+    padding-bottom: 60%;
+
+    @include mq(desktop) {
+        width: 25%;
+        padding-bottom: 30%;
+    }
 }
 
-.intro__year {
-    float: left;
-    width: 25%;
+.intro__img__year {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    @include f-bodyHeading;
+    text-align: center;
+    color: white;
+    font-size: 40px;
+    font-weight: normal;
 }
