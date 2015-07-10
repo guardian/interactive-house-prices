@@ -12,6 +12,11 @@
     margin: 0 auto;
     box-sizing: border-box;
     padding: 10px;
+    height: 100%;
+
+    @include f-bodyHeading;
+    font-weight: normal;
+    color: white;
 
     @include mq(mobileLandscape) {
         padding: 20px;
@@ -30,14 +35,31 @@
     }
 }
 
+.intro__step {
+    height: 100%;
+}
+
+.intro__text {
+    font-size: 60px;
+
+    opacity: 0;
+    transition: opacity 0.5s ease-out;
+
+    &.is-visible {
+        opacity: 1;
+    }
+}
+
 .intro__img {
     position: relative;
-    display: none;
     float: left;
     width: 50%;
     background: url('assets/intro.png');
     background-size: cover;
     padding-bottom: 60%;
+    margin-bottom: 40px;
+
+    display: none;
 
     @include mq(desktop) {
         width: 25%;
@@ -50,9 +72,7 @@
     top: 100%;
     left: 0;
     right: 0;
-    @include f-bodyHeading;
     text-align: center;
-    color: white;
     font-size: 40px;
-    font-weight: normal;
+    line-height: 1;
 }
