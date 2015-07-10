@@ -18,25 +18,24 @@ export default class User {
         this.dateEl.ratio = data[0].y;
         this.dateEl.addEventListener('input', throttle(function () {
             var year = startYear + parseInt(this.dateEl.value);
-            var yearDiff = year - startYear;
-            var dataYear = data.filter(d => d.x === yearDiff);
-            this.changeTime(year, yearDiff, dataYear[0].y);
+            var dataYear = data.filter(d => d.x === parseInt(this.dateEl.value));
+            this.changeTime(year, dataYear[0].y);
         }.bind(this), 50));
         
-        this.changeTime(startYear, 0, this.dateEl.ratio);
+        this.changeTime(startYear, this.dateEl.ratio);
     }
 
-    changeTime(year, yearDiff, ratioYear) {
+    changeTime(year, ratioYear) {
         this.onUpdate({'year': year, 'threshold': 25000});
         
         // update user's line chart
-        var left = (100*yearDiff/this.dateEl.max) + "%";
-        this.labelEl.style.left = left;
+        var left = (100*this.dateEl.value/this.dateEl.max);
+        this.labelEl.style.left = left + "%";
         this.ratioEls.forEach(el => {
-            el.style.left = left;
-            el.textContent = Math.round(ratioYear*10)/10 + "%";
+            el.style.left = (left-0.8) + "%";
+            el.textContent = Math.round(ratioYear) + "%";
         });
-        this.ratiodiffEl.textContent = Math.round((ratioYear - this.dateEl.ratio)*10)/10 + "%";
+        this.ratiodiffEl.textContent = Math.round(ratioYear - this.dateEl.ratio) + "%";
         
         // update tooltip
         //this.tooltip.hide();

@@ -5,8 +5,6 @@ const Height = 15;
 
 export default class Linechart {
     constructor(el, width, height) {
-        //this.el = root.querySelector('.js-linechart');
-        //this.el.innerHTML = template;
         
         this.svg = d3.select(el)
                      .append("svg")
@@ -28,10 +26,10 @@ export default class Linechart {
                            .x(function(d) { return this.x(d.x); })
                            .y(function(d) { return this.y(d.y); });
     
-        this.svg
-        .append("path")
+        this.path = this.svg.append("path")
         .attr("class", "line");
         
+
         /*this.svg.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + width + ")")

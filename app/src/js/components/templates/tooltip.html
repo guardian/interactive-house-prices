@@ -5,16 +5,12 @@
 
 <p><b>number of sales: </b><span class="js-num"></span></p>
 
-<p><b>summary: </b></p>
 <div class="line-distribution js-lines"></div>
 <div class="chart">
-    <!-- labels -->
+    <!-- labels: min/max -->
     <div class="fz-11">
-        <span class="js-salary"></span> 
-        <span class="label-facmed pos-a"> 
-            * <span class="js-factor bb-d"></span> 
-            = <span class="js-med"></span>
-        </span>
+        <span class="label-min">[min.] <span class="js-min"></span></span> - 
+        <span class="f-r">- - <span class="js-max"></span> [max.]</span>
     </div>
     <!-- ranges -->
     <div>
@@ -23,7 +19,7 @@
        ><div class="range-pipes"></div
        ><div class="range-extra"></div>
         <!-- end of hack -->
-   </div>
+    </div>
     <!-- markers -->
     <div>
         <div class="marker-salary"></div>
@@ -33,17 +29,20 @@
     </div>
     <!-- labels -->
     <div class="fz-11">
-        <span class="label-min js-min"></span> - 
-        <span class="f-r">- - <span class="js-max"></span></span>
+        <span class="js-salary"></span> 
+        <span class="label-facmed pos-a"> 
+            * <span class="js-factor bb-d"></span> 
+            = <span class="js-med"></span> [meidan]
+        </span>
     </div>
 </div>
 
 <p><!--b>mortgage factor: </b><br-->
-    The median house price in XXXX was 
-    <span class="js-factor label-fac bb-d"></span><b> times </b>
-    your salary. You would have been able to afford it in XXXX,
-    when it was just below 4.
-    <!--span class="js-med"></span><span class="fz-11"> (house)</span> /
-    <span class="js-salary"></span><span class="fz-11"> (salary)</span> =
-    <span class="js-factor label-fac bb-d"></span-->
+    The median house price in 
+    <span class="js-year-user">[year]</span> was 
+    <b><span class="js-factor label-fac bb-d"></span> times </b>your salary. 
+    <span class="js-year-affordable">   
+        You would have been able to afford it in [year], 
+        when it was just below 4.
+    </span>
 </p>

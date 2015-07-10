@@ -31,6 +31,9 @@ export default class Tooltip {
         this.medEls = Array.from(this.el.querySelectorAll('.js-med'));
         this.salaryEls = Array.from(this.el.querySelectorAll('.js-salary'));
         this.factorEls = Array.from(this.el.querySelectorAll('.js-factor'));
+        // footer
+        this.yearUserEl = this.el.querySelector('.js-year-user');
+        this.yearAffordableEl = this.el.querySelector('.js-year-affordable');
        
         // els for styles
         this.emptyEl = this.el.querySelector('.range-empty');
@@ -96,8 +99,8 @@ export default class Tooltip {
         this.markerMinEl.style.left = ratioMin + "%";        
         
         this.labelMinEl.style.marginLeft = ((ratioMin < 50) ? ratioMin : 50) + "%";   
-        this.labelFacEl.style.fontSize = 8 + ((factor<24)?factor:24) + "px"; 
-
+        this.labelFacEl.style.fontSize = 12 + ((factor<20)?factor:20) + "px"; 
+        
         if (ratioMed > 65) {
             this.labelFacMedEl.style.left = "auto";
             this.labelFacMedEl.style.right = 0;
@@ -121,9 +124,24 @@ export default class Tooltip {
         this.salaryEls.forEach(el => el.textContent = salary.toLocaleString());
         this.factorEls.forEach(el => el.textContent = Math.round(factor*10)/10);
         
+        var textAffordable = "";
+        for (var yr=data.year; yr>=1995; yr--) {
+            var yearPrices = getRegionPrices(districtObj, yr); 
+            var rateAffordable = Math.round((yearPrices.med/data.threshold)*10)/10;
+            if (yr===data.year && rateAffordable <=4 ) { break; }
+            if (rateAffordable <= 4) {
+                textAffordable = "You would have been able to afford it in " + 
+                                 yr + " when it was " + rateAffordable + " (below 4)."; 
+                break;
+            } else {
+                textAffordable = "You would not have been able to afford it even back in 1995.";
+            }
+        }
+        this.yearUserEl.textContent = data.year;
+        this.yearAffordableEl.textContent = textAffordable;
+
         // update line chart
         var diff = (100 - ratioMin)/6; 
-        console.log(prices.range);
         var lines = prices.range.map((l, i, arr) => {
             return {
                 y: l,                            // count
@@ -131,6 +149,7 @@ export default class Tooltip {
             };
         });
         this.linechart.update(lines);
+        console.log(prices.range);
 
         var x = evt.containerPoint.x;
         var y = evt.containerPoint.y;// - tooltipHeight;

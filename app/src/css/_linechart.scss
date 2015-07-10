@@ -17,11 +17,10 @@
 
 .line-affordable {
     @extend .lines;
-    margin-top: 20px;
-    margin-bottom: -5px;
+    margin-top: 15px;
 }
 .line-distribution {
     @extend .lines;
-    margin-top: 2px;
-    margin-bottom: -6px;
+    margin-top: 10px;
+    margin-bottom: -5px;  
 }
