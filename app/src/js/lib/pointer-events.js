@@ -18,7 +18,7 @@ function handler(evt) {
 }
 
 if (navigator.userAgent.match(/MSIE (8|9|10)/)) {
-    ['click', 'dblclick', 'mouseup', 'mousedown'].forEach(function (e) {
+    ['click', 'dblclick', 'mouseup', 'mousedown', 'mousemove'].forEach(function (e) {
         document.addEventListener(e, handler, true);
     });
 }

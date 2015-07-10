@@ -8,6 +8,13 @@ import areaName from '../data/areas-name.json!json';
 const tooltipWidth = 320;
 const tooltipHeight = 200;
 
+function setTranslate(el, x, y) {
+    var translate = `translate(${x}px, ${y}px)`;
+    el.style.transform = translate;
+    el.style.msTransform = translate;
+    el.style.webkitTransform = translate;
+}
+
 export default class Tooltip {
     constructor(root) {
         this.el = root.querySelector('.js-tooltip');
@@ -135,11 +142,11 @@ export default class Tooltip {
         }
 
         this.hidden = false;
-        this.el.style.transform = `translate(${x}px, ${y}px)`;
+        setTranslate(this.el, x, y);
     }
 
     hide() {
         this.hidden = true;
-        this.el.style.transform = 'translate(-1000px, -1000px)';
+        setTranslate(this.el, -1000, -1000);
     }
 }
