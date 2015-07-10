@@ -15,13 +15,10 @@ function init(el, config) {
     el.innerHTML = mainHTML;
 
     if (window.guardian) {
-        function setContainerSize() {
-            window.requestAnimationFrame(() => {
-                el.style.height = window.innerHeight - document.getElementById('maincontent').offsetTop + 'px';
-            });
-        }
-
-        window.addEventListener('resize', throttle(setContainerSize));
+        var setContainerSize = throttle(() => {
+            el.style.height = window.innerHeight - document.getElementById('maincontent').offsetTop + 'px';
+        }, 100);
+        window.addEventListener('resize', () => window.requestAnimationFrame(setContainerSize));
         setContainerSize();
     }
 
