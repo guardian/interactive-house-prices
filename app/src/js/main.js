@@ -1,6 +1,9 @@
-import { set as setConfig } from './lib/cfg'
+// Polyfills
 import './lib/pointer-events'
 import './lib/raf'
+
+import { set as setConfig } from './lib/cfg'
+import throttle from './lib/throttle'
 
 import Intro from './components/intro';
 import Map from './components/map'
@@ -12,7 +15,14 @@ function init(el, config) {
     el.innerHTML = mainHTML;
 
     if (window.guardian) {
-        el.style.height = window.innerHeight - document.getElementById('maincontent').offsetTop + 'px';
+        function setContainerSize() {
+            window.requestAnimationFrame(() => {
+                el.style.height = window.innerHeight - document.getElementById('maincontent').offsetTop + 'px';
+            });
+        }
+
+        window.addEventListener('resize', throttle(setContainerSize));
+        setContainerSize();
     }
 
     // While testing
