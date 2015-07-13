@@ -54,3 +54,53 @@ FROM b WHERE postcode_district = 'GL50'
 GROUP BY year, postcode_district
 ORDER BY year
 ```
+
+```
+DROP FUNCTION calc_quartiles(real[]);
+DROP TYPE quartiles;
+
+CREATE TYPE quartiles AS (
+  q1 real,
+  q3 real,
+  iqr real,
+  lower_fence real,
+  upper_fence real
+);
+
+CREATE OR REPLACE FUNCTION calc_quartiles(myarray real[])
+  RETURNS quartiles AS
+$BODY$
+
+DECLARE
+  ary_cnt INTEGER;
+  new_array real[];
+  half INTEGER;
+  qtr INTEGER;
+  q quartiles;
+BEGIN
+  ary_cnt = array_length(myarray, 1);
+  new_array = array_sort(myarray);
+
+  half = ary_cnt / 2;
+  if half & 1 then
+    qtr = (half + 1) / 2;
+    q.q1 = new_array[qtr];
+    q.q3 = new_array[ary_cnt - qtr + 1];
+  else
+    qtr = half / 2;
+    q.q1 = (new_array[qtr] + new_array[qtr + 1]) / 2;
+    q.q3 = (new_array[ary_cnt - qtr] + new_array[ary_cnt - qtr + 1]) / 2;
+  end if;
+
+  q.iqr = q.q3 - q.q1;
+  q.lower_fence = q.q1 - 1.5 * q.iqr;
+  q.upper_fence = q.q3 + 1.5 * q.iqr;
+  return q;
+END;
+$BODY$
+  LANGUAGE plpgsql IMMUTABLE
+  COST 100;
+ALTER FUNCTION calc_quartiles(real[])
+  OWNER TO users;
+
+```
