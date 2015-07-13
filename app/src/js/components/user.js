@@ -1,41 +1,9 @@
 import template from './templates/user.html!text';
 import throttle from '../lib/throttle';
 import { startYear, endYear, getCountryMedian } from '../lib/region';
+import madlib from '../lib/madlib';
 
 import Linechart from './linechart';
-
-function madlib(el, onchange) {
-    var expanded = false;
-    var text = el.querySelector('.madlib__input__text'),
-        expand = el.querySelector('.madlib__input__expand'),
-        canned = el.querySelector('.madlib__input__canned__options');
-
-    function toggle() {
-        if (expanded) {
-            el.removeAttribute('data-expanded');
-        } else {
-            el.setAttribute('data-expanded', '');
-        }
-
-        expanded = !expanded;
-    }
-
-    expand.addEventListener('click', evt => toggle());
-
-    canned.addEventListener('change', evt => {
-        var option = canned.options[canned.selectedIndex];
-        text.placeholder = option.textContent;
-        onchange(option.value);
-
-        toggle();
-        canned.selectedIndex = -1;
-    });
-
-    return {
-        get: () => text.value,
-        set: value => text.value = value
-    };
-}
 
 export default class User {
     constructor(el, districts, onUpdate) {

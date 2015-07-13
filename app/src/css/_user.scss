@@ -71,10 +71,17 @@
     padding-left: 5px;
     box-sizing: border-box;
 
-    &::-webkit-input-placeholder { color: #333; }
-    &:-moz-placeholder { color: #333; }
-    &::-moz-placeholder { color: #333; }
-    &:-ms-input-placeholder { color: #333; }
+    @mixin placeholder($color) {
+        &::-webkit-input-placeholder { color: $color; }
+        &:-moz-placeholder { color: $color; }
+        &::-moz-placeholder { color: $color; }
+        &:-ms-input-placeholder { color: $color; }
+    }
+
+    @include placeholder(#333);
+    &:focus {
+        @include placeholder(#ccc);
+    }
 }
 
 .madlib__input__expand {

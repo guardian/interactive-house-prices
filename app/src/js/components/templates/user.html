@@ -1,19 +1,19 @@
 <div class="user__inner">
     <h2 class="subtitle">House prices in England and Wales</h2>
     <h1 class="title">Unaffordable country</h1>
-    <p class="madlib">
+    <div class="madlib">
         If you earned
-        <span class="madlib__input js-wage">
-            <input class="madlib__input__text" type="text" /><button class="madlib__input__expand"></button>
+        <form class="madlib__input js-wage">
+            <input class="madlib__input__text" type="text" placeholder="the UK average" /><button type="button" class="madlib__input__expand"></button>
             <span class="madlib__input__canned">
                 <select class="madlib__input__canned__options" size="2">
                     <option value="25000">the UK average</option>
                     <option value="18900">the living wage</option>
                 </select>
             </span>
-        </span>
+        </form>
         and wanted to buy a house
-    </p>
+    </div>
     <p class="result result--bad">
         Then <span class="result__color">you wouldn't be able to afford
             <span class="js-user-ratio"></span> of the country</span>,
