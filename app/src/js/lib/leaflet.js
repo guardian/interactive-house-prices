@@ -1,5 +1,5 @@
 /*
- Leaflet 1.0-dev (320c46c), a JS library for interactive maps. http://leafletjs.com
+ Leaflet 1.0-dev (76cd73c), a JS library for interactive maps. http://leafletjs.com
  (c) 2010-2015 Vladimir Agafonkin, (c) 2010-2011 CloudMade
 */
 (function (window, document, undefined) {
@@ -6137,7 +6137,8 @@ L.Canvas = L.Renderer.extend({
 
 		L.DomEvent
 			.on(container, 'mousemove', this._onMouseMove, this)
-			.on(container, 'click dblclick mousedown mouseup contextmenu', this._onClick, this);
+			.on(container, 'click dblclick mousedown mouseup contextmenu', this._onClick, this)
+			.on(container, 'mouseout', this._handleMouseOut, this);
 
 		this._ctx = container.getContext('2d');
 	},
@@ -6323,9 +6324,10 @@ L.Canvas = L.Renderer.extend({
 		this._handleMouseHover(e, point);
 	},
 
+
 	_handleMouseOut: function (e, point) {
 		var layer = this._hoveredLayer;
-		if (layer && !layer._containsPoint(point)) {
+		if (layer && (e.type === 'mouseout' || !layer._containsPoint(point))) {
 			// if we're leaving the layer, fire mouseout
 			L.DomUtil.removeClass(this._container, 'leaflet-interactive');
 			this._fireEvent(layer, e, 'mouseout');
