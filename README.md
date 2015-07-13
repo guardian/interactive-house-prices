@@ -67,7 +67,7 @@ CREATE TYPE quartiles AS (
   lower_fence real,
   upper_fence real
 );
-ALTER TYPE quartiles SET OWNER TO users;
+ALTER TYPE quartiles OWNER TO users;
 
 CREATE FUNCTION calc_quartiles(myarray real[])
   RETURNS quartiles AS
