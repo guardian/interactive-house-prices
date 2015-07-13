@@ -16,16 +16,22 @@ var options = {
     'property-transform': function (d) { return {'prices': common.prices[d.properties.name] }; },
     'pre-quantization': 1e8,
     'post-quantization': 1e4,
-    'retain-proportion': 0.2
+    'retain-proportion': 0.3
 };
 
 var topo = topojson.topology({'shapes': common.geo}, options);
 topojson.simplify(topo, options);
+
+// Create country outline for mapbox
+var country = topojson.merge(topo, topo.objects.shapes.geometries);
+fs.writeFileSync('data/country-geo.json', JSON.stringify(country));
+
+// Create client file
+// This might all look a bit arbitrary, thats because it pretty much is
 topojson.filter(topo, options);
 topojson.presimplify(topo, function (triangle) {
     var area = cartesianTriangleArea(triangle);
 
-    // This might all look a bit arbitrary, thats because it pretty much is
     var zoom = 4;
     while ((1 / Math.pow(10, zoom)) > area && zoom <= 9) {
         zoom++;
