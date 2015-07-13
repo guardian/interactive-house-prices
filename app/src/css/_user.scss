@@ -48,20 +48,74 @@
 }
 
 .madlib__input {
-    font-family: inherit;
-    font-size: inherit;
-    font-weight: bold;
-    color: #333;
+    display: inline-block;
+    position: relative;
+    border-bottom: 2px dotted black;
+    width: 200px;
+}
+
+.madlib__input__text,
+.madlib__input__expand,
+.madlib__input__canned__options {
     background: 0;
     border: 0;
-    border-bottom: 2px dotted black;
     margin: 0;
-    padding: 0 0 0 5px;
+    padding: 0;
     outline: 0;
-
-    &#your_wage {
-        width: 200px;
 }
+
+.madlib__input__text {
+    width: calc(100% - 20px);
+    font-weight: bold;
+    color: #333;
+    padding-left: 5px;
+    box-sizing: border-box;
+
+    &::-webkit-input-placeholder { color: #333; }
+    &:-moz-placeholder { color: #333; }
+    &::-moz-placeholder { color: #333; }
+    &:-ms-input-placeholder { color: #333; }
+}
+
+.madlib__input__expand {
+    width: 20px;
+    &::after {
+        content: "";
+        display: inline-block;
+        height: 0;
+        vertical-align: middle;
+        border-top: 5px solid black;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+    }
+
+    .madlib__input[data-expanded] &::after {
+        border-top: 0;
+        border-bottom: 5px solid black;
+    }
+}
+
+.madlib__input__canned {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    overflow: hidden;
+
+    display: none;
+    .madlib__input[data-expanded] & {
+        display: block;
+    }
+}
+
+.madlib__input__canned__options {
+    background-color: white;
+    width: 120%;
+    cursor: pointer;
+
+    & > option {
+        padding-left: 5px;
+    }
 }
 
 .result {

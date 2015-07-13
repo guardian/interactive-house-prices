@@ -3,7 +3,15 @@
     <h1 class="title">Unaffordable country</h1>
     <p class="madlib">
         If you earned
-        <input class="madlib__input" id="wage" type="text" />
+        <span class="madlib__input js-wage">
+            <input class="madlib__input__text" type="text" /><button class="madlib__input__expand"></button>
+            <span class="madlib__input__canned">
+                <select class="madlib__input__canned__options" size="2">
+                    <option value="25000">the UK average</option>
+                    <option value="18900">the living wage</option>
+                </select>
+            </span>
+        </span>
         and wanted to buy a house
     </p>
     <p class="result result--bad">

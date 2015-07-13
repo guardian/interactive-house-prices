@@ -1,12 +1,10 @@
 import L from '../lib/leaflet';
-import { getDistricts, getRegionPrices, getCountryMedian } from '../lib/region';
+import { getDistricts, getRegionPrices } from '../lib/region';
 
-import Tooltip from './tooltip';
 import User from './user';
-import Linechart from './linechart';
+import Tooltip from './tooltip';
 
 const colors = ['#39a4d8', '#8ac7cd', '#daeac1', '#fdd09e', '#f58680', '#ed3d61'];
-
 
 // Hacky way of using presimplified TopoJSON
 var projectLatlngs = L.Polyline.prototype._projectLatlngs;
@@ -76,18 +74,15 @@ export default class Map {
 
         getDistricts().then(geo => { 
             this.regionLayer.addData(geo);
-            
-            this.lines = getCountryMedian(geo.features);
-            this.user = new User(el.querySelector('.js-user'), this.lines,  this.update.bind(this));
-            this.linechart = new Linechart(".js-line", 400, 30);
-            this.linechart.update(this.lines, 400, 100);
+            this.user = new User(el.querySelector('.js-user'), geo.features, this.update.bind(this));
         });
+
         this.tooltip = new Tooltip(el);
     }
 
     update(data) {
         this.data = data;
-         
+
         this.regionLayer.options.style = function (region) {
             var price = getRegionPrices(region, data.year).med;
             var ratio = price / data.threshold;

@@ -35,10 +35,9 @@ export function getRegionPrices(region, year) {
     return {min, max, med, count, range: [r1, r2, r3, r4, r5, r6]};
 }
 
-export function getCountryMedian(districts) {
+export function getCountryMedian(districts, wage) {
     var data = [],
         medians = [], 
-        wage = 25000,
         yearCount = districts[0].properties.prices.length, 
         distCount = districts.length;
 
