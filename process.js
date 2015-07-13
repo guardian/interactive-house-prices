@@ -16,7 +16,7 @@ var options = {
     'property-transform': function (d) { return {'prices': common.prices[d.properties.name] }; },
     'pre-quantization': 1e8,
     'post-quantization': 1e4,
-    'retain-proportion': 0.4
+    'retain-proportion': 0.2
 };
 
 var topo = topojson.topology({'shapes': common.geo}, options);
