@@ -12,6 +12,11 @@
         stroke: grey;
         stroke-width: 1;
         shape-rendering: crispEdges;
+    }
+
+    text {
+        fill: #333;
+        font-size: 9px;
     } 
 }
 
@@ -21,6 +26,5 @@
 }
 .line-distribution {
     @extend .lines;
-    margin-top: 10px;
-    margin-bottom: -5px;  
+    margin-bottom: -5px;
 }

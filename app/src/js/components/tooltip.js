@@ -46,7 +46,7 @@ export default class Tooltip {
         this.labelFacEl = this.el.querySelector('.label-fac');
         
         // init line chart
-        this.linechart = new Linechart(".js-lines", 280, 15);
+        this.linechart = new Linechart(".js-lines", 280, 25);
         
 
         var resize = debounce(function () {
@@ -76,18 +76,19 @@ export default class Tooltip {
             factor = prices.med/salary;
         
         var empty = 0,
-            ratio = 100/prices.max,
+            ratio = 100/prices.upper_fence, //TODO
             ratioMin = ratio*prices.min,
             ratioMed = ratio*prices.med,
             ratioSalary = ratio*salary,
             range = ratioSalary*8;
-        
+       
+        var count = prices.range.reduce((pre, cur) => pre + cur) + prices.outlier; 
         // change styles
-        if (prices.count === 0) {
+        if (count === 0) {
             ratioMin = 0;
             ratioMed = 50;
             empty = 100;
-        } else if (prices.count ===1) {
+        } else if (count ===1) {
             ratioMin = 98;
         }
 
@@ -116,9 +117,9 @@ export default class Tooltip {
         this.areaEl.textContent = area; 
         this.districtEl.textContent = district; 
         
-        this.numEl.textContent = prices.count || 0;
+        this.numEl.textContent = count || 0;
         this.minEl.textContent = prices.min.toLocaleString();
-        this.maxEl.textContent = prices.max.toLocaleString();
+        this.maxEl.textContent = prices.upper_fence.toLocaleString();
         
         this.medEls.forEach(el => el.textContent = prices.med.toLocaleString());
         this.salaryEls.forEach(el => el.textContent = salary.toLocaleString());
@@ -145,11 +146,15 @@ export default class Tooltip {
         var lines = prices.range.map((l, i, arr) => {
             return {
                 y: l,                            // count
-                x: (ratioMin + diff*(i+0.5))*2.8 // range
+                x: (ratioMin + diff*(i+0.5))*2.5 // range
             };
         });
+        //lines.push({x:255, y:prices.near_outlier});
+        lines.push({x:275, y:prices.outlier});
         this.linechart.update(lines);
-        console.log(prices.range);
+        this.linechart.labels(lines);
+        //console.log(prices.range);
+        //console.log(lines);
 
         var x = evt.containerPoint.x;
         var y = evt.containerPoint.y;// - tooltipHeight;

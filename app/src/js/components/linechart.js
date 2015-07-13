@@ -1,19 +1,18 @@
 import d3 from '../lib/d3';
 
-const Width = 280;
-const Height = 15;
-
 export default class Linechart {
     constructor(el, width, height) {
         
         this.svg = d3.select(el)
                      .append("svg")
                      .attr("width", width)
-                     .attr("height", height+2);
+                     .attr("height", height)
+                     .append("g")
+                     .attr("transform", "translate(0," + 10 + ")");
 
         // Set the ranges
-        this.x = d3.scale.linear().range([0, width]);
-        this.y = d3.scale.linear().range([height, 0]);
+        this.x = d3.scale.linear().range([0, width-30]);
+        this.y = d3.scale.linear().range([height-10, 0]);
 
         // Define the axes
         this.xAxis = d3.svg.axis().scale(this.x)
@@ -23,13 +22,12 @@ export default class Linechart {
 
         // Define the line
         this.valueline = d3.svg.line()
-                           .x(function(d) { return this.x(d.x); })
-                           .y(function(d) { return this.y(d.y); });
+                           .x(d => this.x(d.x))
+                           .y(d => this.y(d.y));
     
         this.path = this.svg.append("path")
         .attr("class", "line");
         
-
         /*this.svg.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + width + ")")
@@ -42,8 +40,8 @@ export default class Linechart {
     }
 
     update(data, width, height) {
-        var maxX = d3.max(data, function(d) { return d.x; }),
-            maxY = d3.max(data, function(d) { return d.y; }),
+        var maxX = d3.max(data, d => d.x),
+            maxY = d3.max(data, d => d.y),
             rangeX = width || maxX/*,
             rangeY = height || 0*/;
 
@@ -62,5 +60,19 @@ export default class Linechart {
         .transition()
         .duration(250)
         .attr("d", this.valueline(data));
+        
+    }
+    
+    labels(data) {
+        this.svg
+        .selectAll("text")
+        .data(data)
+        .attr("x", d => this.x(d.x)-5)
+        .attr("y", d => this.y(d.y)-3)
+        .text(d => d.y)
+        .enter().append("text")
+        .attr("x", d => this.x(d.x)-5)
+        .attr("y", d => this.y(d.y)-3)
+        .text(d => d.y);
     }
 }
