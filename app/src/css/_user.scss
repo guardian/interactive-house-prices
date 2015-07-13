@@ -10,12 +10,15 @@
     height: 0;
 
     display: none;
-
-    // TODO: the rest of the breakpoints
-    @include mq(wide) {
+    @include mq(tablet) {
         display: block;
-        width: map-get($mq-breakpoints, wide);
-}
+    }
+
+    @each $bp in (tablet, desktop, leftCol, wide) {
+        @include mq($bp) {
+            max-width: map-get($mq-breakpoints, $bp);
+        }
+    }
 }
 
 .user__inner {

@@ -21,17 +21,11 @@
     @include mq(mobileLandscape) {
         padding: 20px;
     }
-    @include mq(tablet) {
-        max-width: 740px;
-    }
-    @include mq(desktop) {
-        max-width: 980px;
-    }
-    @include mq(leftCol) {
-        max-width: 1140px;
-    }
-    @include mq(wide) {
-        max-width: 1300px;
+
+    @each $bp in (tablet, desktop, leftCol, wide) {
+        @include mq($bp) {
+            max-width: map-get($mq-breakpoints, $bp);
+        }
     }
 }
 
