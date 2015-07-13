@@ -91,17 +91,22 @@ export default class Map {
         this.regionLayer.options.style = function (region) {
             var price = getRegionPrices(region, data.year).med;
             var ratio = price / data.threshold;
+            var color, colorIndex = 0;
 
-            var colorIndex = 0;
-            if (ratio > 2) colorIndex++;
-            if (ratio > 3) colorIndex++;
-            if (ratio > 4) colorIndex++;
-            if (ratio > 5) colorIndex++;
-            if (ratio > 6) colorIndex++;
+            if (!price) {
+                color = '#cccccc';
+            } else {
+                if (ratio > 2) colorIndex++;
+                if (ratio > 3) colorIndex++;
+                if (ratio > 4) colorIndex++;
+                if (ratio > 5) colorIndex++;
+                if (ratio > 6) colorIndex++;
+                color = colors[colorIndex];
+            }
 
             return {
                 'stroke': 0,
-                'fillColor': colors[colorIndex],
+                'fillColor': color,
                 'fillOpacity': 1
             };
         };
