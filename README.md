@@ -33,43 +33,46 @@ b AS (
 SELECT h.year_of_sale,
        h.postcode_district,
        price2014,
-       FLOOR((price2014 - a.lower_fence) / ((a.upper_fence - a.lower_fence) / 6)) AS group
+       FLOOR((price2014 - a.min) / ((a.upper_fence - a.min) / 6)) AS group,
+       CASE WHEN price2014 > a.upper_fence AND price2014 <= a.outer_fence THEN 1 END AS near_outlier,
+       CASE WHEN price2014 > a.outer_fence THEN 1 END AS far_outlier
 FROM houseprice h RIGHT OUTER JOIN a
      ON a.year_of_sale = h.year_of_sale AND a.postcode_district = h.postcode_district
 WHERE h.postcode_district = 'GL50'
 )
 
 SELECT year_of_sale AS year, postcode_district AS id,
-       MIN(price2014), MAX(price2014), MEDIAN(price2014), COUNT(*),
-       (calc_quartiles(array_agg(price2014::real))).*,
-       COUNT(CASE WHEN b.group < 0 THEN 1 END) AS r0,
-       COUNT(CASE WHEN b.group = 0 THEN 1 END) AS r1,
+       MEDIAN(price2014), MIN(price2014), MAX(price2014),
+       (calc_quartiles(array_agg(price2014::real))).upper_fence,
+       COUNT(CASE WHEN b.group <= 0 THEN 1 END) AS r1,
        COUNT(CASE WHEN b.group = 1 THEN 1 END) AS r2,
        COUNT(CASE WHEN b.group = 2 THEN 1 END) AS r3,
        COUNT(CASE WHEN b.group = 3 THEN 1 END) AS r4,
        COUNT(CASE WHEN b.group = 4 THEN 1 END) AS r5,
        COUNT(CASE WHEN b.group = 5 THEN 1 END) AS r6,
-       COUNT(CASE WHEN b.group > 5 THEN 1 END) AS r7
-FROM b WHERE postcode_district = 'GL50'
+       COUNT(CASE WHEN b.near_outlier = 1 THEN 1 END) AS r7,
+       COUNT(CASE WHEN b.far_outlier = 1 THEN 1 END) AS r8
+FROM b WHERE postcode_district = 'GL50' AND year_of_sale != '2015'
 GROUP BY year, postcode_district
 ORDER BY year
 ```
 
 You will need this function:
 ```sql
-DROP FUNCTION IF EXISTS calc_quartiles(real[]);
-DROP TYPE IF EXISTS quartiles;
+DROP FUNCTION calc_quartiles(real[]);
+DROP TYPE quartiles;
 
 CREATE TYPE quartiles AS (
   q1 real,
   q3 real,
   iqr real,
+  min real,
   lower_fence real,
-  upper_fence real
+  upper_fence real,
+  outer_fence real
 );
-ALTER TYPE quartiles OWNER TO users;
 
-CREATE FUNCTION calc_quartiles(myarray real[])
+CREATE OR REPLACE FUNCTION calc_quartiles(myarray real[])
   RETURNS quartiles AS
 $BODY$
 
@@ -95,13 +98,15 @@ BEGIN
   end if;
 
   q.iqr = q.q3 - q.q1;
+  q.min = new_array[1];
   q.lower_fence = q.q1 - 1.5 * q.iqr;
   q.upper_fence = q.q3 + 1.5 * q.iqr;
+  q.outer_fence = q.q3 + 3 * q.iqr;
   return q;
 END;
 $BODY$
   LANGUAGE plpgsql IMMUTABLE
   COST 100;
-ALTER FUNCTION calc_quartiles(real[]) OWNER TO users;
-
+ALTER FUNCTION calc_quartiles(real[])
+  OWNER TO users;
 ```
