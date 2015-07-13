@@ -29,9 +29,9 @@ var pricesById = _(prices)
         var p = _(price)
             .indexBy(function (row) { return row.year; })
             .mapValues(function (row) {
-                return [row.min, row.max, row.median, row.count, 
-                        row.r1, row.r2, row.r3, row.r4, row.r5, row.r6
-                       ].map(function (n) { return parseInt(n); });
+                return [row.min, row.max, row.median, row.upper_fence,
+                        row.r1, row.r2, row.r3, row.r4, row.r5, row.r6,
+                        row.near_outlier, row.far_outlier].map(function (n) { return parseInt(n); });
             }).value();
         return dates.map(function (date) {
             //if (!p[date+'']) { if (!counts[id]) counts[id] = 0; counts[id]++; console.log(id, date);}
