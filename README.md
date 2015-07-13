@@ -11,7 +11,7 @@ NOTE: The table `houseprice_test` has a reduced dataset for testing, use instead
 faster results
 
 The quick query (no ranges in tooltip)
-```
+```sql
 SELECT EXTRACT(year FROM date_of_sale) AS year,
        postcode_district AS id,
        MEDIAN(price2014), MIN(price2014), MAX(price2014), COUNT(*)
@@ -21,7 +21,7 @@ ORDER BY year
 ```
 
 The full query
-```
+```sql
 WITH a AS (
 SELECT year_of_sale,
        postcode_district,
@@ -55,9 +55,10 @@ GROUP BY year, postcode_district
 ORDER BY year
 ```
 
-```
-DROP FUNCTION calc_quartiles(real[]);
-DROP TYPE quartiles;
+You will need this function:
+```sql
+DROP FUNCTION IF EXISTS calc_quartiles(real[]);
+DROP TYPE IF EXISTS quartiles;
 
 CREATE TYPE quartiles AS (
   q1 real,
@@ -66,8 +67,9 @@ CREATE TYPE quartiles AS (
   lower_fence real,
   upper_fence real
 );
+ALTER TYPE quartiles SET OWNER TO users;
 
-CREATE OR REPLACE FUNCTION calc_quartiles(myarray real[])
+CREATE FUNCTION calc_quartiles(myarray real[])
   RETURNS quartiles AS
 $BODY$
 
@@ -100,7 +102,6 @@ END;
 $BODY$
   LANGUAGE plpgsql IMMUTABLE
   COST 100;
-ALTER FUNCTION calc_quartiles(real[])
-  OWNER TO users;
+ALTER FUNCTION calc_quartiles(real[]) OWNER TO users;
 
 ```
