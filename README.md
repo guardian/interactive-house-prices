@@ -50,8 +50,8 @@ SELECT year_of_sale AS year, postcode_district AS id,
        COUNT(CASE WHEN b.group = 3 THEN 1 END) AS r4,
        COUNT(CASE WHEN b.group = 4 THEN 1 END) AS r5,
        COUNT(CASE WHEN b.group = 5 THEN 1 END) AS r6,
-       COUNT(CASE WHEN b.near_outlier = 1 THEN 1 END) AS r7,
-       COUNT(CASE WHEN b.far_outlier = 1 THEN 1 END) AS r8
+       COUNT(CASE WHEN b.near_outlier = 1 THEN 1 END) AS near_outlier,
+       COUNT(CASE WHEN b.far_outlier = 1 THEN 1 END) AS far_outlier
 FROM b WHERE postcode_district = 'GL50' AND year_of_sale != '2015'
 GROUP BY year, postcode_district
 ORDER BY year
