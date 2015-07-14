@@ -28,10 +28,12 @@ var pricesById = _(prices)
     .mapValues(function (price, id) {
         var p = _(price)
             .indexBy(function (row) { return row.year; })
-            .mapValues(function (row) {
-                return [row.min, row.max, row.median, row.upper_fence,
-                    row.r1, row.r2, row.r3, row.r4, row.r5, row.r6,
-                    row.near_outlier, row.far_outlier].map(function (n) { return parseInt(n); });
+            .mapValues(function (rowRaw) {
+                var row = _.mapValues(rowRaw, function (n) { return Math.round(parseFloat(n)); });
+                var a = [row.min, row.max, row.median, row.upper_fence].map(function (n) { return Math.round(n / 100); });
+                var b = [row.r1, row.r2, row.r3, row.r4, row.r5, row.r6, row.near_outlier + row.far_outlier];
+                var count = b.reduce(function (a, b) { return a + b; });
+                return a.concat(b.map(function (c) { return Math.round(c / count * 20); }), [count]);
             }).value();
         return dates.map(function (date) {
             //if (!p[date+'']) { if (!counts[id]) counts[id] = 0; counts[id]++; console.log(id, date);}

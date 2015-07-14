@@ -31,8 +31,16 @@ export function getDistricts() {
 }
 
 export function getRegionPrices(region, year) {
-    var [min, max, med, upper_fence, r1, r2, r3, r4, r5, r6, near_outlier, far_outlier] = region.properties.prices[year - startYear];
-    return {min, max, med, upper_fence, range: [r1, r2, r3, r4, r5, r6], outlier: near_outlier + far_outlier};
+    var [min, max, med, upper_fence, r1, r2, r3, r4, r5, r6, outlier, count]  = region.properties.prices[year - startYear];
+    return {
+        min: min * 100,
+        max: max * 100,
+        med: med * 100,
+        upper_fence: upper_fence * 100,
+        range: [r1, r2, r3, r4, r5, r6],
+        outlier,
+        count
+    };
 }
 
 export function getCountryMedian(districts, wage) {
