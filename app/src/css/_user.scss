@@ -131,6 +131,12 @@
     font-weight: bold;
 }
 
+.inflation-note {
+    @include f-textSans;
+    font-size: 10px;
+    color: #bdbdbd;
+}
+
 .share-container {
     @include f-textSans;
     font-size: 16px;

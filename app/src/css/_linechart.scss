@@ -22,7 +22,7 @@
 
 .line-affordable {
     @extend .lines;
-    margin-top: 15px;
+    margin: 15px 7px 0; // 7px is half thumb
 }
 .line-distribution {
     @extend .lines;

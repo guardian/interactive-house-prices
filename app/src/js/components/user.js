@@ -23,10 +23,10 @@ export default class User {
         this.date = range(el.querySelector('.js-date'), startYear, endYear, this.changeYear.bind(this), 5);
         madlib(el.querySelector('.js-wage'), this.changeThreshold.bind(this));
 
-        this.linechart = new Linechart(el.querySelector('.js-line'), 400, 30);
+        this.linechart = new Linechart(el.querySelector('.js-line'), 386, 30);
 
         this.value = {'year': startYear, 'threshold': 0};
-        this.changeThreshold(25000); // ugly way to initialise line chart
+        this.changeThreshold('25000'); // ugly way to initialise line chart
     }
 
     change() {
@@ -47,9 +47,9 @@ export default class User {
     }
 
     changeThreshold(threshold) {
-        this.value.threshold = parseFloat(threshold);
+        this.value.threshold = parseFloat(threshold.replace(/£,/g, ''));
         this.medians = getCountryMedian(this.districts, this.value.threshold);
-        this.linechart.update(this.medians, 400, 100);
+        this.linechart.update(this.medians, 386, 100);
 
         this.change();
     }

@@ -67,7 +67,7 @@ export function getCountryMedian(districts, wage) {
         var ratio = (affordableCount-nosalesCount) / (distCount-nosalesCount);
         data[i] = {
             x: i,
-            y: 100 - Math.round(ratio*10000)/100
+            y: Math.round(ratio*10000)/100
         }; 
     });
     
