@@ -1,0 +1,31 @@
+$thumb-size: 14px;
+
+.range-slider {
+    position: relative;
+    height: 40px;
+    cursor: pointer;
+    margin: 0 ($thumb-size / 2);
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: (-$thumb-size / 2);
+        right: (-$thumb-size / 2);
+        background-color: #dcdcdc;
+        margin-top: -1px;
+        height: 2px;
+    }
+}
+
+.range-slider__thumb {
+    position: absolute;
+    top: 50%;
+    margin: (-$thumb-size / 2) 0 0 (-$thumb-size / 2);
+    width: $thumb-size;
+    height: $thumb-size;
+    background-color: #333;
+    border-radius: 100px;
+}
+
+

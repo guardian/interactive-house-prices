@@ -1,3 +1,5 @@
+@import 'range';
+
 .user {
     @include f-bodyCopy;
 
@@ -127,33 +129,6 @@
 .madlib__result {
     color: #ed3d61;
     font-weight: bold;
-}
-
-.range-slider {
-    position: relative;
-    height: 40px;
-    cursor: pointer;
-
-    &::before {
-        content: "";
-        position: absolute;
-        top: 50%;
-        left: 0;
-        right: 0;
-        background-color: #767676;
-        height: 1px;
-    }
-}
-
-.range-slider__thumb {
-    position: absolute;
-    top: 50%;
-    margin-top: -10px;
-    margin-left: -10px;
-    width: 20px;
-    height: 20px;
-    background-color: black;
-    border-radius: 100px;
 }
 
 .share-container {
