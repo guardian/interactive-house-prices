@@ -20,7 +20,7 @@ export default class User {
         this.ratiodiffEl = el.querySelector(".js-user-diff");
         this.ratioEls = Array.from(el.querySelectorAll('.js-user-ratio'));
 
-        this.date = range(el.querySelector('.js-date'), startYear, endYear, this.changeYear.bind(this));
+        this.date = range(el.querySelector('.js-date'), startYear, endYear, this.changeYear.bind(this), 5);
         madlib(el.querySelector('.js-wage'), this.changeThreshold.bind(this));
 
         this.linechart = new Linechart(el.querySelector('.js-line'), 400, 30);
