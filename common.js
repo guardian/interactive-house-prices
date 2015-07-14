@@ -33,7 +33,11 @@ var pricesById = _(prices)
                 var a = [row.min, row.max, row.median, row.upper_fence].map(function (n) { return Math.round(n / 100); });
                 var b = [row.r1, row.r2, row.r3, row.r4, row.r5, row.r6, row.near_outlier + row.far_outlier];
                 var count = b.reduce(function (a, b) { return a + b; });
-                return a.concat(b.map(function (c) { return Math.round(c / count * 20); }), [count]);
+                if (count < 10) {
+                    return undefined;
+                } else {
+                    return a.concat(b.map(function (c) { return Math.round(c / count * 20); }), [count]);
+                }
             }).value();
         return dates.map(function (date) {
             //if (!p[date+'']) { if (!counts[id]) counts[id] = 0; counts[id]++; console.log(id, date);}
