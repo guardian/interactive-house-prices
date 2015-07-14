@@ -1,3 +1,28 @@
+function tics(min, max, ticStep) {
+    var range = max - min;
+    var v, tics = document.createElement('div');
+    tics.className = 'range-slider__tics';
+
+    function tic(v, major) {
+        var t = document.createElement('div');
+        t.className = 'range-slider__tics__tic';
+        t.style.left = (v / range * 100) + '%';
+        if (major) {
+            t.className += ' range-slider__tics__tic--major';
+            t.innerHTML = `<span>${v + min}</span>`;
+        }
+        tics.appendChild(t);
+    }
+
+    for (v = 0; v < range; v++) {
+        tic(v, v % ticStep === 0);
+    }
+    // Always have an end tic
+    tic(range, true);
+
+    return tics;
+}
+
 export default function (el, min, max, onchange, ticStep) {
     var range = max - min;
 
@@ -7,25 +32,7 @@ export default function (el, min, max, onchange, ticStep) {
     var value;
 
     if (ticStep !== undefined) {
-        (function () {
-            var v, tics = document.createElement('div');
-            tics.className = 'range-slider__tics';
-            el.appendChild(tics);
-
-            function tic(v) {
-                var t = document.createElement('div');
-                t.className = 'range-slider__tics__tic';
-                t.style.left = (v / range * 100) + '%';
-                t.innerHTML = `<span>${v + min}</span>`;
-                tics.appendChild(t);
-            }
-
-            for (v = 0; v <= range; v += ticStep) {
-                tic(v);
-            }
-            // Always have an end tic
-            if (v > range) { tic(range); }
-        })();
+        el.appendChild(tics(min, max, ticStep));
     }
 
     function move(evt) {

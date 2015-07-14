@@ -4,7 +4,7 @@ $thumb-size: 14px;
     position: relative;
     height: 40px;
     cursor: pointer;
-    margin: 0 ($thumb-size / 2) 20px;
+    margin: 0 ($thumb-size / 2) 10px;
 
     &::before {
         content: "";
@@ -33,35 +33,18 @@ $thumb-size: 14px;
     position: absolute;
     top: 50%;
     border-left: 1px solid #bdbdbd;
-    padding-top: 10px;
+    padding-top: 5px;
 
-    @include fs-textSans(1);
-    color: #bdbdbd;
+    &.range-slider__tics__tic--major {
+        @include fs-textSans(1);
+        color: #bdbdbd;
+        padding-top: 10px;
 
-    & > span {
-        position: absolute;
-        left: -100px;
-        right: -100px;
-        text-align: center;
-    }
-
-    &:first-child {
-        left: (-$thumb-size / 2) !important;
         & > span {
-            left: 0;
-            text-align: left;
-        }
-    }
-
-    &:last-child {
-        right: (-$thumb-size / 2);
-        border-left: 0;
-        border-right: 1px solid #bdbdbd;
-        & > span {
-            right: 0;
-            text-align: right;
+            position: absolute;
+            left: -100px;
+            right: -100px;
+            text-align: center;
         }
     }
 }
-
-
