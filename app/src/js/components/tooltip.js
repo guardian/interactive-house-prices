@@ -117,7 +117,7 @@ export default class Tooltip {
         this.areaEl.textContent = area; 
         this.districtEl.textContent = district; 
         
-        this.numEl.textContent = count || 0;
+        this.numEl.textContent = prices.count || 0;
         this.minEl.textContent = prices.min.toLocaleString();
         this.maxEl.textContent = prices.upper_fence.toLocaleString();
         

@@ -56,7 +56,7 @@ export function getCountryMedian(districts, wage) {
     // group district med by year
     districts.forEach((d, i) => {
         d.properties.prices.forEach((p, j) => {
-            medians[j][i] = p[2];
+            medians[j][i] = p[2] * 100;
         });
     });
     //console.log(districts);    
@@ -67,7 +67,7 @@ export function getCountryMedian(districts, wage) {
         var ratio = (affordableCount-nosalesCount) / (distCount-nosalesCount);
         data[i] = {
             x: i,
-            y: Math.round(ratio*10000)/100
+            y: 100 - Math.round(ratio*10000)/100
         }; 
     });
     

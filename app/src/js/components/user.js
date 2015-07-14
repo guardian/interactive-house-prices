@@ -14,6 +14,7 @@ export default class User {
         this.onUpdate = onUpdate;
 
         this.labelEl = el.querySelector(".js-user-label");
+        this.yearEl = el.querySelector('.js-year');
         this.ratiodiffEl = el.querySelector(".js-user-diff");
         this.ratioEls = Array.from(el.querySelectorAll('.js-user-ratio'));
 
@@ -29,7 +30,7 @@ export default class User {
         this.linechart = new Linechart(el.querySelector('.js-line'), 400, 30);
 
         this.value = {'year': startYear, 'threshold': 0};
-        this.changeThreshold(25000); // ugly way to initiate line chart
+        this.changeThreshold(25000); // ugly way to initialise line chart
     }
 
     change() {
@@ -43,7 +44,8 @@ export default class User {
             el.style.left = (left-0.8) + "%";
             el.textContent = Math.round(currentYear) + "%";
         });
-        this.ratiodiffEl.textContent = Math.round(currentYear - firstYear) + "%";
+        //this.ratiodiffEl.textContent = Math.round(firstYear) + "%";
+        this.yearEl.textContent = this.value.year;
 
         this.onUpdate(this.value);
     }

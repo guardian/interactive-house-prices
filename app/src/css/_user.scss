@@ -43,15 +43,14 @@
 }
 
 .madlib {
-    font-size: 20px;
-    color: #767676;
+    font-size: 18px;
 }
 
 .madlib__input {
     display: inline-block;
     position: relative;
-    border-bottom: 2px dotted black;
-    width: 200px;
+    border-bottom: 1px dotted black;
+    width: 160px;
 }
 
 .madlib__input__text,
@@ -125,24 +124,15 @@
     }
 }
 
-.result {
-    @include f-header;
+.madlib__result {
+    color: #ed3d61;
     font-weight: bold;
-}
-
-.result__color {
-    .result--bad & {
-        color: #ed3d61;
-}
-.result--good & {
-    color: #39a4d8;
-}
 }
 
 .daterange {
     input {
         width: 100%;
-}
+    }
 }
 
 .share-container {
@@ -156,7 +146,7 @@
 
     p {
         margin: 0;
-}
+    }
 }
 
 .share {
