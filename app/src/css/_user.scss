@@ -131,6 +131,20 @@
     font-weight: bold;
 }
 
+.range-slider {
+    margin-top: -10px;
+}
+
+.range-slider__thumb::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    margin-left: -1px;
+    bottom: 100%;
+    height: 40px;
+    border-left: 1px dotted #333;
+}
+
 .inflation-note {
     @include f-textSans;
     font-size: 10px;
