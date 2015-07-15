@@ -10,6 +10,31 @@ You need to install `pngquant`, then run:
 NOTE: The table `houseprice_test` has a reduced dataset for testing, use instead of `houseprice` for
 faster results
 
+### Preprocessing
+
+Calculating postcode districts from postcodes
+
+```sql
+UPDATE houseprice SET postcode_district=REGEXP_REPLACE(postcode, ' ?[0-9][A-Z][A-Z]$', '')
+WHERE postcode_district = ''
+```
+
+Find all subdistricts (W1C, W1H, E1C, etc.)
+
+```sql
+SELECT postcode_district
+FROM houseprice WHERE postcode_district ~ '[A-Z] ?$'
+GROUP BY postcode_district
+```
+
+Convert subdistricts to districts
+```sql
+UPDATE houseprice SET postcode_district=REGEXP_REPLACE(postcode_district, '[A-Z] ?$', '')
+WHERE postcode_district ~ '[A-Z] ?$'
+```
+
+### Result aggregation
+
 The quick query (no ranges in tooltip)
 ```sql
 SELECT EXTRACT(year FROM date_of_sale) AS year,
@@ -98,7 +123,7 @@ BEGIN
   end if;
 
   q.iqr = q.q3 - q.q1;
-  q.min = new_array[1];
+  q.min = new_array[0];
   q.lower_fence = q.q1 - 1.5 * q.iqr;
   q.upper_fence = q.q3 + 1.5 * q.iqr;
   q.outer_fence = q.q3 + 3 * q.iqr;
