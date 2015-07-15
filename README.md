@@ -58,7 +58,7 @@ b AS (
 SELECT h.year_of_sale,
        h.postcode_district,
        price2014,
-       FLOOR((price2014 - a.min) / ((a.upper_fence - a.min) / 6)) AS group,
+       FLOOR((price2014 - a.min) / ((a.max - a.min) / 6)) AS group,
        CASE WHEN price2014 > a.upper_fence AND price2014 <= a.outer_fence THEN 1 END AS near_outlier,
        CASE WHEN price2014 > a.outer_fence THEN 1 END AS far_outlier
 FROM houseprice h RIGHT OUTER JOIN a
@@ -68,15 +68,14 @@ WHERE h.postcode_district = 'GL50'
 
 SELECT year_of_sale AS year, postcode_district AS id,
        MEDIAN(price2014), MIN(price2014), MAX(price2014),
-       (calc_quartiles(array_agg(price2014::real))).upper_fence,
+       (calc_quartiles(array_agg(price2014::real))).max as max_range,
        COUNT(CASE WHEN b.group <= 0 THEN 1 END) AS r1,
        COUNT(CASE WHEN b.group = 1 THEN 1 END) AS r2,
        COUNT(CASE WHEN b.group = 2 THEN 1 END) AS r3,
        COUNT(CASE WHEN b.group = 3 THEN 1 END) AS r4,
        COUNT(CASE WHEN b.group = 4 THEN 1 END) AS r5,
        COUNT(CASE WHEN b.group = 5 THEN 1 END) AS r6,
-       COUNT(CASE WHEN b.near_outlier = 1 THEN 1 END) AS near_outlier,
-       COUNT(CASE WHEN b.far_outlier = 1 THEN 1 END) AS far_outlier
+       COUNT(CASE WHEN b.group > 5 THEN 1 END) AS outlier
 FROM b WHERE postcode_district = 'GL50' AND year_of_sale != '2015'
 GROUP BY year, postcode_district
 ORDER BY year
@@ -92,6 +91,7 @@ CREATE TYPE quartiles AS (
   q3 real,
   iqr real,
   min real,
+  max real,
   lower_fence real,
   upper_fence real,
   outer_fence real
@@ -107,6 +107,7 @@ DECLARE
   half INTEGER;
   qtr INTEGER;
   q quartiles;
+  i real;
 BEGIN
   ary_cnt = array_length(myarray, 1);
   new_array = array_sort(myarray);
@@ -121,12 +122,18 @@ BEGIN
     q.q1 = (new_array[qtr] + new_array[qtr + 1]) / 2;
     q.q3 = (new_array[ary_cnt - qtr] + new_array[ary_cnt - qtr + 1]) / 2;
   end if;
-
+  
   q.iqr = q.q3 - q.q1;
-  q.min = new_array[1];
   q.lower_fence = q.q1 - 1.5 * q.iqr;
   q.upper_fence = q.q3 + 1.5 * q.iqr;
   q.outer_fence = q.q3 + 3 * q.iqr;
+
+  q.min = new_array[1];
+  foreach i in array new_array loop
+    exit when i > q.upper_fence;
+    q.max = i;
+  end loop;
+  
   return q;
 END;
 $BODY$
