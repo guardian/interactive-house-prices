@@ -123,7 +123,7 @@ BEGIN
   end if;
 
   q.iqr = q.q3 - q.q1;
-  q.min = new_array[0];
+  q.min = new_array[1];
   q.lower_fence = q.q1 - 1.5 * q.iqr;
   q.upper_fence = q.q3 + 1.5 * q.iqr;
   q.outer_fence = q.q3 + 3 * q.iqr;
