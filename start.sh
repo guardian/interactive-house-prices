@@ -1,6 +1,6 @@
 #!/bin/bash
 unzip data.zip
-node process.js
+node districts.js
 node minimap.js
 node generate.js
 
