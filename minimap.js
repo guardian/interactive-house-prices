@@ -20,8 +20,7 @@ var b = path.bounds(common.geo),
 
 projection.scale(s).translate(t);
 
-ctx.fillStyle = '#cccccc';
-ctx.strokeStyle = '#cccccc';
+ctx.fillStyle = ctx.strokeStyle = '#ed3d61';
 common.geo.features.forEach(function (feature) {
     path(feature);
 });
@@ -33,8 +32,7 @@ var prices = _.pairs(common.prices);
 var features = _.indexBy(common.geo.features, 'properties.name');
 var startYear = common.years[0];
 
-ctx.fillStyle = '#ed3d61';
-ctx.strokeStyle = '#ed3d61';
+ctx.fillStyle = ctx.strokeStyle = '#cccccc';
 common.years.forEach(function (year) {
     console.log(year);
 

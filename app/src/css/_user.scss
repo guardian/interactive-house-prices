@@ -126,6 +126,20 @@
     }
 }
 
+.madlib__minimap {
+    float: right;
+    width: 120px;
+    height: 144px;
+    overflow: hidden;
+    background-image: url('assets/minimap/bg.png');
+    background-size: contain;
+
+    img {
+        display: none;
+        max-width: 100%;
+    }
+}
+
 .madlib__result {
     color: #ed3d61;
     font-weight: bold;

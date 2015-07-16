@@ -1,11 +1,12 @@
-import template from './templates/user.html!text';
-import throttle from '../lib/throttle';
-import { startYear, endYear, getCountryMedian } from '../lib/region';
+import template from './templates/user.html!text'
+import throttle from '../lib/throttle'
+import { startYear, endYear, getCountryMedian } from '../lib/region'
+import { config } from '../lib/cfg'
 
-import madlib from '../lib/madlib';
-import range from '../lib/range';
+import madlib from '../lib/madlib'
+import range from '../lib/range'
 
-import Linechart from './linechart';
+import Linechart from './linechart'
 
 export default class User {
     constructor(el, districts, onUpdate) {
@@ -22,6 +23,15 @@ export default class User {
 
         this.date = range(el.querySelector('.js-date'), startYear, endYear, this.changeYear.bind(this), 5);
         madlib(el.querySelector('.js-wage'), this.changeThreshold.bind(this));
+
+        var minimap = el.querySelector('.js-minimap');
+        this.minimapImgs = [];
+        for (var year = startYear; year <= endYear; year++) {
+            var el = document.createElement('img');
+            this.minimapImgs[year] = el;
+            minimap.appendChild(el);
+        }
+        this.minimapImgs[startYear].style.display = 'block';
 
         this.linechart = new Linechart(el.querySelector('.js-line'), 386, 30);
 
@@ -40,7 +50,6 @@ export default class User {
             el.style.left = (left-0.8) + "%";
             el.textContent = Math.round(currentYear) + "%";
         });
-        //this.ratiodiffEl.textContent = Math.round(firstYear) + "%";
         this.yearEl.textContent = this.value.year;
 
         this.onUpdate(this.value);
@@ -51,10 +60,21 @@ export default class User {
         this.medians = getCountryMedian(this.districts, this.value.threshold);
         this.linechart.update(this.medians, 386, 100);
 
+        this.medians.forEach((median, year) => {
+            this.minimapImgs[year + startYear].src =
+                `${config.assetPath}/assets/minimap/${year + startYear}-${median.no}.png`;
+        });
+
         this.change();
     }
 
     changeYear(year) {
+        var lastYear = this.value.year;
+        window.requestAnimationFrame(() => {
+            this.minimapImgs[lastYear].style.display = 'none';
+            this.minimapImgs[year].style.display = 'block';
+        });
+
         this.value.year = year;
 
         this.change();
