@@ -7,7 +7,7 @@ require("d3-geo-projection")(d3);
 
 var IMG_WIDTH = 315;
 var IMG_HEIGHT = 378;
-var THRESHOLD = 25000 * 4;
+var THRESHOLD = 25000 * 4 / 100;
 
 var projection = d3.geo.mercator().scale(1).translate([0, 0]);
 var path = d3.geo.path().projection(projection);
@@ -31,31 +31,29 @@ function render(ctx, features, color) {
     });
 }
 
-var canvas = new Canvas(IMG_WIDTH * common.dates.length, IMG_HEIGHT),
-    ctx = canvas.getContext('2d'),
-    stream = canvas.pngStream(),
-    out = fs.createWriteStream('out.png');
-
-canvas.pngStream().on('data', function (chunk) { out.write(chunk); });
+var canvas = new Canvas(IMG_WIDTH * common.years.length, IMG_HEIGHT),
+    ctx = canvas.getContext('2d');
 
 ctx.fillStyle = '#a60947';
-ctx.fillRect(0, 0, IMG_WIDTH * common.dates.length, IMG_HEIGHT);
+ctx.fillRect(0, 0, IMG_WIDTH * common.years.length, IMG_HEIGHT);
 
-common.dates.forEach(function (date, dateI) {
-    projection.translate([t[0] + dateI * IMG_WIDTH, t[1]]);
+common.years.forEach(function (year, yearI) {
+    projection.translate([t[0] + yearI * IMG_WIDTH, t[1]]);
 
     var features = common.geo.features;
 
-    if (dateI > 0) {
+    if (yearI > 0) {
         features = features.filter(function (feature) {
-            return common.prices[feature.properties.name][dateI - 1][2] <= THRESHOLD;
+            return common.prices[feature.properties.name][yearI - 1][2] <= THRESHOLD;
         });
     }
 
     features = _.groupBy(features, function (feature) {
-        return common.prices[feature.properties.name][dateI][2] > THRESHOLD ? 'going' : 'staying';
+        return common.prices[feature.properties.name][yearI][2] > THRESHOLD ? 'going' : 'staying';
     });
 
     render(ctx, features.staying, '#e0e0e0');
     render(ctx, features.going, '#ca2354');
 });
+
+common.writePNG(canvas, 'intro.png', 8);

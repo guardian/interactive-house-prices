@@ -59,7 +59,7 @@ export function getCountryMedian(districts, wage) {
             medians[j][i] = p[2] * 100;
         });
     });
-    //console.log(districts);    
+
     // calc med house price lower than med salary
     medians.forEach((meds, i) => { 
         var affordableCount = meds.filter(m => m > wage*4).length;
@@ -67,7 +67,8 @@ export function getCountryMedian(districts, wage) {
         var ratio = (affordableCount-nosalesCount) / (distCount-nosalesCount);
         data[i] = {
             x: i,
-            y: Math.round(ratio*10000)/100
+            y: Math.round(ratio*10000)/100,
+            no: distCount - affordableCount - nosalesCount
         }; 
     });
     

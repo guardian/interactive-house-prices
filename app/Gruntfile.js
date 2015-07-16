@@ -17,10 +17,6 @@ module.exports = function(grunt) {
                 files: ['src/css/**/*'],
                 tasks: ['sass:interactive'],
             },
-            assets: {
-                files: ['src/assets/**/*'],
-                tasks: ['copy:assets']
-            },
             harness: {
                 files: ['harness/**/*'],
                 tasks: ['harness']

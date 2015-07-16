@@ -5,7 +5,6 @@
   "main": "process.js",
   "dependencies": {
     "canvas": "^1.2.3",
-    "csv": "^0.4.4",
     "d3": "^3.5.5",
     "d3-geo-projection": "^0.2.15",
     "humanize": "0.0.9",
