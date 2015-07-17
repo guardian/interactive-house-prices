@@ -31,6 +31,11 @@ function render(ctx, features, color) {
     });
 }
 
+function isAffordable(feature, yearI) {
+    var stats = common.prices[feature.properties.name].stats;
+    return stats && stats[2] <= THRESHOLD;
+}
+
 var canvas = new Canvas(IMG_WIDTH * common.years.length, IMG_HEIGHT),
     ctx = canvas.getContext('2d');
 
@@ -44,12 +49,12 @@ common.years.forEach(function (year, yearI) {
 
     if (yearI > 0) {
         features = features.filter(function (feature) {
-            return common.prices[feature.properties.name][yearI - 1][2] <= THRESHOLD;
+            return isAffordable(feature, yearI - 1);
         });
     }
 
     features = _.groupBy(features, function (feature) {
-        return common.prices[feature.properties.name][yearI][2] > THRESHOLD ? 'going' : 'staying';
+        return isAffordable(feature, yearI) ? 'staying' : 'going';
     });
 
     render(ctx, features.staying, '#e0e0e0');

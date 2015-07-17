@@ -13,7 +13,16 @@ function cartesianTriangleArea(triangle) {
 var options = {
     'id': function (d) { return d.properties.name; },
     'coordinate-system': 'cartesian',
-    'property-transform': function (d) { return {'prices': common.prices[d.properties.name] }; },
+    'property-transform': function (d) {
+        return {
+            'prices': common.prices[d.properties.name].map(function (price) {
+                if (price.stats) {
+                    return price.stats.concat([price.count]).concat(price.histogram);
+                }
+                return [];
+            })
+        };
+    },
     'pre-quantization': 1e8,
     'post-quantization': 1e4,
     'retain-proportion': 0.3

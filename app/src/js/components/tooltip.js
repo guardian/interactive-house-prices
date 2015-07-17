@@ -82,7 +82,7 @@ export default class Tooltip {
             ratioSalary = ratio*salary,
             range = ratioSalary*8;
        
-        var count = prices.range.reduce((pre, cur) => pre + cur) + prices.outlier; 
+        var count = prices.count;
         // change styles
         if (count === 0) {
             ratioMin = 0;
@@ -117,7 +117,7 @@ export default class Tooltip {
         this.areaEl.textContent = area; 
         this.districtEl.textContent = district; 
         
-        this.numEl.textContent = prices.count || 0;
+        this.numEl.textContent = prices.count;
         this.minEl.textContent = prices.min.toLocaleString();
         this.maxEl.textContent = prices.upper_fence.toLocaleString();
         
@@ -143,14 +143,14 @@ export default class Tooltip {
 
         // update line chart
         var diff = (100 - ratioMin)/6; 
-        var lines = prices.range.map((l, i, arr) => {
+        var lines = prices.histogram.map((l, i, arr) => {
             return {
                 y: l,                            // count
                 x: (ratioMin + diff*(i+0.5))*2.5 // range
             };
         });
         //lines.push({x:255, y:prices.near_outlier});
-        lines.push({x:275, y:prices.outlier});
+        //lines.push({x:275, y:prices.outlier});
         this.linechart.update(lines);
         this.linechart.labels(lines);
         //console.log(prices.range);

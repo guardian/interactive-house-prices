@@ -5,8 +5,8 @@ var Canvas = require('canvas');
 var d3 = require('d3');
 require('d3-geo-projection')(d3);
 
-var IMG_WIDTH = 166;
-var IMG_HEIGHT = 200;
+var IMG_WIDTH = 100;
+var IMG_HEIGHT = 120;
 
 var canvas = new Canvas(IMG_WIDTH, IMG_HEIGHT),
     ctx = canvas.getContext('2d');
@@ -20,7 +20,7 @@ var b = path.bounds(common.geo),
 
 projection.scale(s).translate(t);
 
-ctx.fillStyle = ctx.strokeStyle = '#ed3d61';
+ctx.fillStyle = ctx.strokeStyle = '#e0e0e0';
 common.geo.features.forEach(function (feature) {
     path(feature);
 });
@@ -32,15 +32,15 @@ var prices = _.pairs(common.prices);
 var features = _.indexBy(common.geo.features, 'properties.name');
 var startYear = common.years[0];
 
-ctx.fillStyle = ctx.strokeStyle = '#cccccc';
+ctx.fillStyle = ctx.strokeStyle = '#ed3d61';
 common.years.forEach(function (year) {
     console.log(year);
 
     var sortedDistricts = _.sortBy(prices, function (price) {
-        return price[1][year - startYear][2]; // median
+        return price[1][year - startYear].stats[2]; // median
     }).map(function (price) {
         return price[0];
-    });
+    }).reverse();
 
     ctx.clearRect(0, 0, IMG_WIDTH, IMG_HEIGHT);
     sortedDistricts.forEach(function (district, i) {
