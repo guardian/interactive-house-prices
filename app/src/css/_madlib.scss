@@ -1,0 +1,110 @@
+.madlib {
+    font-size: 18px;
+}
+
+.madlib__input {
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    border-bottom: 1px dotted black;
+    margin-top: 1px;
+    width: 250px;
+    padding-left: 5px;
+    &::before {
+        content: "£";
+        font-weight: bold;
+        float: left;
+    }
+}
+
+.madlib__input__expand,
+.madlib__input__custom__text,
+.madlib__input__canned__options {
+    background: 0;
+    border: 0;
+    margin: 0;
+    padding: 0;
+    outline: 0;
+}
+
+.madlib__input__custom {
+    overflow: hidden;
+    font-weight: bold;
+}
+
+.madlib__input__custom__text {
+    width: 100%;
+    &::selection {
+        background: #b6cadb;
+    }
+    &::-moz-selection {
+        background: #b6cadb;
+    }
+}
+
+.madlib__input__type {
+    position: absolute;
+    pointer-events: none;
+    right: 25px;
+    top: 0;
+}
+
+.madlib__input__expand {
+    width: 20px;
+    float: right;
+
+    &::after {
+        content: "";
+        display: inline-block;
+        height: 0;
+        vertical-align: middle;
+        border-top: 5px solid black;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+    }
+
+    .madlib__input[data-expanded] &::after {
+        border-top: 0;
+        border-bottom: 5px solid black;
+    }
+}
+
+.madlib__input__canned {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    overflow: hidden;
+
+    display: none;
+    .madlib__input[data-expanded] & {
+        display: block;
+    }
+}
+
+.madlib__input__canned__options {
+    background-color: white;
+    width: 120%;
+    cursor: pointer;
+
+    & > option {
+        padding-left: 5px;
+    }
+}
+
+.madlib__minimap {
+    float: right;
+    background-image: url('assets/minimap/bg.png');
+    background-repeat: no-repeat;
+    margin: 15px 0 50px 10px;
+
+    img {
+        display: none;
+        max-width: 100%;
+    }
+}
+
+.madlib__result {
+    color: #ed3d61;
+    font-weight: bold;
+}
