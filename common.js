@@ -39,11 +39,10 @@ var pricesById = _(prices)
                     return Math.round(parseFloat(n) / 100);
                 });
                 var histogram = row.histogram.replace(/\[0:\d+\]={/, '').replace('}', '')
-                    .split(',').map(function (n) {
+                    .split(',').concat([row.outliers]).map(function (n) {
                         return parseInt(n);
                     });
-                var count = histogram.reduce(function (a, b) { return a + b; });
-                return {'stats': stats, 'histogram': histogram, 'count': count};
+                return {'stats': stats, 'histogram': histogram, 'count': parseInt(row.count)};
             }).value();
         return years.map(function (year) {
             if (p[year]) {
