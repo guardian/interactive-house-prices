@@ -83,8 +83,8 @@ ORDER BY year
 
 You will need this function:
 ```sql
-DROP FUNCTION calc_quartiles(real[]);
-DROP TYPE quartiles;
+DROP FUNCTION IF EXISTS calc_quartiles(real[]);
+DROP TYPE IF EXISTS quartiles;
 
 CREATE TYPE quartiles AS (
   q1 real,
@@ -94,46 +94,53 @@ CREATE TYPE quartiles AS (
   max real,
   lower_fence real,
   upper_fence real,
-  outer_fence real
+  outer_fence real,
+  buckets int
 );
 
-CREATE OR REPLACE FUNCTION calc_quartiles(myarray real[])
+
+CREATE FUNCTION calc_quartiles(myarray real[])
   RETURNS quartiles AS
 $BODY$
 
 DECLARE
-  ary_cnt INTEGER;
-  new_array real[];
-  half INTEGER;
-  qtr INTEGER;
+  sorted real[];
+  n int;
+  half int;
+  qtr int;
   q quartiles;
   i real;
+  sample_n int;
 BEGIN
-  ary_cnt = array_length(myarray, 1);
-  new_array = array_sort(myarray);
+  n = array_length(myarray, 1);
+  sorted = array_sort(myarray);
 
-  half = ary_cnt / 2;
+  half = n / 2;
   if half & 1 then
     qtr = (half + 1) / 2;
-    q.q1 = new_array[qtr];
-    q.q3 = new_array[ary_cnt - qtr + 1];
+    q.q1 = sorted[qtr];
+    q.q3 = sorted[n - qtr + 1];
   else
     qtr = half / 2;
-    q.q1 = (new_array[qtr] + new_array[qtr + 1]) / 2;
-    q.q3 = (new_array[ary_cnt - qtr] + new_array[ary_cnt - qtr + 1]) / 2;
+    q.q1 = (sorted[qtr] + sorted[qtr + 1]) / 2;
+    q.q3 = (sorted[n - qtr] + sorted[n - qtr + 1]) / 2;
   end if;
-  
+
   q.iqr = q.q3 - q.q1;
   q.lower_fence = q.q1 - 1.5 * q.iqr;
   q.upper_fence = q.q3 + 1.5 * q.iqr;
   q.outer_fence = q.q3 + 3 * q.iqr;
 
-  q.min = new_array[1];
-  foreach i in array new_array loop
+  q.min = sorted[1];
+  sample_n = 0;
+  foreach i in array sorted loop
     exit when i > q.upper_fence;
     q.max = i;
+    sample_n = sample_n + 1;
   end loop;
-  
+
+  q.buckets = ceil(log(2, sample_n) + 1); -- sturges rule
+
   return q;
 END;
 $BODY$
