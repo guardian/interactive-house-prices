@@ -1,4 +1,5 @@
 @import 'range';
+@import 'madlib';
 
 .user {
     @include f-bodyCopy;
@@ -44,109 +45,9 @@
     margin-bottom: 3px;
 }
 
-.madlib {
-    font-size: 18px;
-}
-
-.madlib__input {
-    display: inline-block;
-    position: relative;
-    border-bottom: 1px dotted black;
-    width: 160px;
-}
-
-.madlib__input__text,
-.madlib__input__expand,
-.madlib__input__canned__options {
-    background: 0;
-    border: 0;
-    margin: 0;
-    padding: 0;
-    outline: 0;
-}
-
-.madlib__input__text {
-    width: calc(100% - 20px);
-    font-weight: bold;
-    color: #333;
-    padding-left: 5px;
-    box-sizing: border-box;
-
-    @mixin placeholder($color) {
-        &::-webkit-input-placeholder { color: $color; }
-        &:-moz-placeholder { color: $color; }
-        &::-moz-placeholder { color: $color; }
-        &:-ms-input-placeholder { color: $color; }
-    }
-
-    @include placeholder(#333);
-    &:focus {
-        @include placeholder(#ccc);
-    }
-}
-
-.madlib__input__expand {
-    width: 20px;
-    &::after {
-        content: "";
-        display: inline-block;
-        height: 0;
-        vertical-align: middle;
-        border-top: 5px solid black;
-        border-left: 5px solid transparent;
-        border-right: 5px solid transparent;
-    }
-
-    .madlib__input[data-expanded] &::after {
-        border-top: 0;
-        border-bottom: 5px solid black;
-    }
-}
-
-.madlib__input__canned {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    overflow: hidden;
-
-    display: none;
-    .madlib__input[data-expanded] & {
-        display: block;
-    }
-}
-
-.madlib__input__canned__options {
-    background-color: white;
-    width: 120%;
-    cursor: pointer;
-
-    & > option {
-        padding-left: 5px;
-    }
-}
-
-.madlib__minimap {
-    float: right;
-    width: 120px;
-    height: 144px;
-    overflow: hidden;
-    background-image: url('assets/minimap/bg.png');
-    background-size: contain;
-
-    img {
-        display: none;
-        max-width: 100%;
-    }
-}
-
-.madlib__result {
-    color: #ed3d61;
-    font-weight: bold;
-}
-
 .range-slider {
     margin-top: -10px;
+    width: 270px;
 }
 
 .range-slider__thumb::after {
@@ -189,13 +90,4 @@
     border-left: 5px solid transparent;
     border-right: 5px solid transparent;
     border-bottom: 8px solid #ed3d61;
-}
-.pos-r-user {
-    @extend .pos-r;
-    top: -55px;
-    margin-left: 3px;
-    width: calc(100% - 15px);
-
-    font-family: $f-data;
-    font-size: 12px;
 }

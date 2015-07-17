@@ -16,9 +16,7 @@ export default class User {
         this.districts = districts;
         this.onUpdate = onUpdate;
 
-        this.labelEl = el.querySelector(".js-user-label");
         this.yearEl = el.querySelector('.js-year');
-        this.ratiodiffEl = el.querySelector(".js-user-diff");
         this.ratioEls = Array.from(el.querySelectorAll('.js-user-ratio'));
 
         this.date = range(el.querySelector('.js-date'), startYear, endYear, this.changeYear.bind(this), 5);
@@ -45,7 +43,6 @@ export default class User {
 
         // update user's line chart
         var left = (100 * (this.date.get() - startYear) / (endYear - startYear));
-        this.labelEl.style.left = left + "%";
         this.ratioEls.forEach(el => {
             el.style.left = (left-0.8) + "%";
             el.textContent = Math.round(currentYear) + "%";
@@ -56,7 +53,7 @@ export default class User {
     }
 
     changeThreshold(threshold) {
-        this.value.threshold = parseFloat(threshold.replace(/£,/g, ''));
+        this.value.threshold = threshold;
         this.medians = getCountryMedian(this.districts, this.value.threshold);
         this.linechart.update(this.medians, 386, 100);
 

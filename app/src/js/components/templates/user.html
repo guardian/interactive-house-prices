@@ -1,32 +1,36 @@
 <div class="user__inner">
     <h2 class="subtitle">House prices in England and Wales</h2>
     <h1 class="title">Unaffordable country</h1>
-        <div class="madlib__minimap js-minimap"></div>
     <div class="madlib">
         If you earned
         <form class="madlib__input js-wage">
-            <input class="madlib__input__text" type="text" placeholder="the UK average" /><button type="button" class="madlib__input__expand"></button>
-            <span class="madlib__input__canned">
+            <button type="button" class="madlib__input__expand"></button>
+            <div class="madlib__input__custom">
+                <input class="madlib__input__custom__text" type="text" value="25,000" />
+                <div class="madlib__input__type">(the UK average)</div>
+            </div>
+            <div class="madlib__input__canned">
                 <select class="madlib__input__canned__options" size="2">
-                    <option value="25000">the UK average</option>
-                    <option value="18900">the living wage</option>
+                    <option value="25000">£25,000 (the UK average)</option>
+                    <option value="18900">£18,900 (the living wage)</option>
                 </select>
-            </span>
+            </div>
         </form>
-        and wanted to buy a house at the median price,<br />
-        <span class="madlib__result"><span class="js-user-ratio"></span> of the country</span> would be
-        beyond your means in <span class="js-year"></span>
+        <div><div class="madlib__minimap js-minimap"></div></div>
+        and wanted to buy a house at the median price,
+        <span class="madlib__result">
+            <span class="js-user-ratio"></span> of the country
+        </span>
+        would be beyond your means
+        in <span class="js-year"></span>
     </div>
 
     <div class="line-affordable js-line"></div>
-    <div class="pos-r-user">
-        <span class="pos-a js-user-ratio"></span>
-        <span class="pos-a js-user-label shape-triangle"></span>
+
+    <div class="range-slider js-date needsclick">
+        <span class="range-slider__thumb needclick"></span>
     </div>
 
-    <div class="range-slider js-date">
-        <span class="range-slider__thumb"></span>
-    </div>
     <p class="inflation-note">Adjusted for inflation</p>
 
     <div class="share-container">
