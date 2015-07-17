@@ -97,7 +97,7 @@ CREATE TYPE quartiles AS (
   outer_fence real,
   buckets int
 );
-
+ALTER TYPE quartiles OWNER TO users;
 
 CREATE FUNCTION calc_quartiles(myarray real[])
   RETURNS quartiles AS
@@ -146,6 +146,5 @@ END;
 $BODY$
   LANGUAGE plpgsql IMMUTABLE
   COST 100;
-ALTER FUNCTION calc_quartiles(real[])
-  OWNER TO users;
+ALTER FUNCTION calc_quartiles(real[]) OWNER TO users;
 ```
