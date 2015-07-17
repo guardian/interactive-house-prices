@@ -45,8 +45,10 @@ export default class Map {
         }).addTo(this.map);
 
         // Region layer
+        var regionRenderer = L.canvas();
+        regionRenderer.suspendDraw = true;
         this.regionLayer = L.geoJson(undefined, {
-            renderer: L.canvas(),
+            renderer: regionRenderer,
             onEachFeature: (feature, layer) => {
                 layer.on({
                     mouseover: evt => {
@@ -72,9 +74,16 @@ export default class Map {
             accessToken: 'pk.eyJ1IjoiZ3VhcmRpYW4iLCJhIjoiNHk1bnF4OCJ9.25tK75EuDdgq5GxQKyD6Fg'
         }).addTo(this.map);
 
-        getDistricts().then(geo => { 
-            this.regionLayer.addData(geo);
-            this.user = new User(el.querySelector('.js-user'), geo.features, this.update.bind(this));
+        var districts = [];
+        getDistricts(res => {
+            if (res.districts.length === 0) {
+                regionRenderer.suspendDraw = false;
+                this.user = new User(el.querySelector('.js-user'), districts, this.update.bind(this));
+            } else {
+                districts = districts.concat(res.districts);
+                this.regionLayer.addData(res.districts);
+                res.more();
+            }
         });
 
         this.tooltip = new Tooltip(el);
