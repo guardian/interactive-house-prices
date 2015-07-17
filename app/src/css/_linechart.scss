@@ -1,30 +1,118 @@
 // line chart
-.lines {
-    path { 
-        stroke: #333;
-        stroke-width: 1;
-        fill: none;
-    }
 
-    .axis path,
-    .axis line {
-        fill: none;
-        stroke: grey;
-        stroke-width: 1;
-        shape-rendering: crispEdges;
-    }
+.line-affordable {
+    margin: 15px 7px 0; // 7px is half thumb
+}
+.line-distribution {
+    margin-bottom: -5px;
+}
 
+.line,
+.line-thine,
+.line-light,
+.line-dashed {
+    fill: none;
+    stroke: #333;
+    stroke-width: 3px;
+}  
+.line-thine  { stroke-width: 2px; }
+.line-light  { stroke-width: 1px; }
+.line-dashed { stroke-dasharray: 3 3; }
+
+.line-mask {
+    fill: white;
+    stroke: white;
+    stroke-width: 1px;
+}
+
+
+.range-empty {
+    width: 100%;
+    height: 60px;
+    background-color: $c-neutral-3;
+}
+.range-extra {
+    width: 100%;
+    height: 60px;
+    background-color: #ed3d61;
+}
+.range-pipes {
+    height: 60px;
+    transition: width 0.25s ease;
+    background-image: linear-gradient(90deg,
+    #39a4d8  0%,   #39a4d8 25%,
+    #8ac7cd 25%,   #8ac7cd 37.5%,
+    #daeac1 37.5%, #daeac1 50%, 
+    #fdd09e 50%,   #fdd09e 62.5%,
+    #f58680 62.5%, #f58680 75%, 
+    #ed3d62 75%,   #ed3d61 100%
+    );
+}  
+
+
+.d-ib { display: inline-block; }
+.ta-r { text-align: right; }
+.c-bd { color: #767676; font-size: 9px; }
+
+[class^="pos-a-"] { 
+    position: absolute; 
+}
+.pos-a-mr { top: 1.1em; right:  0; }
+.pos-a-bl { bottom:  0; left:   0; }
+.pos-a-upf { bottom: 0; transition: right 0.25s ease; }
+.pos-a-med { top:    0; transition: left  0.25s ease; }
+
+.chart {
+    width: 280px;
+    height: 93px;
+    margin-top: -5px;
+    margin-bottom: 5px;
+
+    font-size: 11px;
+    line-height: 1.15em;
+     
     text {
-        fill: #333;
+        fill: #767676;
         font-size: 9px;
     } 
 }
 
-.line-affordable {
-    @extend .lines;
-    margin: 15px 7px 0; // 7px is half thumb
+.chart-color {
+    width: 100%;
+    height: 30px;
+    white-space:nowrap;
+    overflow:hidden;
+    top: 35px;
 }
-.line-distribution {
-    @extend .lines;
-    margin-bottom: -5px;
+.chart-mask {
+    top:25px;
 }
+.chart-label {
+    width: 100%;
+    height: 100%;
+    
+    .pin-min {
+        width: 1px;
+        height: 4px;
+        border-left: 1px solid #333;
+    }
+    .pin-max {
+        height: 18px;
+        border-right: 1px solid #333;
+    }
+    .pin-med {
+        width: 1px;
+        height: 40px;
+        border-left: 1px solid #333;
+    }
+    .pin-upf {
+        width: 2px;
+        height: 20px;
+        //border-left:  1px solid #767676;
+        //border-right: 1px solid #767676;
+        background-color: white;
+        margin-top: -20px;
+        margin-right: -5px;
+    }
+}
+

@@ -35,7 +35,7 @@ var pricesById = _(prices)
         var p = _(price)
             .indexBy(function (row) { return parseInt(row.year_of_sale); })
             .mapValues(function (row) {
-                var stats = [row.min, row.max, row.median, row.upper_fence].map(function (n) {
+                var stats = [row.min, row.actual_max, row.median, row.upper_fence].map(function (n) {
                     return Math.round(parseFloat(n) / 100);
                 });
                 var histogram = row.histogram.replace(/\[0:\d+\]={/, '').replace('}', '')

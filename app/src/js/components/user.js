@@ -55,7 +55,7 @@ export default class User {
     changeThreshold(threshold) {
         this.value.threshold = threshold;
         this.medians = getCountryMedian(this.districts, this.value.threshold);
-        this.linechart.update(this.medians, 386, 100);
+        //this.linechart.updatePath(this.medians);
 
         this.medians.forEach((median, year) => {
             this.minimapImgs[year + startYear].src =

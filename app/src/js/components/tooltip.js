@@ -28,6 +28,7 @@ export default class Tooltip {
         this.numEl = this.el.querySelector('.js-num'); //number of sales
         this.minEl = this.el.querySelector('.js-min');
         this.maxEl = this.el.querySelector('.js-max');
+        this.upfEl = this.el.querySelector('.js-upf'); //upper fence
         this.medEls = Array.from(this.el.querySelectorAll('.js-med'));
         this.salaryEls = Array.from(this.el.querySelectorAll('.js-salary'));
         this.factorEls = Array.from(this.el.querySelectorAll('.js-factor'));
@@ -36,17 +37,15 @@ export default class Tooltip {
         this.yearAffordableEl = this.el.querySelector('.js-year-affordable');
        
         // els for styles
+        this.upfPos = this.el.querySelector('.pos-a-upf'); //upper fence
+        this.medPos = this.el.querySelector('.pos-a-med'); //upper fence
+        
         this.emptyEl = this.el.querySelector('.range-empty');
         this.rangeEl = this.el.querySelector('.range-pipes');
-        this.markerSalaryEl = this.el.querySelector('.marker-salary');
-        this.markerMedEl = this.el.querySelector('.marker-med');
-        this.markerMinEl = this.el.querySelector('.marker-min');
-        this.labelMinEl = this.el.querySelector('.label-min');
-        this.labelFacMedEl = this.el.querySelector('.label-facmed');
         this.labelFacEl = this.el.querySelector('.label-fac');
         
         // init line chart
-        this.linechart = new Linechart(".js-lines", 280, 25);
+        this.linechart = new Linechart(".js-lines", 280, 35);
         
 
         var resize = debounce(function () {
@@ -66,7 +65,6 @@ export default class Tooltip {
     }
 
     show(evt, data) {
-
         var districtObj = evt.target.feature,
             district = districtObj.id,
             area = areaName[district.replace(/[0-9].*/,'')] + " area";
@@ -83,35 +81,19 @@ export default class Tooltip {
             range = ratioSalary*8;
        
         var count = prices.count;
-        // change styles
-        if (count === 0) {
-            ratioMin = 0;
-            ratioMed = 50;
-            empty = 100;
-        } else if (count ===1) {
-            ratioMin = 98;
-        }
-
+        
+        var numBins = prices.histogram.length, // number of bins 
+            diff = 280/numBins; 
+       
+        
+        this.upfPos.style.right = (100/(numBins-1)) + "%";  
+        this.medPos.style.left  = ratioMed + "%";  
+        
         this.rangeEl.style.width = range + "%";        
         this.emptyEl.style.width = empty + "%";
-        
-        this.markerSalaryEl.style.left = ratioSalary + "%";        
-        this.markerMedEl.style.left = ratioMed + "%";        
-        this.markerMinEl.style.left = ratioMin + "%";        
-        
-        this.labelMinEl.style.marginLeft = ((ratioMin < 50) ? ratioMin : 50) + "%";   
+       
         this.labelFacEl.style.fontSize = 12 + ((factor<20)?factor:20) + "px"; 
         
-        if (ratioMed > 65) {
-            this.labelFacMedEl.style.left = "auto";
-            this.labelFacMedEl.style.right = 0;
-        } else if (ratioMed > 35) {
-            this.labelFacMedEl.style.left = (ratioMed-5) + "%";
-            this.labelFacMedEl.style.right = "auto";
-        } else {
-            this.labelFacMedEl.style.left = "auto";
-            this.labelFacMedEl.style.right = "auto";
-        }
         
         // load data
         this.areaEl.textContent = area; 
@@ -119,7 +101,8 @@ export default class Tooltip {
         
         this.numEl.textContent = prices.count;
         this.minEl.textContent = prices.min.toLocaleString();
-        this.maxEl.textContent = prices.upper_fence.toLocaleString();
+        this.maxEl.textContent = prices.max.toLocaleString();
+        this.upfEl.textContent = prices.upper_fence.toLocaleString();
         
         this.medEls.forEach(el => el.textContent = prices.med.toLocaleString());
         this.salaryEls.forEach(el => el.textContent = salary.toLocaleString());
@@ -142,20 +125,18 @@ export default class Tooltip {
         this.yearAffordableEl.textContent = textAffordable;
 
         // update line chart
-        var diff = (100 - ratioMin)/6; 
-        var lines = prices.histogram.map((l, i, arr) => {
+        var dataBins = prices.histogram.map((l, i, arr) => {
             return {
-                y: l,                            // count
-                x: (ratioMin + diff*(i+0.5))*2.5 // range
+                x: diff*(i+0.5), // range
+                y: l                   // count
             };
         });
-        //lines.push({x:255, y:prices.near_outlier});
-        //lines.push({x:275, y:prices.outlier});
-        this.linechart.update(lines);
-        this.linechart.labels(lines);
-        //console.log(prices.range);
-        //console.log(lines);
-
+        console.log(prices.histogram); 
+        //this.linechart.updateColors();
+        this.linechart.updatePath("");
+        this.linechart.updateMask(dataBins, "line-mask", "monotone");
+        this.linechart.updateLabels(dataBins);
+        
         var x = evt.containerPoint.x;
         var y = evt.containerPoint.y;// - tooltipHeight;
         if (x + tooltipWidth > this.viewWidth) {

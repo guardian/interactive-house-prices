@@ -3,13 +3,16 @@ import d3 from '../lib/d3';
 export default class Linechart {
     constructor(el, width, height) {
         
+        this.width = width;
+        this.height = height;
+
         this.svg = d3.select(el)
                      .append("svg")
                      .attr("width", width)
                      .attr("height", height)
                      .append("g")
                      .attr("transform", "translate(0," + 10 + ")");
-
+        
         // Set the ranges
         this.x = d3.scale.linear().range([0, width-30]);
         this.y = d3.scale.linear().range([height-10, 0]);
@@ -21,58 +24,60 @@ export default class Linechart {
                        .orient("left").ticks(8);
 
         // Define the line
-        this.valueline = d3.svg.line()
-                           .x(d => this.x(d.x))
-                           .y(d => this.y(d.y));
-    
-        this.path = this.svg.append("path")
+        this.valueline = (type =>
+                 d3.svg.line()
+                .x(d => this.x(d.x))
+                .y(d => this.y(d.y))
+                .interpolate(type)
+        );
+
+        this.svg.append("path")
         .attr("class", "line");
         
-        /*this.svg.append("g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(0," + width + ")")
-        .call(this.xAxis);
-
-        this.svg.append("g")
-        .attr("class", "y axis")
-        .call(this.yAxis);
-        */
+        this.svg.append("path")
+        .attr("class", "line-mask");
     }
 
-    update(data, width, height) {
-        var maxX = d3.max(data, d => d.x),
+    updateMask(data, className, lineType) {        
+        var num = data.length,
+            minX = data[0].x, 
+            maxX = data[num-1].x, 
             maxY = d3.max(data, d => d.y),
-            rangeX = width || maxX/*,
-            rangeY = height || 0*/;
+            cn = className || "line";
 
-        this.x.domain([0, maxX]);
+        var dataMask = [
+            {x: this.width, y: data[num-1].y}, 
+            {x: this.width, y: maxY}, 
+            {x: -0, y: maxY},
+            {x: 0, y: data[0].y}
+        ].concat(data); 
+        
+        this.x.domain([minX, maxX]).range([minX, maxX]);
         this.y.domain([0, maxY]);
-        
-        this.x.range([0, rangeX]);
-        this.xAxis.scale(this.x);
-        /*if (rangeY !== 0) {
-            this.y.range([0, rangeY]);
-            this.yAxis.scale(this.y);
-        }*/
 
+        this.updatePath(dataMask, cn, lineType);
+    }
+
+    updatePath(data, className, lineType) {        
         this.svg
-        .select("path")
-        .transition()
-        .duration(250)
-        .attr("d", this.valueline(data));
-        
+        .select("." + className).datum(data)
+        .transition().duration(250)
+        .attr("d", this.valueline(lineType)); 
     }
     
-    labels(data) {
-        this.svg
-        .selectAll("text")
-        .data(data)
+    updateLabels(data) {
+        
+        var label = this.svg
+        .selectAll("text").data(data)
         .attr("x", d => this.x(d.x)-5)
-        .attr("y", d => this.y(d.y)-3)
-        .text(d => d.y)
-        .enter().append("text")
-        .attr("x", d => this.x(d.x)-5)
-        .attr("y", d => this.y(d.y)-3)
+        .attr("y", d => this.y(d.y)-2)
         .text(d => d.y);
+        
+        label.enter().append("text")
+        .attr("x", d => this.x(d.x)-5)
+        .attr("y", d => this.y(d.y)-2)
+        .text(d => d.y);
+
+        label.exit().remove();
     }
 }

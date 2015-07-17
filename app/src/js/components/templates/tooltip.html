@@ -3,42 +3,46 @@
     <span class="js-area"></span>
 </h3>
 
-<p><b>number of sales: </b><span class="js-num"></span></p>
+<p><b>Sales: <span class="js-num"></span></b></p>
 
-<div class="line-distribution js-lines"></div>
-<!--div class="dots-outlier"></div-->
-<div class="chart">
-    <!-- labels: min/max -->
-    <div class="fz-11">
-        <span class="label-min">[min.] <span class="js-min"></span></span> - 
-        <span class="f-r">- - <span class="js-max"></span></span>
-    </div>
-    <!-- ranges -->
-    <div>
+<div class="chart pos-r">
+    <div class="chart-color pos-a">  
         <!-- hack for extra space using inline-block -->
-        <div class="range-empty"></div
-       ><div class="range-pipes"></div
-       ><div class="range-extra"></div>
+        <div class="d-ib range-empty"></div
+       ><div class="d-ib range-pipes"></div 
+       ><div class="d-ib range-extra"></div> 
         <!-- end of hack -->
     </div>
-    <!-- markers -->
-    <div>
-        <div class="marker-salary"></div>
-        <div class="marker-med"></div>
-        <div class="marker-min"></div>
-        <div class="marker-max"></div>
+
+    <div class="chart-mask pos-a js-lines"></div>
+
+    <div class="chart-label pos-r">
+        <div class="pos-a-bl">
+            <div class="pin-min"></div>
+            £<span class="js-min"></span><br>
+            <span class="c-bd">Cheapest</span>
+        </div>
+        <div class="pos-a-upf ta-r">
+            <div class="pin-upf f-r"></div>
+            £<span class="js-upf"></span><br>
+            <span class="c-bd">More expensive</span>
+        </div>
+        <div class="pos-a-mr ta-r">
+            <span class="c-bd">Most expensive</span><br>
+            £<span class="js-max"></span>
+            <!--div class="pin-max f-r"></div-->
+        </div>
+        <div class="pos-a-med">
+            <span class="c-bd">Median house price</span><br>
+            £<span class="js-med"></span>
+            <div class="pin-med"></div>
+        </div>
     </div>
-    <!-- labels -->
-    <div class="fz-11">
-        <span class="js-salary"></span> 
-        <span class="label-facmed pos-a"> 
-            * <span class="js-factor bb-d"></span> 
-            = <span class="js-med"></span> [meidan]
-        </span>
-    </div>
+
 </div>
 
-<p><!--b>mortgage factor: </b><br-->
+<p>
+    <b>Mortgage factor: </b>
     The median house price in 
     <span class="js-year-user">[year]</span> was 
     <b><span class="js-factor label-fac bb-d"></span> times </b>your salary. 
