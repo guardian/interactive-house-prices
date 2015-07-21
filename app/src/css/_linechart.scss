@@ -48,7 +48,18 @@
     #ed3d62 75%,   #ed3d61 100%
     );
 }  
-
+.range-pipes-blur {
+    height: 60px;
+    transition: width 0.25s ease;
+    background-image: linear-gradient(90deg,
+    #39a4d8  0%,   #39a4d8 20%,
+    #8ac7cd 30%,   #8ac7cd 32.5%,
+    #daeac1 42.5%, #daeac1 45%, 
+    #fdd09e 55%,   #fdd09e 57.5%,
+    #f58680 67.5%, #f58680 70%, 
+    #ed3d62 80%,   #ed3d61 100%
+    );
+}
 
 .d-ib { display: inline-block; }
 .ta-r { text-align: right; }
@@ -57,14 +68,14 @@
 [class^="pos-a-"] { 
     position: absolute; 
 }
-.pos-a-mr { top: 1.1em; right:  0; }
+.pos-a-mr { top:   25%; right:  0; }
 .pos-a-bl { bottom:  0; left:   0; }
-.pos-a-upf { bottom: 0; transition: right 0.25s ease; }
+.pos-a-upf { bottom: 0; transition: right 0.25s ease; margin-right: -4px; }
 .pos-a-med { top:    0; transition: left  0.25s ease; }
 
 .chart {
     width: 280px;
-    height: 93px;
+    height: 113px;
     margin-top: -5px;
     margin-bottom: 5px;
 
@@ -75,44 +86,49 @@
         fill: #767676;
         font-size: 9px;
     } 
+    //border: 1px solid green;
 }
 
 .chart-color {
     width: 100%;
-    height: 30px;
+    height: 54px; //64-10
     white-space:nowrap;
     overflow:hidden;
-    top: 35px;
+    top: 24px;
+    //border: 1px solid;
 }
+
 .chart-mask {
-    top:25px;
+    top: 13px;
+    //border: 1px solid red;
 }
+
 .chart-label {
     width: 100%;
     height: 100%;
     
     .pin-min {
         width: 1px;
-        height: 4px;
+        height: 10px;
         border-left: 1px solid #333;
     }
     .pin-max {
-        height: 18px;
+        height: 20px;
         border-right: 1px solid #333;
+        margin-top: 17px;
     }
     .pin-med {
         width: 1px;
-        height: 40px;
+        height: 54px;
         border-left: 1px solid #333;
     }
     .pin-upf {
         width: 2px;
         height: 20px;
-        //border-left:  1px solid #767676;
-        //border-right: 1px solid #767676;
+        border-left:  1px solid #767676;
+        border-right: 1px solid #767676;
         background-color: white;
-        margin-top: -20px;
-        margin-right: -5px;
+        margin-top: -25px;
     }
 }
 

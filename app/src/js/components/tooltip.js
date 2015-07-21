@@ -40,12 +40,11 @@ export default class Tooltip {
         this.upfPos = this.el.querySelector('.pos-a-upf'); //upper fence
         this.medPos = this.el.querySelector('.pos-a-med'); //upper fence
         
-        this.emptyEl = this.el.querySelector('.range-empty');
-        this.rangeEl = this.el.querySelector('.range-pipes');
+        this.rangeEl = this.el.querySelector('.js-pipes');
         this.labelFacEl = this.el.querySelector('.label-fac');
         
         // init line chart
-        this.linechart = new Linechart(".js-lines", 280, 35);
+        this.linechart = new Linechart(".js-lines", 280, 64);
         
 
         var resize = debounce(function () {
@@ -73,8 +72,7 @@ export default class Tooltip {
             salary = data.threshold,
             factor = prices.med/salary;
         
-        var empty = 0,
-            ratio = 100/prices.upper_fence, //TODO
+        var ratio = 100/prices.upper_fence, //TODO
             ratioMin = ratio*prices.min,
             ratioMed = ratio*prices.med,
             ratioSalary = ratio*salary,
@@ -83,14 +81,16 @@ export default class Tooltip {
         var count = prices.count;
         
         var numBins = prices.histogram.length, // number of bins 
-            diff = 280/numBins; 
-       
+            diff = 280/numBins,
+            rangeDiff = 100/(numBins-1),
+            rangeWidth  = (8*(100-rangeDiff)*salary/(prices.upper_fence-prices.min)); 
         
-        this.upfPos.style.right = (100/(numBins-1)) + "%";  
-        this.medPos.style.left  = ratioMed + "%";  
+        this.upfPos.style.right = rangeDiff + "%";  
+        this.medPos.style.left  = ((prices.med-prices.min)*rangeWidth/(8*salary)) + "%";  
         
-        this.rangeEl.style.width = range + "%";        
-        this.emptyEl.style.width = empty + "%";
+
+        this.rangeEl.style.width = rangeWidth + "%"; 
+        this.rangeEl.style.marginLeft = (-prices.min*rangeWidth/(8*salary)) + "%";        
        
         this.labelFacEl.style.fontSize = 12 + ((factor<20)?factor:20) + "px"; 
         
@@ -131,11 +131,9 @@ export default class Tooltip {
                 y: l                   // count
             };
         });
-        console.log(prices.histogram); 
-        //this.linechart.updateColors();
-        this.linechart.updatePath("");
+        //console.log(prices.histogram); 
         this.linechart.updateMask(dataBins, "line-mask", "monotone");
-        this.linechart.updateLabels(dataBins);
+        //this.linechart.updateLabels(dataBins);
         
         var x = evt.containerPoint.x;
         var y = evt.containerPoint.y;// - tooltipHeight;

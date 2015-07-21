@@ -46,6 +46,7 @@ export default class Linechart {
             cn = className || "line";
 
         var dataMask = [
+            data[num-1],
             {x: this.width, y: data[num-1].y}, 
             {x: this.width, y: maxY}, 
             {x: -0, y: maxY},
@@ -70,12 +71,12 @@ export default class Linechart {
         var label = this.svg
         .selectAll("text").data(data)
         .attr("x", d => this.x(d.x)-5)
-        .attr("y", d => this.y(d.y)-2)
+        .attr("y", d => this.y(d.y)-3)
         .text(d => d.y);
         
         label.enter().append("text")
         .attr("x", d => this.x(d.x)-5)
-        .attr("y", d => this.y(d.y)-2)
+        .attr("y", d => this.y(d.y)-3)
         .text(d => d.y);
 
         label.exit().remove();
