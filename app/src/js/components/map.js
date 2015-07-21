@@ -26,9 +26,12 @@ export default class Map {
         this.map = L.map(el.querySelector('.js-map'), {
             'center': [53, -2.3],
             //'maxBounds': [[50, -6.5], [56, 1.8]],
-            'zoom': 7,
+            'maxZoom': 17,
+            'minZoom': 6,
+            'zoom': el.clientWidth > 600 ? 7 : 6,
             'fadeAnimation': false
         });
+        this.map.zoomControl.setPosition('bottomright');
 
         var renderer = L.canvas();
         renderer._initContainer();
@@ -68,8 +71,6 @@ export default class Map {
         L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
             pane: 'overlayPane',
             attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-            minZoom: 7,
-            maxZoom: 14,
             id: 'guardian.b71bdefa',
             accessToken: 'pk.eyJ1IjoiZ3VhcmRpYW4iLCJhIjoiNHk1bnF4OCJ9.25tK75EuDdgq5GxQKyD6Fg'
         }).addTo(this.map);

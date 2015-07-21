@@ -25,16 +25,17 @@ export default class User {
         var minimap = el.querySelector('.js-minimap');
         this.minimapImgs = [];
         for (var year = startYear; year <= endYear; year++) {
-            var el = document.createElement('img');
-            this.minimapImgs[year] = el;
-            minimap.appendChild(el);
+            var img = document.createElement('img');
+            this.minimapImgs[year] = img;
+            minimap.appendChild(img);
         }
         this.minimapImgs[startYear].style.display = 'block';
 
-        this.linechart = new Linechart(el.querySelector('.js-line'), 386, 30);
+        console.log(el.querySelector('.js-line'));
+        this.linechart = new Linechart(el.querySelector('.js-line'), 250, 30);
 
         this.value = {'year': startYear, 'threshold': 0};
-        this.changeThreshold('25000'); // ugly way to initialise line chart
+        this.changeThreshold(25000); // ugly way to initialise line chart
     }
 
     change() {

@@ -25,7 +25,7 @@
 }
 
 .user__inner {
-    width: 400px;
+    width: 370px;
     margin: 0 0 0 auto;
     background-color: rgba(255, 255, 255, 0.95);
     padding: 20px;
@@ -34,9 +34,9 @@
 .title {
     @include f-bodyHeading;
     font-weight: normal;
-    font-size: 38px;
+    font-size: 36px;
     line-height: 1;
-    margin-bottom: 20px;
+    margin-bottom: 12px;
 }
 
 .subtitle {
@@ -47,7 +47,8 @@
 
 .range-slider {
     margin-top: -10px;
-    width: 270px;
+    margin-bottom: 22px;
+    width: 250px;
 }
 
 .range-slider__thumb::after {
@@ -58,12 +59,6 @@
     bottom: 100%;
     height: 40px;
     border-left: 1px dotted #333;
-}
-
-.inflation-note {
-    @include f-textSans;
-    font-size: 10px;
-    color: #bdbdbd;
 }
 
 .share-container {
