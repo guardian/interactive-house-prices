@@ -611,9 +611,6 @@ travel
 </header>
 </div>
 <div class="top-banner-below-nav-mt-test"></div>
-<div class="top-banner-ad-container top-banner-ad-container--mobile">
-<div id="dfp-ad--top" class="js-ad-slot ad-slot ad-slot--dfp ad-slot--top ad-slot--top-banner-ad" data-link-name="ad slot top" data-test-id="ad-slot-top" data-name="top" data-label="false" data-mobile="1,1|300,50|320,50|88,70"> </div>
-</div>
 <div id="maincontent" tabindex="0"></div>
 <div class="js-breaking-news-placeholder breaking-news breaking-news--hidden breaking-news--fade-in" data-link-name="breaking news" data-component="breaking-news"></div>
 <figure class="element element-interactive interactive" data-interactive="<%= assetPath %>/boot.js" data-canonical-url="<%= assetPath %>/boot.js" data-alt="Guardian poll projection"> </figure>
