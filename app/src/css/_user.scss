@@ -6,13 +6,15 @@
     font-size: 18px;
     line-height: 1.25;
 
-    position: absolute;
-    z-index: 10;
-    margin: 0 auto;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 0;
+    @include mq(tablet) {
+        position: absolute;
+        z-index: 10;
+        margin: 0 auto;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 0;
+    }
 
     @each $bp in (tablet, desktop, leftCol, wide) {
         @include mq($bp) {
@@ -22,10 +24,18 @@
 }
 
 .hp-user__inner {
-    width: 320px;
     margin: 0 0 0 auto;
-    background-color: rgba(255, 255, 255, 0.95);
-    padding: 20px;
+    padding: 10px;
+    background-color: white;
+
+    @include mq(mobileLandscape) {
+        padding: 20px;
+    }
+
+    @include mq(tablet) {
+        width: 320px;
+        background-color: rgba(255, 255, 255, 0.95);
+    }
 
     &.hp-user__inner--results {
         border-top: 1px solid #bdbdbd;
