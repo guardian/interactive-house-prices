@@ -1,6 +1,7 @@
 var common = require('./common');
 var fs = require('fs');
 var zlib = require('zlib');
+var _ = require('lodash');
 var humanize = require('humanize');
 var topojson = require('topojson');
 
@@ -30,6 +31,14 @@ var options = {
 
 var topo = topojson.topology({'shapes': common.geo}, options);
 topojson.simplify(topo, options);
+
+// Remove districts that have no price data
+// Crazily doing this here because it seems to result in a smaller
+// file size than stripping them out of common.geo before simplifying
+// Something about shared arcs perhaps?
+topo.objects.shapes.geometries = topo.objects.shapes.geometries.filter(function (geo) {
+    return _.flatten(geo.properties.prices).length > 0;
+});
 
 // Create country outline for mapbox
 var country = topojson.merge(topo, topo.objects.shapes.geometries);
@@ -61,3 +70,18 @@ var json = JSON.stringify(topo);
 fs.writeFileSync('app/src/assets/districts/districts.json', json);
 
 console.log(humanize.filesize(zlib.gzipSync(json).length) + ' (' + humanize.filesize(json.length) + ')');
+
+var medians = _(common.prices)
+    .mapValues(function (price) {
+        var agg = 0;
+        return price.map(function (p) { return p.median; }).map(function (m) {
+            if (!m) return;
+            var ret = m - agg;
+            agg += ret;
+            return ret;
+        });
+    })
+    .pick(function (m) { return m.reduce(function (a, b) { return a || b; }); })
+    .value();
+
+fs.writeFileSync('app/src/js/data/medians.json', JSON.stringify(medians));

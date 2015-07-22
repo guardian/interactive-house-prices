@@ -37,7 +37,7 @@ common.years.forEach(function (year) {
     console.log(year);
 
     var sortedDistricts = _.sortBy(prices, function (price) {
-        return price[1][year - startYear].stats[2]; // median
+        return !!price[1][year - startYear].median;
     }).map(function (price) {
         return price[0];
     }).reverse();

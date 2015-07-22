@@ -33,7 +33,7 @@ function render(ctx, features, color) {
 
 function isAffordable(feature, yearI) {
     var stats = common.prices[feature.properties.name].stats;
-    return stats && stats[2] <= THRESHOLD;
+    return stats && stats.median <= THRESHOLD;
 }
 
 var canvas = new Canvas(IMG_WIDTH * common.years.length, IMG_HEIGHT),

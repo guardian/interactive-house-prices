@@ -35,14 +35,20 @@ var pricesById = _(prices)
         var p = _(price)
             .indexBy(function (row) { return parseInt(row.year_of_sale); })
             .mapValues(function (row) {
-                var stats = [row.min, row.actual_max, row.median, row.upper_fence].map(function (n) {
+                var median = Math.round(parseFloat(row.median));
+                var stats = [row.min, row.actual_max, row.upper_fence].map(function (n) {
                     return Math.round(parseFloat(n) / 100);
                 });
                 var histogram = row.histogram.replace(/\[0:\d+\]={/, '').replace('}', '')
                     .split(',').concat([row.outliers]).map(function (n) {
                         return parseInt(n);
                     });
-                return {'stats': stats, 'histogram': histogram, 'count': parseInt(row.count)};
+                return {
+                    'median': median,
+                    'stats': stats,
+                    'histogram': histogram,
+                    'count': parseInt(row.count)
+                };
             }).value();
         return years.map(function (year) {
             if (p[year]) {
