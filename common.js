@@ -1,12 +1,10 @@
 var fs = require('fs');
-var _ = require('lodash');
 var child_process = require('child_process');
+var _ = require('lodash');
 
-var start = 1995;
-var end = 2014;
-var years = _.range(start, end + 1);
+var COUNT_THRESHOLD = 10;
 
-function readPrices(file) {
+function readStats(file) {
     var data = fs.readFileSync(file).toString();
     var rows = data.split('\n');
     var headers = rows.splice(0, 1)[0].split('|');
@@ -18,61 +16,58 @@ function readPrices(file) {
         });
 }
 
-function writePNG(canvas, fn, ncolors) {
-    fs.writeFileSync('out.png', canvas.toBuffer());
-    child_process.execFileSync('pngquant', ['-f', '-o', 'app/src/assets/' + fn, ncolors, 'out.png']);
+function roundNo(nearest) {
+    return function (n) {
+        return Math.round(parseFloat(n)  / nearest);
+    };
 }
 
-var geo = JSON.parse(fs.readFileSync('data/districts.json'));
-var prices = readPrices('data/districts.csv');
+var districtGeo = JSON.parse(fs.readFileSync('data/districts.json'));
+var districtStats = readStats('data/districts.csv');
 
-// Reduce prices to a flat object of district to prices
-// e.g. {'AA': [12345, ...], ...}
-var counts = {};
-var pricesById = _(prices)
-    .groupBy(function (p) { return p.postcode_district; })
-    .mapValues(function (price, district) {
-        var p = _(price)
-            .indexBy(function (row) { return parseInt(row.year_of_sale); })
-            .mapValues(function (row) {
-                var median = Math.round(parseFloat(row.median));
-                var stats = [row.min, row.actual_max, row.upper_fence].map(function (n) {
-                    return Math.round(parseFloat(n) / 100);
-                });
-                var histogram = row.histogram.replace(/\[0:\d+\]={/, '').replace('}', '')
-                    .split(',').concat([row.outliers]).map(function (n) {
-                        return parseInt(n);
-                    });
+var districtCodes = _(districtStats)
+    .filter(function (stat) { return parseInt(stat.count) >= COUNT_THRESHOLD; })
+    .map(function (sale) { return sale.postcode_district; })
+    .uniq().value();
+
+// {year: [{median, ...}, ...], ...}
+var periodStats = _(districtStats)
+    .groupBy(function (stat) { return stat.year_of_sale; })
+    .mapValues(function (yearStats) {
+        var districts = _(yearStats)
+            .indexBy(function (stat) { return stat.postcode_district; })
+            .mapValues(function (stat) {
+                var limits = [stat.min, stat.upper_fence, stat.actual_max];
+                var histogram = stat.histogram.replace(/\[0:\d+\]={/, '').replace('}', '')
+                    .split(',').concat([stat.outliers]);
+
                 return {
-                    'median': median,
-                    'stats': stats,
-                    'histogram': histogram,
-                    'count': parseInt(row.count)
-                };
-            }).value();
-        return years.map(function (year) {
-            if (p[year]) {
-                if (p[year].count >= 10) {
-                    return p[year];
+                    'median': roundNo(1)(stat.median),
+                    'count': parseInt(stat.count),
+                    'limits': limits.map(roundNo(100)),
+                    'histogram': histogram.map(roundNo(1))
                 }
-            } else {
-                if (!counts[district]) counts[district] = [];
-                counts[district].push(year);
-            }
-            return {};
+            }).value();
+
+        return districtCodes.map(function (code) {
+            var district = districts[code];
+            return district && district.count >= COUNT_THRESHOLD ? district : null;
         });
     }).value();
 
-_.each(counts, function (v, k) {
-    //console.log(k);
+
+// Remove features with no stats
+var districtFeatures = districtGeo.features.filter(function (district) {
+    return districtCodes.indexOf(district.properties.name) !== -1;
 });
 
-// Remove any topologies that don't have associated prices
-var features = geo.features.filter(function (feature) { return pricesById[feature.properties.name]; });
-
 module.exports = {
-    'years': years,
-    'prices': pricesById,
-    'geo': {'features': features, 'type': 'FeatureCollection'},
-    'writePNG': writePNG
+    'periodStats': periodStats,
+    'districtCodes': districtCodes,
+    'districtGeo': {'features': districtFeatures, 'type': 'FeatureCollection'},
+
+    'writePNG': function (canvas, fn, ncolors) {
+        fs.writeFileSync('out.png', canvas.toBuffer());
+        child_process.execFileSync('pngquant', ['-f', '-o', 'app/src/assets/' + fn, ncolors, 'out.png']);
+    }
 };
