@@ -3,6 +3,8 @@
 
 .user {
     @include f-bodyCopy;
+    font-size: 18px;
+    line-height: 1.25;
 
     position: absolute;
     z-index: 10;
@@ -25,17 +27,27 @@
 }
 
 .user__inner {
-    width: 370px;
+    width: 320px;
     margin: 0 0 0 auto;
     background-color: rgba(255, 255, 255, 0.95);
     padding: 20px;
+
+    &.user__inner--results {
+        border-top: 1px solid #bdbdbd;
+        font-size: 21px;
+        & > p:last-child {
+            margin: 0;
+            font-size: 0;
+        }
+    }
 }
 
 .title {
     @include f-bodyHeading;
     font-weight: normal;
-    font-size: 36px;
-    line-height: 1;
+    font-size: 50px;
+    line-height: 0.9;
+    margin-top: 5px;
     margin-bottom: 12px;
 }
 
@@ -47,8 +59,7 @@
 
 .range-slider {
     margin-top: -10px;
-    margin-bottom: 22px;
-    width: 250px;
+    margin-bottom: 3px;
 }
 
 .range-slider__thumb::after {
@@ -61,28 +72,18 @@
     border-left: 1px dotted #333;
 }
 
-.share-container {
-    @include f-textSans;
-    font-size: 16px;
-    font-weight: bold;
-    line-height: 30px;
+.results-minimap {
+    float: right;
+    background-image: url('assets/minimap/bg.png');
+    background-repeat: no-repeat;
+    margin-left: 10px;
 
-    border-top: 1px solid #dfdfdf;
-    padding-top: 10px;
-
-    p {
-        margin: 0;
+    img {
+        display: none;
     }
 }
 
-.share {
-    float: right;
-}
-
-// marker for line chart
-.shape-triangle {
-    top: 45px; //temp
-    border-left: 5px solid transparent;
-    border-right: 5px solid transparent;
-    border-bottom: 8px solid #ed3d61;
+.results-stat {
+    color: #ed3d61;
+    font-weight: bold;
 }

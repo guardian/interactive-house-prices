@@ -1,40 +1,32 @@
 <div class="user__inner">
     <h2 class="subtitle">House prices in England and Wales</h2>
     <h1 class="title">Unaffordable country</h1>
-    <div class="madlib">
-        If you earned
-        <form class="madlib__input js-wage">
-            <button type="button" class="madlib__input__expand"></button>
-            <div class="madlib__input__custom">
-                <input class="madlib__input__custom__text" type="text" value="25,000" />
-                <div class="madlib__input__type">(the UK average)</div>
-            </div>
-            <div class="madlib__input__canned">
-                <select class="madlib__input__canned__options" size="2">
-                    <option value="25000">£25,000 (the UK average)</option>
-                    <option value="18900">£18,900 (the living wage)</option>
-                </select>
-            </div>
-        </form>
-        <div><div class="madlib__minimap js-minimap"></div></div>
-        and wanted to buy a house at the median price,
-        <span class="madlib__result">
-            <span class="js-user-ratio"></span> of the country
-        </span>
-        would be beyond your means
-        in <span class="js-year"></span>
-    </div>
+    <p>If you earned</p>
+    <form class="madlib js-wage">
+        <p class="madlib__note">Your salary is not stored</p>
+        <div class="madlib__input">
+            <input class="madlib__input__text" type="text" placeholder="25,000" />
+        </div>
+    </form>
+    <p>and wanted to buy a house at the median price in <span class="js-year"></span></p>
 
     <div class="line-affordable js-line"></div>
 
     <div class="range-slider js-date needsclick">
         <span class="range-slider__thumb needclick"></span>
     </div>
-
-    <div class="share-container">
-        <button class="share share--mail"></button>
-        <button class="share share--twitter"></button>
+</div>
+<div class="user__inner user__inner--results">
+    <div class="results-minimap js-minimap"></div>
+    <p>
+        <span class="results-stat">
+            <span class="js-user-ratio"></span> of the country
+        </span>
+        would be beyond your means
+    </p>
+    <p>
         <button class="share share--facebook"></button>
-        <p>Share your poverty</p>
-    </div>
+        <button class="share share--twitter"></button>
+        <button class="share share--mail"></button>
+    </p>
 </div>

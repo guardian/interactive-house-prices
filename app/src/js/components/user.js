@@ -31,7 +31,6 @@ export default class User {
         }
         this.minimapImgs[startYear].style.display = 'block';
 
-        console.log(el.querySelector('.js-line'));
         this.linechart = new Linechart(el.querySelector('.js-line'), 250, 30);
 
         this.value = {'year': startYear, 'threshold': 0};
