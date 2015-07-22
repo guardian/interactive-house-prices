@@ -5,9 +5,7 @@ export default function (el, onchange) {
         var newValue = '',
             value = parseInt(text.value.replace(/[^0-9]/g, ''));
 
-        if (isNaN(value)) {
-            text.focus();
-        } else {
+        if (!isNaN(value)) {
             onchange(value);
 
             value = value + '';
@@ -27,14 +25,6 @@ export default function (el, onchange) {
         });
     });
     text.addEventListener('blur', () => submit());
-
-    text.addEventListener('input', evt => {
-        var value = text.value;
-        var newValue = value.replace(/[^0-9,]/g, '');
-        if (newValue !== value) {
-            text.value = newValue;
-        }
-    });
 
     el.addEventListener('submit', evt => {
         evt.preventDefault();
