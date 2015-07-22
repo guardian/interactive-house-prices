@@ -1,4 +1,4 @@
-.madlib {
+.hp-madlib {
     border-bottom: 1px dotted black;
     margin-top: -8px;
     margin-bottom: 6px;
@@ -13,11 +13,11 @@
     }
 }
 
-.madlib__input {
+.hp-madlib__input {
     overflow: hidden;
 }
 
-.madlib__input__text {
+.hp-madlib__input__text {
     width: 100%;
     background: 0;
     border: 0;
@@ -33,7 +33,7 @@
     }
 }
 
-.madlib__note {
+.hp-madlib__note {
     @include fs-textSans(2);
     color: #bdbdbd;
     width: 80px;

@@ -1,5 +1,5 @@
 // tooptip
-.tooltip {
+.hp-tooltip {
     @include fs-textSans(2);
     background-color: white;//rgba(255,255,255,0.9);
 
@@ -13,7 +13,7 @@
     z-index: 11; //legend of range is 10 
 
     pointer-events: none;
-    user-select: none; 
+    user-select: none;
 
     h3, p { margin: 0; }
     h3 { margin-bottom: 3px; }

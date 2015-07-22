@@ -1,5 +1,5 @@
 export default function (el, onchange) {
-    var text = el.querySelector('.madlib__input__text');
+    var text = el.querySelector('.hp-madlib__input__text');
 
     function submit() {
         var newValue = '',

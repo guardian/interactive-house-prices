@@ -1,14 +1,14 @@
 function tics(min, max, ticStep) {
     var range = max - min;
     var v, tics = document.createElement('div');
-    tics.className = 'range-slider__tics';
+    tics.className = 'hp-range-slider__tics';
 
     function tic(v, major) {
         var t = document.createElement('div');
-        t.className = 'range-slider__tics__tic';
+        t.className = 'hp-range-slider__tics__tic';
         t.style.left = (v / range * 100) + '%';
         if (major) {
-            t.className += ' range-slider__tics__tic--major';
+            t.className += ' hp-range-slider__tics__tic--major';
             t.innerHTML = `<span>${v + min}</span>`;
         }
         tics.appendChild(t);
@@ -26,7 +26,7 @@ function tics(min, max, ticStep) {
 export default function (el, min, max, onchange, ticStep) {
     var range = max - min;
 
-    var thumb = el.querySelector('.range-slider__thumb');
+    var thumb = el.querySelector('.hp-range-slider__thumb');
     var xMin, xWidth, xStep;
 
     var value;

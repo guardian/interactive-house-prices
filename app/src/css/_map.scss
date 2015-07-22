@@ -1,6 +1,6 @@
 @import "lib/leaflet";
 
-.map {
+.hp-map {
     width: 100%;
     height: 100%;
 }
@@ -9,7 +9,7 @@
     pointer-events: none;
 }
 
-.map__highlight {
+.hp-map__highlight {
     pointer-events: none;
     opacity: 0.5;
     z-index: 20 !important;
@@ -19,7 +19,7 @@
     }
 }
 
-.range {
+.hp-range {
     @include fs-textSans(2);
     line-height: 1.25;
     position: absolute;
@@ -33,7 +33,7 @@
     }
 }
 
-.range__desc {
+.hp-range__desc {
     font-weight: bold;
     margin: 0;
     padding: 3px;
@@ -49,11 +49,11 @@ $pips: (
 );
 $pips-width: 100% / (length($pips) + 2);
 
-.range__pips {
+.hp-range__pips {
     margin-bottom: 25px;
 }
 
-.range__pips__pip {
+.hp-range__pips__pip {
     position: relative;
     float: left;
     height: 6px;
@@ -62,7 +62,7 @@ $pips-width: 100% / (length($pips) + 2);
 }
 
 @each $no, $color in $pips {
-    .range__pips__pip[data-range='#{$no}'] {
+    .hp-range__pips__pip[data-range='#{$no}'] {
         background-color: $color;
         @if $no != 0 {
             &::after {
@@ -77,8 +77,8 @@ $pips-width: 100% / (length($pips) + 2);
     }
 }
 
-.range__pips__pip:first-child,
-.range__pips__pip:last-child {
+.hp-range__pips__pip:first-child,
+.hp-range__pips__pip:last-child {
     width: ($pips-width * 2);
 }
 

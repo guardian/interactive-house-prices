@@ -1,6 +1,6 @@
 $thumb-size: 14px;
 
-.range-slider {
+.hp-range-slider {
     position: relative;
     height: 40px;
     cursor: pointer;
@@ -18,7 +18,7 @@ $thumb-size: 14px;
     }
 }
 
-.range-slider__thumb {
+.hp-range-slider__thumb {
     position: absolute;
     z-index: 5;
     top: 50%;
@@ -29,13 +29,13 @@ $thumb-size: 14px;
     border-radius: 100px;
 }
 
-.range-slider__tics__tic {
+.hp-range-slider__tics__tic {
     position: absolute;
     top: 50%;
     border-left: 1px solid #bdbdbd;
     padding-top: 5px;
 
-    &.range-slider__tics__tic--major {
+    &.hp-range-slider__tics__tic--major {
         @include fs-textSans(1);
         color: #bdbdbd;
         padding-top: 10px;

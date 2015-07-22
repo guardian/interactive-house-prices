@@ -1,7 +1,7 @@
 @import 'range';
 @import 'madlib';
 
-.user {
+.hp-user {
     @include f-bodyCopy;
     font-size: 18px;
     line-height: 1.25;
@@ -14,11 +14,6 @@
     right: 0;
     height: 0;
 
-    display: none;
-    @include mq(tablet) {
-        display: block;
-    }
-
     @each $bp in (tablet, desktop, leftCol, wide) {
         @include mq($bp) {
             max-width: map-get($mq-breakpoints, $bp);
@@ -26,13 +21,13 @@
     }
 }
 
-.user__inner {
+.hp-user__inner {
     width: 320px;
     margin: 0 0 0 auto;
     background-color: rgba(255, 255, 255, 0.95);
     padding: 20px;
 
-    &.user__inner--results {
+    &.hp-user__inner--results {
         border-top: 1px solid #bdbdbd;
         font-size: 21px;
         & > p:last-child {
@@ -42,7 +37,7 @@
     }
 }
 
-.title {
+.hp-title {
     @include f-bodyHeading;
     font-weight: normal;
     font-size: 50px;
@@ -51,18 +46,22 @@
     margin-bottom: 12px;
 }
 
-.subtitle {
+.hp-subtitle {
     @include f-header;
     font-size: 14px;
     margin-bottom: 3px;
 }
 
-.range-slider {
+.hp-line-affordable {
+    margin: 0 ($thumb-size / 2);
+}
+
+.hp-range-slider {
     margin-top: -10px;
     margin-bottom: 3px;
 }
 
-.range-slider__thumb::after {
+.hp-range-slider__thumb::after {
     content: "";
     position: absolute;
     left: 50%;
@@ -72,18 +71,18 @@
     border-left: 1px dotted #333;
 }
 
-.results-minimap {
+.hp-results-minimap {
     float: right;
     background-image: url('assets/minimap/bg.png');
     background-repeat: no-repeat;
     margin-left: 10px;
 
-    img {
+    & > img {
         display: none;
     }
 }
 
-.results-stat {
+.hp-results-stat {
     color: #ed3d61;
     font-weight: bold;
 }

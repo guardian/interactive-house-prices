@@ -35,7 +35,7 @@ export default class Map {
 
         var renderer = L.canvas();
         renderer._initContainer();
-        renderer._container.className += ' map__highlight';
+        renderer._container.className += ' hp-map__highlight';
 
         var highlightLayer = L.geoJson(undefined, {
             renderer: renderer,
