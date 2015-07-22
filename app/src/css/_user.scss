@@ -38,7 +38,8 @@
     }
 
     &.hp-user__inner--results {
-        border-top: 1px solid #bdbdbd;
+        background-clip: padding-box;
+        border-top: 1px solid rgba(255, 255, 255, 0.5);
         font-size: 21px;
         & > p:last-child {
             margin: 0;
@@ -51,8 +52,7 @@
     @include f-bodyHeading;
     font-weight: normal;
     font-size: 50px;
-    line-height: 0.9;
-    margin-top: 5px;
+    line-height: 1;
     margin-bottom: 12px;
 }
 

@@ -14,6 +14,7 @@ export default function (el, onchange) {
                 value = value.substr(0, value.length - 3);
             }
             text.value = value + newValue;
+            text.blur();
         }
     }
 
