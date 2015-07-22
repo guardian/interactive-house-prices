@@ -31,7 +31,7 @@ export default class User {
         }
         this.minimapImgs[startYear].style.display = 'block';
 
-        this.linechart = new Linechart(el.querySelector('.js-line'), 250, 30);
+        this.linechart = new Linechart('.js-line', 305, 30);
 
         this.value = {'year': startYear, 'threshold': 0};
         this.changeThreshold(25000); // ugly way to initialise line chart
@@ -55,7 +55,8 @@ export default class User {
     changeThreshold(threshold) {
         this.value.threshold = threshold;
         this.medians = getCountryMedian(this.districts, this.value.threshold);
-        this.linechart.updatePath(this.medians);
+        //this.linechart.updateMask(this.medians, 'line-mask', 'monotone', 0, 270);
+        this.linechart.updateLine(this.medians, 'line');
 
         this.medians.forEach((median, year) => {
             this.minimapImgs[year + startYear].src =

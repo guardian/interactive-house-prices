@@ -58,6 +58,7 @@
     );
 }
 
+.h-5  { height: 5px; }
 .d-ib { display: inline-block; }
 .ta-r { text-align: right; }
 .c-bd { color: #767676; font-size: 9px; }
@@ -65,25 +66,32 @@
 [class^="pos-a-"] { 
     position: absolute; 
 }
-.pos-a-mr { top:   25%; right:  0; }
-.pos-a-bl { bottom:  0; left:   0; }
-.pos-a-upf { bottom: 0; transition: right 0.25s ease; margin-right: -4px; }
+.pos-a-mr { top: 2.3em; right: 0; }
+.pos-a-bl { bottom:  0; left:  0; }
+.pos-a-upf { bottom: 0; transition: right 0.25s ease; margin-right: -5px; }
 .pos-a-med { top:    0; transition: left  0.25s ease; }
 
 .chart {
     width: 280px;
-    height: 113px;
-    margin-top: -5px;
-    margin-bottom: 5px;
+    height: 110px;
+    margin-top: 5px;
 
     font-size: 11px;
     line-height: 1.15em;
      
     text {
-        fill: #767676;
+        fill: #bdbdbd;
         font-size: 9px;
     } 
+
+    .axis path, 
+    .axis line {
+        fill: none;
+        stroke: #dcdcdc;
+        shape-rendering: crispEdges;
+    }
     //border: 1px solid green;
+
 }
 
 .chart-color {
@@ -91,7 +99,7 @@
     height: 54px; //64-10
     white-space:nowrap;
     overflow:hidden;
-    top: 24px;
+    top: 23px;
     //border: 1px solid;
 }
 
@@ -106,13 +114,12 @@
     
     .pin-min {
         width: 1px;
-        height: 10px;
+        height: 7px;
         border-left: 1px solid #333;
     }
     .pin-max {
-        height: 20px;
+        height: 28px;
         border-right: 1px solid #333;
-        margin-top: 17px;
     }
     .pin-med {
         width: 1px;
@@ -121,11 +128,11 @@
     }
     .pin-upf {
         width: 2px;
-        height: 20px;
+        height: 26px;
         border-left:  1px solid #767676;
         border-right: 1px solid #767676;
         background-color: white;
-        margin-top: -25px;
+        margin-top: -27px;
     }
 }
 

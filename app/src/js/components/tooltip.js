@@ -44,7 +44,7 @@ export default class Tooltip {
         this.labelFacEl = this.el.querySelector('.label-fac');
         
         // init line chart
-        this.linechart = new Linechart(".js-lines", 280, 64);
+        this.linechart = new Linechart(".js-lines", 280, 64, true);
         
 
         var resize = debounce(function () {
@@ -82,7 +82,7 @@ export default class Tooltip {
         
         var numBins = prices.histogram.length, // number of bins 
             diff = 280/numBins,
-            rangeDiff = 100/(numBins-1),
+            rangeDiff = numBins!==0 ? 100/(numBins-1):0,
             rangeWidth  = (8*(100-rangeDiff)*salary/(prices.upper_fence-prices.min)); 
         
         this.upfPos.style.right = rangeDiff + "%";  
@@ -115,7 +115,7 @@ export default class Tooltip {
             if (yr===data.year && rateAffordable <=4 ) { break; }
             if (rateAffordable <= 4) {
                 textAffordable = "You would have been able to afford it in " + 
-                                 yr + " when it was " + rateAffordable + " (below 4)."; 
+                                 yr + " when it was " + rateAffordable + "."; 
                 break;
             } else {
                 textAffordable = "You would not have been able to afford it even back in 1995.";
@@ -131,9 +131,9 @@ export default class Tooltip {
                 y: l                   // count
             };
         });
-        //console.log(prices.histogram); 
         this.linechart.updateMask(dataBins, "line-mask", "monotone");
-        //this.linechart.updateLabels(dataBins);
+        this.linechart.updateAxis(dataBins);
+        this.linechart.updateLabels(dataBins);
         
         var x = evt.containerPoint.x;
         var y = evt.containerPoint.y;// - tooltipHeight;
@@ -146,6 +146,7 @@ export default class Tooltip {
 
         this.hidden = false;
         setTranslate(this.el, x, y);
+        //setTranslate(this.el, 10, 10);
     }
 
     hide() {
