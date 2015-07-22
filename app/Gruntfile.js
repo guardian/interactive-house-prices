@@ -10,7 +10,7 @@ module.exports = function(grunt) {
 
         watch: {
             js: {
-                files: ['src/js/**/*'],
+                files: ['src/js/**/*', 'src/worker.html'],
                 tasks: ['shell:interactive', 'copy:districts'],
             },
             css: {
@@ -82,6 +82,7 @@ module.exports = function(grunt) {
             },
             districts: {
                 files: [
+                    {src: 'src/worker.html', dest: 'build/worker.html'},
                     {src: 'src/js/districts.js', dest: 'build/districts.js'},
                     {src: 'src/js/jspm_packages/github/mbostock/topojson@1.6.19/topojson.min.js', dest: 'build/topojson.js'}
                 ]
@@ -100,7 +101,7 @@ module.exports = function(grunt) {
                     },
                     { // ASSETS
                         expand: true, cwd: 'build/',
-                        src: ['main.js', 'districts.js', 'main.css', 'main.js.map', 'main.css.map', 'assets/**/*'],
+                        src: ['main.js', 'districts.js', 'main.css', 'main.js.map', 'main.css.map', 'worker.html', 'assets/**/*'],
                         dest: 'deploy/<%= visuals.timestamp %>/<%= visuals.timestamp %>'
                     }
                 ]

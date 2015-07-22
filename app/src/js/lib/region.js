@@ -6,31 +6,30 @@ import { config } from './cfg';
 export const startYear = 1995;
 export const endYear = 2014;
 
-export function getDistricts(data) {
-    var worker;
-    if (window.Worker) {
-        worker = new Worker(config.assetPath + '/districts.js');
-    }
+function processDistricts(onData, res) {
+    var iframe = window.Worker && document.querySelector('.js-worker').contentWindow;
 
+    if (iframe) {
+        window.addEventListener('message', e => onData({
+            'districts': e.data,
+            'more': () => iframe.postMessage({'action': 'more'}, '*')
+        }));
+        iframe.postMessage({'action': 'data', 'data': res}, '*');
+    } else {
+        var topo = JSON.parse(res);
+        onData({
+            'districts': topojson.feature(topo, topo.objects.shapes),
+            'more': () => onData({'districts': []})
+        });
+    }
+}
+
+export function getDistricts(onData) {
     reqwest({
         url: config.assetPath + '/assets/districts/districts.json',
         type: 'html', // force JSON parsing to be done in worker
         crossOrigin: true,
-        success: text => {
-            if (worker) {
-                worker.addEventListener('message', e => data({
-                    'districts': e.data,
-                    'more': () => worker.postMessage({'action': 'more'})
-                }));
-                worker.postMessage({'action': 'data', 'data': text});
-            } else {
-                var topo = JSON.parse(text);
-                data({
-                    'districts': topojson.feature(topo, topo.objects.shapes),
-                    'more': () => data({'districts': []})
-                });
-            }
-        },
+        success: res => processDistricts(onData, res),
         error: err => {
             console.log('Could not load districts data');
             reject(err);

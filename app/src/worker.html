@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<body>
+<script>
+    if (window.Worker) {
+        var worker = new Worker('districts.js');
+        worker.addEventListener('message', function (evt) {
+            window.parent.postMessage(evt.data, '*');
+        });
+
+        window.addEventListener('message', function (evt) {
+            worker.postMessage(evt.data);
+        });
+    }
+</script>
+</body>
+</html>
+
