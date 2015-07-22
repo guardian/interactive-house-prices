@@ -101,7 +101,8 @@ module.exports = function(grunt) {
                     },
                     { // ASSETS
                         expand: true, cwd: 'build/',
-                        src: ['main.js', 'districts.js', 'main.css', 'main.js.map', 'main.css.map', 'worker.html', 'assets/**/*'],
+                        src: ['main.js', 'districts.js', 'main.css', 'main.js.map', 'main.css.map', 'worker.html',
+                            'topojson.js', 'assets/**/*'],
                         dest: 'deploy/<%= visuals.timestamp %>/<%= visuals.timestamp %>'
                     }
                 ]
