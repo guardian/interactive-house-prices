@@ -9,11 +9,10 @@ import range from '../lib/range'
 import Linechart from './linechart'
 
 export default class User {
-    constructor(el, districts, onUpdate) {
+    constructor(el, onUpdate) {
         this.el = el;
         this.el.innerHTML = template;
 
-        this.districts = districts;
         this.onUpdate = onUpdate;
 
         this.yearEl = el.querySelector('.js-year');
