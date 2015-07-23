@@ -48,15 +48,18 @@ export default function User(el, onUpdate) {
     }
 
     function changeThreshold(threshold) {
+        var lineData = [];
+
         currentValue.threshold = threshold;
 
         periodSplits = getPeriodSplits(threshold);
-        //linechart.updateLine(periodSplits, 'line');
-
         periodSplits.forEach((yearSplit, year) => {
+            lineData.push({'x': i, 'y': split.ratio});
             minimapImgs[year].src =
                 `${config.assetPath}/assets/minimap/${year}-${yearSplit.unaffordable}.png`;
         });
+
+        linechart.updateLine(lineData, 'line');
 
         change();
     }
