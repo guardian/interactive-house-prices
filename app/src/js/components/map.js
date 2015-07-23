@@ -1,7 +1,6 @@
 import { periodMedians, getDistricts, getRegionPrices } from '../lib/region';
 
-import User from './user';
-//import Tooltip from './tooltip';
+import Tooltip from './tooltip';
 
 const colors = ['#39a4d8', '#8ac7cd', '#daeac1', '#fdd09e', '#f58680', '#ed3d61'];
 
@@ -23,7 +22,7 @@ function hackL(L) {
 }
 
 export default function Map(el) {
-    var tooltip, districtLayer, userInput;
+    var tooltip, districtLayer, highlightLayer, userInput;
 
     function init(L) {
         hackL(L);
@@ -42,7 +41,7 @@ export default function Map(el) {
         renderer._initContainer();
         renderer._container.className += ' hp-map__highlight';
 
-        var highlightLayer = L.geoJson(undefined, {
+        highlightLayer = L.geoJson(undefined, {
             renderer: renderer,
             style: {
                 fill: false,
@@ -80,7 +79,7 @@ export default function Map(el) {
             }
         });
 
-        //tooltip = new Tooltip(el);
+        tooltip = new Tooltip(el);
     }
 
     function setStyle(district) {
@@ -111,11 +110,11 @@ export default function Map(el) {
         layer.on({
             mouseover: evt => {
                 highlightLayer.addData([feature]);
-                //tooltip.show(evt, userInput);
+                tooltip.show(evt, userInput);
             },
             mouseout: () => {
                 highlightLayer.clearLayers();
-                //tooltip.hide();
+                tooltip.hide();
             }
         });
     }

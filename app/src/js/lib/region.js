@@ -61,6 +61,16 @@ export function getDistricts(onData) {
     });
 }
 
+export function getTooltipStats(onData) {
+    reqwest({
+        url: config.assetPath + '/assets/stats.json',
+        type: 'json', // TODO: put in worker
+        crossOrigin: true,
+        success: res => onData(res),
+        error: err => console.log('Could not load tooltip stats', err)
+    });
+}
+
 export function getPeriodSplits(wage) {
     var threshold = wage * 4;
     var periodSplits = [];

@@ -6,12 +6,13 @@ import { config } from '../lib/cfg'
 import madlib from '../lib/madlib'
 import range from '../lib/range'
 
-//import Linechart from './linechart'
+import Linechart from './linechart'
 
 export default function User(el, onUpdate) {
     var yearEl, ratioEl, thumblineEl, minimapImgs = [];
     var periodSplits;
     var currentValue = {'year': startYear, 'threshold': 0};
+    var linechart;
 
     function init() {
         var minimap, year, img;

@@ -209,7 +209,9 @@ module.exports = function(grunt) {
                 'mangle': minified,
                 'sourceMaps': true
             });
-        }).then(this.async());
+        }).then(this.async()).catch(function (e) {
+            console.log(e);
+        });
     });
 
     grunt.registerTask('loadDeployConfig', function() {
