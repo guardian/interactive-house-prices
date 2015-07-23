@@ -48,7 +48,7 @@ export default function Linechart(elClassName, styleClassName, width, height, ma
                 minRange || data[0].x,
                 maxRange || data[num-1].x
             ],
-            domainY = [0, d3.max(data, d => d.y)];
+            domainY = [0, 100];//d3.max(data, d => d.y)];
 
         x.domain(domainX).range(rangeX);
         y.domain(domainY);
