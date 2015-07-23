@@ -1,6 +1,6 @@
 import template from './templates/user.html!text'
 import throttle from '../lib/throttle'
-import { startYear, endYear, getCountryMedian } from '../lib/region'
+import { startYear, endYear, getPeriodSplits } from '../lib/region'
 import { config } from '../lib/cfg'
 
 import madlib from '../lib/madlib'
@@ -16,9 +16,9 @@ export default class User {
         this.onUpdate = onUpdate;
 
         this.yearEl = el.querySelector('.js-year');
-        this.ratioEls = Array.from(el.querySelectorAll('.js-user-ratio'));
-        this.thumblineEl = document.querySelector(".hp-range-slider__thumbline");
-        
+        this.ratioEl = el.querySelector('.js-user-ratio');
+        this.thumblineEl = document.querySelector('.hp-range-slider__thumbline');
+
         this.date = range(el.querySelector('.js-date'), startYear, endYear, this.changeYear.bind(this), 5);
         madlib(el.querySelector('.js-wage'), this.changeThreshold.bind(this));
 
@@ -38,34 +38,21 @@ export default class User {
     }
 
     change() {
-        var firstYear = this.medians[0].y;
-        var currentYear = this.medians[this.value.year - startYear].y;
-
-        // update user's line chart
-        this.yearEl.textContent = this.value.year;
-        
-        var left = (100 * (this.date.get() - startYear) / (endYear - startYear));
-        this.ratioEls.forEach(el => {
-            el.style.left = (left-0.8) + "%";
-            el.textContent = Math.round(currentYear) + "%";
-        });
-        
-        var ratio = this.medians[this.value.year - startYear].y;
-        this.thumblineEl.style.height = (5 + ratio/2) + "px";
-
-
+        var ratio = this.periodSplits[this.value.year].ratio;
+        this.thumblineEl.style.height = (5 + ratio / 2) + 'px';
+        this.ratioEl.textContent = Math.floor(ratio) + '%';
         this.onUpdate(this.value);
     }
 
     changeThreshold(threshold) {
         this.value.threshold = threshold;
-        
-        this.medians = getCountryMedian(this.districts, this.value.threshold);
-        this.linechart.updateLine(this.medians, 'line');
 
-        this.medians.forEach((median, year) => {
-            this.minimapImgs[year + startYear].src =
-                `${config.assetPath}/assets/minimap/${year + startYear}-${median.no}.png`;
+        this.periodSplits = getPeriodSplits(this.value.threshold);
+        //this.linechart.updateLine(this.medians, 'line');
+
+        this.periodSplits.forEach((yearSplit, year) => {
+            this.minimapImgs[year].src =
+                `${config.assetPath}/assets/minimap/${year}-${yearSplit.unaffordable}.png`;
         });
 
         this.change();
@@ -79,7 +66,8 @@ export default class User {
         });
 
         this.value.year = year;
-        
+        this.yearEl.textContent = this.value.year;
+
         this.change();
     }
 }

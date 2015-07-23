@@ -3,20 +3,22 @@ import topojson from 'mbostock/topojson';
 
 import { config } from './cfg';
 
-import medians from '../data/medians.json!json';
+import periodMediansRaw from '../data/medians.json!json';
 import districtCodes from '../data/codes.json!json';
 
-export const startYear = 1995;
-export const endYear = 2014;
+const districtsCount = districtCodes.length;
 
 export var periodMedians = {};
 
-Object.keys(medians).forEach(function (year) {
+Object.keys(periodMediansRaw).forEach(function (year) {
     periodMedians[parseInt(year)] = {};
     districtCodes.forEach(function (code, i) {
-        periodMedians[year][code] = medians[year][i];
+        periodMedians[year][code] = periodMediansRaw[year][i];
     });
 });
+
+const periodYears = Object.keys(periodMedians).map(n => parseInt(n)).sort((a, b) => a - b);
+export const startYear = periodYears[0], endYear = periodYears[periodYears.length - 1];
 
 function processDistricts(onData, res) {
     var iframe = window.Worker && document.querySelector('.js-worker').contentWindow;
@@ -75,6 +77,19 @@ export function getRegionPrices(region, year) {
     return {'min': 0, 'max': 0, 'med': 0, 'upper_fence': 0, 'count': 0, 'histogram': []};
 }
 
-export function getCountryMedian(wage) {
+export function getPeriodSplits(wage) {
+    var threshold = wage * 4;
+    var periodSplits = [];
 
+    periodYears.map(year => {
+        var unaffordable = 0, nosales = 0;
+        periodMediansRaw[year].forEach(function (median) {
+            if (!median) nosales++;
+            else if (median > threshold) unaffordable++;
+        });
+        var ratio = unaffordable / (districtsCount - nosales) * 100;
+        periodSplits[year] =  {ratio, unaffordable};
+    });
+
+    return periodSplits;
 }
