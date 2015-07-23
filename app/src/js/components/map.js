@@ -10,7 +10,7 @@ function hackL(L) {
 
     L.LineUtil.simplify = function (points, tolerance) {
         return points;
-    }.bind(this);
+    };
 
     L.Polyline.prototype._projectLatlngs = function (latlngs, result) {
         var zoom = this._map.getZoom();
@@ -124,7 +124,7 @@ export default function Map(el) {
 
         // TODO: only update regions that need updating
         if (districtLayer) {
-            districtLayer.eachLayer(district => this.districtLayer.resetStyle(district));
+            districtLayer.eachLayer(district => districtLayer.resetStyle(district));
         }
     }
 

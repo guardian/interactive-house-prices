@@ -31,8 +31,8 @@ export default function Tooltip(root) {
             'med': median,
             'count': stats[0],
             'min': stats[1] * 100,
-            'max': stats[2] * 100,
-            'upper_fence': stats[3] * 100,
+            'upper_fence': stats[2] * 100,
+            'max': stats[3] * 100,
             'histogram': stats.slice(4)
         }
     }
