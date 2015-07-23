@@ -1,6 +1,6 @@
 .hp-share {
-    height: 30px;
-    width: 30px;
+    height: 32px;
+    width: 32px;
     border-radius: 34px;
     background: #333;
     display: inline-block;
@@ -9,9 +9,9 @@
     outline: none;
     background-position: center;
     background-repeat: no-repeat;
-    background-size: 28px;
+    background-size: 30px;
     background-color: rgba(255,255,255,0.25);
-    margin-right: 3px;
+    margin-right: 5px;
 
     &.hp-share--facebook {
         background-color: #3067a3;
