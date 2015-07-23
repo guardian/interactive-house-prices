@@ -62,25 +62,6 @@
     margin-bottom: 3px;
 }
 
-.hp-line-affordable {
-    margin: 0 ($thumb-size / 2);
-}
-
-.hp-range-slider {
-    margin-top: -10px;
-    margin-bottom: 3px;
-}
-
-.hp-range-slider__thumb::after {
-    content: "";
-    position: absolute;
-    left: 50%;
-    margin-left: -1px;
-    bottom: 100%;
-    height: 40px;
-    border-left: 1px dotted #333;
-}
-
 .hp-results-minimap {
     float: right;
     background-image: url('assets/minimap/bg.png');

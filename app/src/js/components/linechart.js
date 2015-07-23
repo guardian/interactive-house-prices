@@ -1,27 +1,25 @@
 import d3 from '../lib/d3';
 
 export default class Linechart {
-    constructor(el, width, height, isAxis) {
+    constructor(elClassName, styleClassName, width, height, marginTop, marginBottom, isAxis) {
         
         this.width = width;
         this.height = height;
 
-        this.svg = d3.select(el)
+        this.svg = d3.select("." + elClassName)
                      .append("svg")
                      .attr("width", width)
-                     .attr("height", height+8)
+                     .attr("height", height + marginTop)
                      .append("g")
                      .attr("transform", "translate(0," + 10 + ")");
         
         // Set the ranges
-        this.x = d3.scale.linear().range([0, width-30]);
-        this.y = d3.scale.linear().range([height-10, 0]);
+        this.x = d3.scale.linear().range([0, width - 30]);
+        this.y = d3.scale.linear().range([height - marginBottom, 0]);
 
         // Define the axes
-        this.xAxis = d3.svg.axis().scale(this.x)
-                       .orient("bottom");//.ticks(6);
-        this.yAxis = d3.svg.axis().scale(this.y)
-                       .orient("left").ticks(8);
+        this.xAxis = d3.svg.axis().scale(this.x).orient("bottom");
+        this.yAxis = d3.svg.axis().scale(this.y).orient("left");
 
         // Define the line
         this.valueline = (type =>
@@ -32,15 +30,12 @@ export default class Linechart {
         );
 
         this.svg.append("path")
-        .attr("class", "line");
-        
-        this.svg.append("path")
-        .attr("class", "line-mask");
+        .attr("class", styleClassName);
     
         if (isAxis) {
         this.svg.append("g")
         .attr("class", "x axis")
-        .attr("transform", "translate(0," + (height-8) + ")")
+        .attr("transform", "translate(0," + (height-marginBottom) + ")")
         .call(this.xAxis);
         }
     }

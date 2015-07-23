@@ -44,7 +44,7 @@ export default class Tooltip {
         this.labelFacEl = this.el.querySelector('.label-fac');
         
         // init line chart
-        this.linechart = new Linechart(".js-lines", 280, 64, true);
+        this.linechart = new Linechart("js-lines", "line-mask", 280, 64, 10, 8, true);
         
 
         var resize = debounce(function () {

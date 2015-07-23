@@ -27,6 +27,7 @@ export default function (el, min, max, onchange, ticStep) {
     var range = max - min;
 
     var thumb = el.querySelector('.hp-range-slider__thumb');
+    var thumbline = el.querySelector('.hp-range-slider__thumbline');
     var xMin, xWidth, xStep;
 
     var value;
@@ -43,6 +44,7 @@ export default function (el, min, max, onchange, ticStep) {
             newValue = Math.round(x / xStep);
             if (newValue != value) {
                 thumb.style.left = (newValue / range * 100) + '%';
+                thumbline.style.left = (newValue / range * 100) + '%';
                 value = newValue;
                 onchange(value + min);
             }
