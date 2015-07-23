@@ -1,4 +1,4 @@
-import { getTooltipStats } from '../lib/region'
+import { periodMedians, getTooltipStats } from '../lib/region'
 import debounce from '../lib/debounce'
 import Linechart from './linechart'
 
@@ -26,7 +26,15 @@ export default function Tooltip(root) {
 
     function getDistrictStats(district, year) {
         var stats = tooltipStats[year][districtCodes.indexOf(district)];
-        console.log(stats);
+        var median = periodMedians[year][district];
+        return stats && {
+            'med': median,
+            'count': stats[0],
+            'min': stats[1] * 100,
+            'max': stats[2] * 100,
+            'upper_fence': stats[3] * 100,
+            'histogram': stats.slice(4)
+        }
     }
 
     function init(stats) {
@@ -81,9 +89,7 @@ export default function Tooltip(root) {
             district = districtObj.id,
             area = areaName[district.replace(/[0-9].*/,'')] + " area";
 
-        var prices = getDistrictStats(district, userInput.year);
-        return;
-        var
+        var prices = getDistrictStats(district, userInput.year),
             salary = userInput.threshold,
             factor = prices.med/salary;
 
@@ -124,8 +130,8 @@ export default function Tooltip(root) {
 
         var textAffordable = "";
         for (var yr=userInput.year; yr>=1995; yr--) {
-            var yearPrices = getRegionPrices(districtObj, yr);
-            var rateAffordable = Math.round((yearPrices.med/userInput.threshold)*10)/10;
+            var median = periodMedians[yr][district];
+            var rateAffordable = Math.round((median/userInput.threshold)*10)/10;
             if (yr===userInput.year && rateAffordable <=4 ) { break; }
             if (rateAffordable <= 4) {
                 textAffordable = "You would have been able to afford it in " + yr + " when it was " + rateAffordable + ".";

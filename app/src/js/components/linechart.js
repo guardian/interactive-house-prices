@@ -38,7 +38,7 @@ export default function Linechart(elClassName, styleClassName, width, height, ma
         }
     }
 
-    function updateLine(data, el, lineType, minRange, maxRange) {
+    var updateLine = this.updateLine = function(data, el, lineType, minRange, maxRange) {
         var num = data.length,
             rangeX = [
                 minRange || 0,
@@ -58,7 +58,7 @@ export default function Linechart(elClassName, styleClassName, width, height, ma
             .attr("d", valueline(lineType));
     }
 
-    function updateMask(data, el, lineType) {
+    this.updateMask = function (data, el, lineType) {
         var num = data.length,
             minX = data[0].x,
             maxX = data[num-1].x,
@@ -75,7 +75,7 @@ export default function Linechart(elClassName, styleClassName, width, height, ma
         updateLine(dataMask, el, lineType, minX, maxX);
     }
 
-    function updateAxis(data) {
+    this.updateAxis = function (data) {
         var num = data.length,
             dataTick = data.map((d, i) =>
             (width/num)*i
@@ -91,7 +91,7 @@ export default function Linechart(elClassName, styleClassName, width, height, ma
             .attr("d", "M0,6V0H"+dataTick[dataTick.length-1]+"V6");
     }
 
-    function updateLabels(data) {
+    this.updateLabels = function (data) {
         var label = svg.selectAll(".label")
             .data(data)
             .attr("x", d => x(d.x)-5)
