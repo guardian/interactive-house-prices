@@ -1,5 +1,5 @@
 import L from '../lib/leaflet';
-import { getDistricts, getRegionPrices } from '../lib/region';
+import { periodMedians, getDistricts, getRegionPrices } from '../lib/region';
 
 import User from './user';
 import Tooltip from './tooltip';
@@ -23,7 +23,7 @@ L.Polyline.prototype._projectLatlngs = function (latlngs, result) {
 
 export default class Map {
     constructor(el) {
-        this.map = L.map(el.querySelector('.js-map'), {
+        var map = L.map(el.querySelector('.js-map'), {
             'center': [53, -2.3],
             //'maxBounds': [[50, -6.5], [56, 1.8]],
             'maxZoom': 17,
@@ -31,7 +31,7 @@ export default class Map {
             'zoom': el.clientWidth > 600 ? 7 : 6,
             'fadeAnimation': false
         });
-        this.map.zoomControl.setPosition('bottomright');
+        map.zoomControl.setPosition('bottomright');
 
         var renderer = L.canvas();
         renderer._initContainer();
@@ -45,27 +45,27 @@ export default class Map {
                 color: '#333',
                 weight: 2
             }
-        }).addTo(this.map);
+        }).addTo(map);
 
         // Region layer
         var regionRenderer = L.canvas();
         regionRenderer.suspendDraw = true;
-        this.regionLayer = L.geoJson(undefined, {
+        this.districtLayer = L.geoJson(undefined, {
             renderer: regionRenderer,
             onEachFeature: (feature, layer) => {
                 layer.on({
                     mouseover: evt => {
                         highlightLayer.addData([feature]);
-                        this.tooltip.show(evt, this.data);
+                        //this.tooltip.show(evt, this.data);
                     },
                     mouseout: () => {
                         highlightLayer.clearLayers();
-                        this.tooltip.hide();
+                        //this.tooltip.hide();
                     }
                 });
             },
             noClip: true
-        }).addTo(this.map);
+        }).addTo(map);
 
         // Label layer
         L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
@@ -73,13 +73,14 @@ export default class Map {
             attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
             id: 'guardian.b71bdefa',
             accessToken: 'pk.eyJ1IjoiZ3VhcmRpYW4iLCJhIjoiNHk1bnF4OCJ9.25tK75EuDdgq5GxQKyD6Fg'
-        }).addTo(this.map);
+        }).addTo(map);
 
         getDistricts(res => {
             if (res.districts.length === 0) {
                 regionRenderer.suspendDraw = false;
+                map.fire('viewreset');
             } else {
-                this.regionLayer.addData(res.districts);
+                this.districtLayer.addData(res.districts);
                 res.more();
             }
         });
@@ -91,8 +92,8 @@ export default class Map {
     update(data) {
         this.data = data;
 
-        this.regionLayer.options.style = function (region) {
-            var price = getRegionPrices(region, data.year).med;
+        this.districtLayer.options.style = function (district) {
+            var price = periodMedians[data.year][district.id];
             var ratio = price / data.threshold;
             var color, colorIndex = 0;
 
@@ -115,6 +116,6 @@ export default class Map {
         };
 
         // TODO: only update regions that need updating
-        this.regionLayer.eachLayer(region => this.regionLayer.resetStyle(region));
+        this.districtLayer.eachLayer(district => this.districtLayer.resetStyle(district));
     }
 }
