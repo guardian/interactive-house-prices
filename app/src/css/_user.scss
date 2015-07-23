@@ -38,7 +38,12 @@
 
     &.hp-user__inner--results {
         background-clip: padding-box;
-        border-top: 1px solid rgba(255, 255, 255, 0.5);
+
+        border-top: 1px solid #bdbdbd;
+        @include mq(tablet) {
+            border-top: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
         font-size: 21px;
         & > p:last-child {
             margin: 0;
