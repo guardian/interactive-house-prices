@@ -5,11 +5,13 @@ import './lib/raf'
 import { set as setConfig } from './lib/cfg'
 import throttle from './lib/throttle'
 
-import Intro from './components/intro';
+import Intro from './components/intro'
 import Map from './components/map'
+import User from './components/user'
+
 import mainHTML from './templates/main.html!text'
 
-function init(el, config) {
+export function init(el, config) {
     setConfig(config);
 
     el.innerHTML = mainHTML.replace('%assetPath%', config.assetPath);
@@ -30,6 +32,5 @@ function init(el, config) {
     }
 
     var map = new Map(el);
+    var user = new User(el.querySelector('.js-user'), map.update);
 }
-
-(window.define || System.amdDefine)(function() { return {init: init}; });

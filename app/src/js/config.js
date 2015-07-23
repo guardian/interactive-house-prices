@@ -1,10 +1,10 @@
 System.config({
   "baseURL": "/",
+  "defaultJSExtensions": true,
   "transpiler": "traceur",
   "paths": {
-    "*": "*.js",
-    "github:*": "src/js/jspm_packages/github/*.js",
-    "npm:*": "src/js/jspm_packages/npm/*.js"
+    "github:*": "./src/js/jspm_packages/github/*",
+    "npm:*": "./src/js/jspm_packages/npm/*"
   },
   "bundles": {
     "build/main": [
@@ -21,8 +21,8 @@ System.config({
     "mbostock/topojson": "github:mbostock/topojson@1.6.19",
     "reqwest": "github:ded/reqwest@1.1.5",
     "text": "github:systemjs/plugin-text@0.0.2",
-    "traceur": "github:jmcriffey/bower-traceur@0.0.87",
-    "traceur-runtime": "github:jmcriffey/bower-traceur-runtime@0.0.87"
+    "traceur": "github:jmcriffey/bower-traceur@0.0.90",
+    "traceur-runtime": "github:jmcriffey/bower-traceur-runtime@0.0.90"
   }
 });
 

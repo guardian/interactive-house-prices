@@ -1,4 +1,5 @@
 var fs = require('fs');
+var Builder = require('systemjs-builder');
 
 module.exports = function(grunt) {
 
@@ -11,7 +12,7 @@ module.exports = function(grunt) {
         watch: {
             js: {
                 files: ['src/js/**/*', 'src/worker.html'],
-                tasks: ['shell:interactive', 'copy:districts'],
+                tasks: ['buildInteractive', 'copy:districts'],
             },
             css: {
                 files: ['src/css/**/*'],
@@ -40,17 +41,6 @@ module.exports = function(grunt) {
             harness: {
                 files: {
                     'build/fonts.css': 'harness/fonts.scss'
-                }
-            }
-        },
-
-        shell: {
-            interactive: {
-                command: './node_modules/.bin/jspm bundle-sfx <%= visuals.jspmFlags %> src/js/main build/main.js',
-                options: {
-                    execOptions: {
-                        cwd: '.'
-                    }
                 }
             }
         },
@@ -84,7 +74,8 @@ module.exports = function(grunt) {
                 files: [
                     {src: 'src/worker.html', dest: 'build/worker.html'},
                     {src: 'src/js/districts.js', dest: 'build/districts.js'},
-                    {src: 'src/js/jspm_packages/github/mbostock/topojson@1.6.19/topojson.min.js', dest: 'build/topojson.js'}
+                    {src: 'src/js/jspm_packages/github/mbostock/topojson@1.6.19/topojson.min.js', dest: 'build/topojson.js'},
+                    {src: 'src/js/lib/leaflet.js', dest: 'build/leaflet.js'}
                 ]
             },
             assets: {
@@ -102,7 +93,7 @@ module.exports = function(grunt) {
                     { // ASSETS
                         expand: true, cwd: 'build/',
                         src: ['main.js', 'districts.js', 'main.css', 'main.js.map', 'main.css.map', 'worker.html',
-                            'topojson.js', 'assets/**/*'],
+                            'topojson.js', 'leaflet.js', 'assets/**/*'],
                         dest: 'deploy/<%= visuals.timestamp %>/<%= visuals.timestamp %>'
                     }
                 ]
@@ -207,13 +198,27 @@ module.exports = function(grunt) {
         }
     });
 
+    grunt.registerTask('buildInteractive', function () {
+        var builder = new Builder();
+        var minified = grunt.config('visuals.minified');
+        builder.loadConfig('./src/js/config.js').then(function () {
+            return builder.buildSFX('./src/js/main.js', './build/main.js', {
+                'sfxFormat': 'amd',
+                'runtime': false,
+                'minified': minified,
+                'mangle': minified,
+                'sourceMaps': true
+            });
+        }).then(this.async());
+    });
+
     grunt.registerTask('loadDeployConfig', function() {
         if (!grunt.file.exists('cfg/aws-keys.json')) grunt.fail.fatal('./cfg/aws-keys.json missing');
         grunt.config('visuals', {
             s3: grunt.file.readJSON('./cfg/s3.json'),
             aws: grunt.file.readJSON('./cfg/aws-keys.json'),
             timestamp: Date.now(),
-            jspmFlags: '-m',
+            minified: true,
             assetPath: '<%= visuals.s3.domain %><%= visuals.s3.path %>/<%= visuals.timestamp %>'
         });
     })
@@ -224,7 +229,7 @@ module.exports = function(grunt) {
     })
 
     grunt.registerTask('harness', ['copy:harness', 'template:harness', 'sass:harness', 'symlink:fonts'])
-    grunt.registerTask('interactive', ['shell:interactive', 'copy:districts', 'template:bootjs', 'sass:interactive', 'copy:assets'])
+    grunt.registerTask('interactive', ['buildInteractive', 'copy:districts', 'template:bootjs', 'sass:interactive', 'copy:assets'])
     grunt.registerTask('default', ['clean', 'harness', 'interactive', 'connect', 'watch']);
     grunt.registerTask('build', ['clean', 'interactive']);
     grunt.registerTask('deploy', ['loadDeployConfig', 'prompt:visuals', 'build', 'copy:deploy', 'aws_s3', 'boot_url']);

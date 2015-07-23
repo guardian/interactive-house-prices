@@ -1,28 +1,33 @@
-import L from '../lib/leaflet';
 import { periodMedians, getDistricts, getRegionPrices } from '../lib/region';
 
 import User from './user';
-import Tooltip from './tooltip';
+//import Tooltip from './tooltip';
 
 const colors = ['#39a4d8', '#8ac7cd', '#daeac1', '#fdd09e', '#f58680', '#ed3d61'];
 
-// Hacky way of using presimplified TopoJSON
-var projectLatlngs = L.Polyline.prototype._projectLatlngs;
+function hackL(L) {
+    // Hacky way of using presimplified TopoJSON
+    var projectLatlngs = L.Polyline.prototype._projectLatlngs;
 
-L.LineUtil.simplify = function (points, tolerance) {
-    return points;
-}.bind(this);
+    L.LineUtil.simplify = function (points, tolerance) {
+        return points;
+    }.bind(this);
 
-L.Polyline.prototype._projectLatlngs = function (latlngs, result) {
-    var zoom = this._map.getZoom();
-    if (latlngs[0] instanceof L.LatLng) {
-        latlngs = latlngs.filter(latlng => !latlng.alt || latlng.alt <= zoom);
-    }
-    projectLatlngs.call(this, latlngs, result);
-};
+    L.Polyline.prototype._projectLatlngs = function (latlngs, result) {
+        var zoom = this._map.getZoom();
+        if (latlngs[0] instanceof L.LatLng) {
+            latlngs = latlngs.filter(latlng => !latlng.alt || latlng.alt <= zoom);
+        }
+        projectLatlngs.call(this, latlngs, result);
+    };
+}
 
-export default class Map {
-    constructor(el) {
+export default function Map(el) {
+    var tooltip, districtLayer, userInput;
+
+    function init(L) {
+        hackL(L);
+
         var map = L.map(el.querySelector('.js-map'), {
             'center': [53, -2.3],
             //'maxBounds': [[50, -6.5], [56, 1.8]],
@@ -50,20 +55,11 @@ export default class Map {
         // Region layer
         var regionRenderer = L.canvas();
         regionRenderer.suspendDraw = true;
-        this.districtLayer = L.geoJson(undefined, {
+
+        districtLayer = L.geoJson(undefined, {
             renderer: regionRenderer,
-            onEachFeature: (feature, layer) => {
-                layer.on({
-                    mouseover: evt => {
-                        highlightLayer.addData([feature]);
-                        //this.tooltip.show(evt, this.data);
-                    },
-                    mouseout: () => {
-                        highlightLayer.clearLayers();
-                        //this.tooltip.hide();
-                    }
-                });
-            },
+            style: setStyle,
+            onEachFeature: setOnEachFeature,
             noClip: true
         }).addTo(map);
 
@@ -78,44 +74,60 @@ export default class Map {
         getDistricts(res => {
             if (res.districts.length === 0) {
                 regionRenderer.suspendDraw = false;
-                map.fire('viewreset');
             } else {
-                this.districtLayer.addData(res.districts);
+                districtLayer.addData(res.districts);
                 res.more();
             }
         });
 
-        this.user = new User(el.querySelector('.js-user'), this.update.bind(this));
-        this.tooltip = new Tooltip(el);
+        //tooltip = new Tooltip(el);
     }
 
-    update(data) {
-        this.data = data;
+    function setStyle(district) {
+        var price = userInput && periodMedians[userInput.year][district.id];
+        var color;
 
-        this.districtLayer.options.style = function (district) {
-            var price = periodMedians[data.year][district.id];
-            var ratio = price / data.threshold;
-            var color, colorIndex = 0;
+        if (price) {
+            let ratio = price / userInput.threshold, colorIndex = 0;
 
-            if (!price) {
-                color = '#cccccc';
-            } else {
-                if (ratio > 2) colorIndex++;
-                if (ratio > 3) colorIndex++;
-                if (ratio > 4) colorIndex++;
-                if (ratio > 5) colorIndex++;
-                if (ratio > 6) colorIndex++;
-                color = colors[colorIndex];
-            }
+            if (ratio > 2) colorIndex++;
+            if (ratio > 3) colorIndex++;
+            if (ratio > 4) colorIndex++;
+            if (ratio > 5) colorIndex++;
+            if (ratio > 6) colorIndex++;
+            color = colors[colorIndex];
+        } else {
+            color = '#cccccc';
+        }
 
-            return {
-                'stroke': 0,
-                'fillColor': color,
-                'fillOpacity': 1
-            };
+        return {
+            'stroke': 0,
+            'fillColor': color,
+            'fillOpacity': 1
         };
+    }
+
+    function setOnEachFeature(feature, layer) {
+        layer.on({
+            mouseover: evt => {
+                highlightLayer.addData([feature]);
+                //tooltip.show(evt, userInput);
+            },
+            mouseout: () => {
+                highlightLayer.clearLayers();
+                //tooltip.hide();
+            }
+        });
+    }
+
+    this.update = function (data) {
+        userInput = data;
 
         // TODO: only update regions that need updating
-        this.districtLayer.eachLayer(district => this.districtLayer.resetStyle(district));
+        if (districtLayer) {
+            districtLayer.eachLayer(district => this.districtLayer.resetStyle(district));
+        }
     }
-}
+
+    require('http://localhost:8000/leaflet.js', init);
+};

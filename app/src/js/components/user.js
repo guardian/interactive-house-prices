@@ -6,69 +6,69 @@ import { config } from '../lib/cfg'
 import madlib from '../lib/madlib'
 import range from '../lib/range'
 
-import Linechart from './linechart'
+//import Linechart from './linechart'
 
-export default class User {
-    constructor(el, onUpdate) {
-        this.el = el;
-        this.el.innerHTML = template;
+export default function User(el, onUpdate) {
+    var yearEl, ratioEl, thumblineEl, minimapImgs = [];
+    var periodSplits;
+    var currentValue = {'year': startYear, 'threshold': 0};
 
-        this.onUpdate = onUpdate;
+    function init() {
+        var minimap, year, img;
 
-        this.yearEl = el.querySelector('.js-year');
-        this.ratioEl = el.querySelector('.js-user-ratio');
-        this.thumblineEl = document.querySelector('.hp-range-slider__thumbline');
+        el.innerHTML = template;
 
-        this.date = range(el.querySelector('.js-date'), startYear, endYear, this.changeYear.bind(this), 5);
-        madlib(el.querySelector('.js-wage'), this.changeThreshold.bind(this));
+        yearEl = el.querySelector('.js-year');
+        ratioEl = el.querySelector('.js-user-ratio');
+        thumblineEl = document.querySelector('.hp-range-slider__thumbline');
 
-        var minimap = el.querySelector('.js-minimap');
-        this.minimapImgs = [];
-        for (var year = startYear; year <= endYear; year++) {
-            var img = document.createElement('img');
-            this.minimapImgs[year] = img;
+        range(el.querySelector('.js-date'), startYear, endYear, changeYear, 5);
+        madlib(el.querySelector('.js-wage'), changeThreshold);
+
+        minimap = el.querySelector('.js-minimap');
+        for (year = startYear; year <= endYear; year++) {
+            img = document.createElement('img');
+            minimapImgs[year] = img;
             minimap.appendChild(img);
         }
-        this.minimapImgs[startYear].style.display = 'block';
+        minimapImgs[startYear].style.display = 'block';
 
-        this.linechart = new Linechart('js-line', 'line', 307, 55, 5, 0);
+        linechart = new Linechart('js-line', 'line', 307, 55, 5, 0);
 
-        this.value = {'year': startYear, 'threshold': 0};
-        this.changeThreshold(25000); // ugly way to initialise line chart
+        changeThreshold(25000); // ugly way to initialise line chart
     }
 
-    change() {
-        var ratio = this.periodSplits[this.value.year].ratio;
-        this.thumblineEl.style.height = (10 + ratio / 2) + 'px';
-        this.ratioEl.textContent = Math.floor(ratio) + '%';
+    function change() {
+        var ratio = periodSplits[currentValue.year].ratio;
+        thumblineEl.style.height = (10 + ratio / 2) + 'px';
+        ratioEl.textContent = Math.floor(ratio) + '%';
 
-        this.onUpdate(this.value);
+        onUpdate(currentValue);
     }
 
-    changeThreshold(threshold) {
-        this.value.threshold = threshold;
+    function changeThreshold(threshold) {
+        currentValue.threshold = threshold;
 
-        this.periodSplits = getPeriodSplits(this.value.threshold);
-        //this.linechart.updateLine(this.medians, 'line');
+        periodSplits = getPeriodSplits(threshold);
+        //linechart.updateLine(periodSplits, 'line');
 
-        this.periodSplits.forEach((yearSplit, year) => {
-            this.minimapImgs[year].src =
+        periodSplits.forEach((yearSplit, year) => {
+            minimapImgs[year].src =
                 `${config.assetPath}/assets/minimap/${year}-${yearSplit.unaffordable}.png`;
         });
 
-        this.change();
+        change();
     }
 
-    changeYear(year) {
-        var lastYear = this.value.year;
-        window.requestAnimationFrame(() => {
-            this.minimapImgs[lastYear].style.display = 'none';
-            this.minimapImgs[year].style.display = 'block';
-        });
+    function changeYear(year) {
+        minimapImgs[currentValue.year].style.display = 'none';
+        minimapImgs[year].style.display = 'block';
 
-        this.value.year = year;
-        this.yearEl.textContent = this.value.year;
+        currentValue.year = year;
+        yearEl.textContent = currentValue.year;
 
-        this.change();
+        change();
     }
+
+    init();
 }
