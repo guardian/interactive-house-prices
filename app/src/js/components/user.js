@@ -54,7 +54,7 @@ export default function User(el, onUpdate) {
 
         periodSplits = getPeriodSplits(threshold);
         periodSplits.forEach((yearSplit, year) => {
-            lineData.push({'x': i, 'y': split.ratio});
+            lineData.push({'x': year, 'y': yearSplit.ratio});
             minimapImgs[year].src =
                 `${config.assetPath}/assets/minimap/${year}-${yearSplit.unaffordable}.png`;
         });
