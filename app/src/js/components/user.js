@@ -31,7 +31,7 @@ export default class User {
         }
         this.minimapImgs[startYear].style.display = 'block';
 
-        this.linechart = new Linechart('js-line', 'line', 307, 50, 0, 0);
+        this.linechart = new Linechart('js-line', 'line', 307, 55, 5, 0);
 
         this.value = {'year': startYear, 'threshold': 0};
         this.changeThreshold(25000); // ugly way to initialise line chart
@@ -39,8 +39,9 @@ export default class User {
 
     change() {
         var ratio = this.periodSplits[this.value.year].ratio;
-        this.thumblineEl.style.height = (5 + ratio / 2) + 'px';
+        this.thumblineEl.style.height = (10 + ratio / 2) + 'px';
         this.ratioEl.textContent = Math.floor(ratio) + '%';
+
         this.onUpdate(this.value);
     }
 

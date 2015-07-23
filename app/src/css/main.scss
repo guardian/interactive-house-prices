@@ -2,17 +2,24 @@
 $c-neutral-1: #333;
 $c-neutral-2: #767676;
 $c-neutral-3: #bdbdbd;
+$c-neutral-4: #dcdcdc;
 $c-neutral-5: #dfdfdf;
 
 // atomic-style
+.c-grey2 { color: $c-neutral-2; }
 .c-grey3 { color: $c-neutral-3; }
 
+.fz-9  { font-size: 9px;  }
 .fz-11 { font-size: 11px; }
-.fz-14 { font-size: 14px; }
 .fz-18 { font-size: 18px; }
 
 .f-l { float: left; }
 .f-r { float: right; }
+
+.pos-r { position: relative; }
+.pos-a { position: absolute; }
+
+.d-ib { display: inline-block; }
 
 .bb-s { border-bottom: 1px solid $c-neutral-5; }
 .bb-d { border-bottom: 1px dotted $c-neutral-1; }
@@ -20,8 +27,7 @@ $c-neutral-5: #dfdfdf;
 .mr-5  { margin-right: 5px; }
 .mt-15 { margin-top: 15px; }
 
-.pos-r { position: relative; }
-.pos-a { position: absolute; }
+.ta-r { text-align: right; }
 
 .f-truncate {
     display: inline-block;

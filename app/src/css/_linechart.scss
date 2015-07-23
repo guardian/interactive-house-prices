@@ -1,17 +1,10 @@
 // line chart
 
-.line,
-.line-thine,
-.line-light,
-.line-dashed {
+.line {
     fill: none;
-    stroke: #333;
+    stroke: $c-neutral-1;
     stroke-width: 3px;
 }  
-.line-thine  { stroke-width: 2px; }
-.line-light  { stroke-width: 1px; }
-.line-dashed { stroke-dasharray: 3 3; }
-
 .line-mask {
     fill: white;
     stroke: white;
@@ -19,11 +12,76 @@
 }
 
 
-.range-empty {
+.chart {
+    font-size: 11px;
+    line-height: 1.15em;
+
+    width: 280px;
+    height: 110px;
+    margin-top: 15px;
+}    
+
+.chart-range {
     width: 100%;
-    height: 60px;
-    background-color: $c-neutral-3;
+    height: 54px; //64(svg)-10(margin-top)
+    white-space:nowrap;
+    overflow:hidden;
+    top: 23px;
 }
+
+.chart-lines {
+    top: 13px;
+    
+    text {
+        font-size: 9px;
+        fill: $c-neutral-3;
+    }
+
+    .axis line, 
+    .axis path {
+        fill: none;
+        stroke: $c-neutral-4;
+        shape-rendering: crispEdges;
+    }   
+}
+
+.chart-label {
+    width: 100%;
+    height: 100%;
+
+    [class^="pos-a-"] { 
+        position: absolute; 
+    }
+    .pos-a-min { bottom:    0; left:  0; }
+    .pos-a-max { top:  1.15em; right: 0; }
+    .pos-a-med { top: -1.15em; transition: left  0.25s ease; }
+    .pos-a-upf { bottom:    0; transition: right 0.25s ease; margin-right: -5px; }
+
+    .pin-min {
+        width: 1px;
+        height: 8px;
+        border-left: 1px solid $c-neutral-1;
+    }
+    .pin-max {
+        height: 40px;
+        border-right: 1px solid $c-neutral-1;
+    }
+    .pin-med {
+        width: 1px;
+        height: 66px;
+        border-left: 1px solid $c-neutral-1;
+    }
+    .pin-upf {
+        width: 2px;
+        height: 26px;
+        border-left:  1px solid $c-neutral-2;
+        border-right: 1px solid $c-neutral-2;
+        background-color: white;
+        margin-top: -27px;
+    }
+}
+
+
 .range-extra {
     width: 100%;
     height: 60px;
@@ -53,82 +111,3 @@
     #ed3d62 80%,   #ed3d61 100%
     );
 }
-
-.h-5  { height: 5px; }
-.d-ib { display: inline-block; }
-.ta-r { text-align: right; }
-.c-bd { color: #767676; font-size: 9px; }
-
-[class^="pos-a-"] { 
-    position: absolute; 
-}
-.pos-a-mr { top: 2.3em; right: 0; }
-.pos-a-bl { bottom:  0; left:  0; }
-.pos-a-upf { bottom: 0; transition: right 0.25s ease; margin-right: -5px; }
-.pos-a-med { top:    0; transition: left  0.25s ease; }
-
-.chart {
-    width: 280px;
-    height: 110px;
-    margin-top: 5px;
-
-    font-size: 11px;
-    line-height: 1.15em;
-     
-    text {
-        fill: #bdbdbd;
-        font-size: 9px;
-    } 
-
-    .axis path, 
-    .axis line {
-        fill: none;
-        stroke: #dcdcdc;
-        shape-rendering: crispEdges;
-    }
-    //border: 1px solid green;
-
-}
-
-.chart-color {
-    width: 100%;
-    height: 54px; //64-10
-    white-space:nowrap;
-    overflow:hidden;
-    top: 23px;
-    //border: 1px solid;
-}
-
-.chart-mask {
-    top: 13px;
-    //border: 1px solid red;
-}
-
-.chart-label {
-    width: 100%;
-    height: 100%;
-    
-    .pin-min {
-        width: 1px;
-        height: 7px;
-        border-left: 1px solid #333;
-    }
-    .pin-max {
-        height: 28px;
-        border-right: 1px solid #333;
-    }
-    .pin-med {
-        width: 1px;
-        height: 54px;
-        border-left: 1px solid #333;
-    }
-    .pin-upf {
-        width: 2px;
-        height: 26px;
-        border-left:  1px solid #767676;
-        border-right: 1px solid #767676;
-        background-color: white;
-        margin-top: -27px;
-    }
-}
-

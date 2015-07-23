@@ -11,11 +11,11 @@ export default class Linechart {
                      .attr("width", width)
                      .attr("height", height + marginTop)
                      .append("g")
-                     .attr("transform", "translate(0," + 10 + ")");
+                     .attr("transform", "translate(0," + marginTop + ")");
         
         // Set the ranges
-        this.x = d3.scale.linear().range([0, width - 30]);
-        this.y = d3.scale.linear().range([height - marginBottom, 0]);
+        this.x = d3.scale.linear().range([0, width]);
+        this.y = d3.scale.linear().range([height - marginTop, 0]);
 
         // Define the axes
         this.xAxis = d3.svg.axis().scale(this.x).orient("bottom");
@@ -35,40 +35,38 @@ export default class Linechart {
         if (isAxis) {
         this.svg.append("g")
         .attr("class", "x axis")
-        .attr("transform", "translate(0," + (height-marginBottom) + ")")
+        .attr("transform", "translate(0," + (height - marginTop + 2) + ")")
         .call(this.xAxis);
         }
     }
 
- 
-    updatePath(data, className, lineType) {        
-        this.svg
-        .select("." + className).datum(data)
-        .transition().duration(250)
-        .attr("d", this.valueline(lineType)); 
-    }
    
-    updateLine(data, className, lineType) {
+    updateLine(data, el, lineType, minRange, maxRange) {
+        var num = data.length,
+            rangeX = [ 
+                minRange || 0,
+                maxRange || this.width
+            ], 
+            domainX = [ 
+                minRange || data[0].x,
+                maxRange || data[num-1].x
+            ],
+            domainY = [0, d3.max(data, d => d.y)];
+       
+        this.x.domain(domainX).range(rangeX);
+        this.y.domain(domainY);
+
+        this.svg
+        .select("." + el).datum(data)
+        .transition().duration(250)
+        .attr("d", this.valueline(lineType));    
+    }   
+    
+    updateMask(data, el, lineType) {        
         var num = data.length,
             minX = data[0].x,
             maxX = data[num-1].x, 
-            maxY = d3.max(data, d => d.y),
-            cn = className || "line";
-        
-        this.x.domain([minX, maxX]).range([0, this.width]);
-        this.y.domain([0, maxY]);
-       
-        this.updatePath(data, cn, lineType);
-    }   
-    
-    updateMask(data, className, lineType, min, max) {        
-        var num = data.length,
-            minX = data[0].x, 
-            maxX = data[num-1].x, 
-            maxY = d3.max(data, d => d.y),
-            minRange = min || minX,
-            maxRange = max || maxX,
-            cn = className || "line";
+            maxY = d3.max(data, d => d.y);
 
         var dataMask = [
             data[num-1],
@@ -78,17 +76,14 @@ export default class Linechart {
             {x: 0, y: data[0].y}
         ].concat(data); 
         
-        this.x.domain([minX, maxX]).range([minRange, maxRange]);
-        this.y.domain([0, maxY]);
-       
-        this.updatePath(dataMask, cn, lineType);
+        this.updateLine(dataMask, el, lineType, minX, maxX);
     }
     
     
     updateAxis(data) {
         var num = data.length,
             dataTick = data.map((d, i) =>
-            (280/num)*i
+            (this.width/num)*i
         );       
         
         this.xAxis

@@ -2,9 +2,8 @@ $thumb-size: 14px;
 
 .hp-range-slider {
     position: relative;
-    height: 40px;
     cursor: pointer;
-    margin: -10px ($thumb-size / 2) 3px ($thumb-size / 2);
+    margin: 0 ($thumb-size / 2) 15px ($thumb-size / 2);
 
     &::before {
         content: "";
@@ -33,10 +32,7 @@ $thumb-size: 14px;
     position: absolute;
     left: 0;
     bottom: 0;
-    
-    height: 50px;
     border-left: 1px dotted #333;
-    margin-bottom: 20px;
 }
 
 .hp-range-slider__tics__tic {

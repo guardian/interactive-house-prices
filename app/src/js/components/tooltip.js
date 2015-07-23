@@ -20,31 +20,29 @@ export default class Tooltip {
         this.el = root.querySelector('.js-tooltip');
         this.el.innerHTML = template;
         
-        // els for datai
+        // els for data
         // header
         this.areaEl = this.el.querySelector('.js-area');
         this.districtEl = this.el.querySelector('.js-district');
         // body
         this.numEl = this.el.querySelector('.js-num'); //number of sales
+        this.upfEl = this.el.querySelector('.js-upf'); //upper fence
         this.minEl = this.el.querySelector('.js-min');
         this.maxEl = this.el.querySelector('.js-max');
-        this.upfEl = this.el.querySelector('.js-upf'); //upper fence
         this.medEls = Array.from(this.el.querySelectorAll('.js-med'));
         this.salaryEls = Array.from(this.el.querySelectorAll('.js-salary'));
-        this.factorEls = Array.from(this.el.querySelectorAll('.js-factor'));
-        // footer
+        this.factorEl = this.el.querySelector('.js-factor');
         this.yearUserEl = this.el.querySelector('.js-year-user');
         this.yearAffordableEl = this.el.querySelector('.js-year-affordable');
        
         // els for styles
         this.upfPos = this.el.querySelector('.pos-a-upf'); //upper fence
-        this.medPos = this.el.querySelector('.pos-a-med'); //upper fence
+        this.medPos = this.el.querySelector('.pos-a-med');
         
         this.rangeEl = this.el.querySelector('.js-pipes');
-        this.labelFacEl = this.el.querySelector('.label-fac');
         
         // init line chart
-        this.linechart = new Linechart("js-lines", "line-mask", 280, 64, 10, 8, true);
+        this.linechart = new Linechart("js-lines", "line-mask", 280, 64, 10, 5, true);
         
 
         var resize = debounce(function () {
@@ -88,11 +86,10 @@ export default class Tooltip {
         this.upfPos.style.right = rangeDiff + "%";  
         this.medPos.style.left  = ((prices.med-prices.min)*rangeWidth/(8*salary)) + "%";  
         
-
         this.rangeEl.style.width = rangeWidth + "%"; 
         this.rangeEl.style.marginLeft = (-prices.min*rangeWidth/(8*salary)) + "%";        
        
-        this.labelFacEl.style.fontSize = 12 + ((factor<20)?factor:20) + "px"; 
+        this.factorEl.style.fontSize = 12 + ((factor<20)?factor:20) + "px"; 
         
         
         // load data
@@ -106,7 +103,7 @@ export default class Tooltip {
         
         this.medEls.forEach(el => el.textContent = prices.med.toLocaleString());
         this.salaryEls.forEach(el => el.textContent = salary.toLocaleString());
-        this.factorEls.forEach(el => el.textContent = Math.round(factor*10)/10);
+        this.factorEl.textContent = Math.round(factor*10)/10;
         
         var textAffordable = "";
         for (var yr=data.year; yr>=1995; yr--) {
@@ -114,8 +111,7 @@ export default class Tooltip {
             var rateAffordable = Math.round((yearPrices.med/data.threshold)*10)/10;
             if (yr===data.year && rateAffordable <=4 ) { break; }
             if (rateAffordable <= 4) {
-                textAffordable = "You would have been able to afford it in " + 
-                                 yr + " when it was " + rateAffordable + "."; 
+                textAffordable = "You would have been able to afford it in " + yr + " when it was " + rateAffordable + "."; 
                 break;
             } else {
                 textAffordable = "You would not have been able to afford it even back in 1995.";
