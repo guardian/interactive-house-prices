@@ -11,9 +11,11 @@ const tooltipHeight = 200;
 
 function setTranslate(el, x, y) {
     var translate = `translate(${x}px, ${y}px)`;
-    el.style.transform = translate;
-    el.style.msTransform = translate;
-    el.style.webkitTransform = translate;
+    window.requestAnimationFrame(() => {
+        el.style.transform = translate;
+        el.style.msTransform = translate;
+        el.style.webkitTransform = translate;
+    });
 }
 
 export default function Tooltip(root) {
@@ -66,12 +68,9 @@ export default function Tooltip(root) {
         // init line chart
         linechart = new Linechart("js-lines", "line-mask", 280, 64, 10, 5, true);
 
-
         var resize = debounce(function () {
-            window.requestAnimationFrame(() => {
-                viewWidth = root.clientWidth;
-                viewHeight = root.clientHeight;
-            });
+            viewWidth = root.clientWidth;
+            viewHeight = root.clientHeight;
         }.bind(this), 200);
 
         window.addEventListener('resize', () => {
@@ -154,8 +153,18 @@ export default function Tooltip(root) {
         linechart.updateAxis(dataBins);
         linechart.updateLabels(dataBins);
 
+        hidden = false;
+        move(evt);
+    }
+
+    this.hide = function () {
+        hidden = true;
+        setTranslate(el, -1000, -1000);
+    }
+
+    var move = this.move = function (evt) {
         var x = evt.containerPoint.x;
-        var y = evt.containerPoint.y;// - tooltipHeight;
+        var y = evt.containerPoint.y;
         if (x + tooltipWidth > viewWidth) {
             x -= tooltipWidth;
         }
@@ -163,14 +172,7 @@ export default function Tooltip(root) {
             y -= tooltipHeight;
         }
 
-        hidden = false;
         setTranslate(el, x, y);
-        //setTranslate(el, 10, 10);
-    }
-
-    this.hide = function () {
-        hidden = true;
-        setTranslate(el, -1000, -1000);
     }
 
     el = root.querySelector('.js-tooltip');

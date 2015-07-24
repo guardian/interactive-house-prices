@@ -112,6 +112,9 @@ export default function Map(el) {
                 highlightLayer.addData([feature]);
                 tooltip.show(evt, userInput);
             },
+            mousemove: evt => {
+                tooltip.move(evt);
+            },
             mouseout: () => {
                 highlightLayer.clearLayers();
                 tooltip.hide();
