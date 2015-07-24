@@ -34,7 +34,7 @@ function processDistricts(onData, res) {
         });
 
         function send() {
-            iframe.postMessage({'action': 'data', 'data': res}, 'http://localhost:8000');
+            iframe.postMessage({'action': 'data', 'data': res}, '*');
         }
 
         if (iframe.document.readyState !== 'complete') {

@@ -5,13 +5,11 @@
     if (window.Worker) {
         var worker = new Worker('districts.js');
         worker.addEventListener('message', function (evt) {
-            window.parent.postMessage(evt.data, 'http://localhost:8000');
+            window.parent.postMessage(evt.data, '*');
         });
 
         window.addEventListener('message', function (evt) {
-            if (evt.origin === 'http://localhost:8000') {
-                worker.postMessage(evt.data);
-            }
+            worker.postMessage(evt.data);
         });
     }
 </script>
