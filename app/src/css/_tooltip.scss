@@ -1,6 +1,7 @@
 // tooptip
 .hp-tooltip {
     @include fs-textSans(2);
+    font-size: 12px;
     background-color: white;//rgba(255,255,255,0.9);
 
     width: 300px;
@@ -20,6 +21,15 @@
         line-height: 1.5em;   
     }
     h3 { 
-        margin-bottom: 5px; 
+        margin-bottom: 5px;  
+    }
+    
+    .w-50 {
+        display: inline-block;
+        width: 50px;
+    }
+    .h-50 {
+        display: inline-block;
+        height: 50px;
     }
 }
