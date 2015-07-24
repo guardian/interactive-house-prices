@@ -21,27 +21,23 @@ const periodYears = Object.keys(periodMedians).map(n => parseInt(n)).sort((a, b)
 export const startYear = periodYears[0], endYear = periodYears[periodYears.length - 1];
 
 function processDistricts(onData, res) {
-    var iframe = window.Worker && document.querySelector('.js-worker').contentWindow;
-
-    if (iframe) {
-        window.addEventListener('message', e => {
-            if (e.source === iframe) {
-                onData({
-                    'districts': e.data,
-                    'more': () => iframe.postMessage({'action': 'more'}, '*')
-                })
+    if (window.Worker) {
+        let iframe = document.createElement('iframe'), target;
+        iframe.src = config.assetPath + '/worker.html';
+        window.addEventListener('message', function (evt) {
+            if (target) {
+                if (evt.source === target) {
+                    onData({
+                        'districts': evt.data,
+                        'more': () => target.postMessage({'action': 'more'}, '*')
+                    });
+                }
+            } else {
+                target = evt.source;
+                target.postMessage({'action': 'data', 'data': res}, '*');
             }
         });
-
-        function send() {
-            iframe.postMessage({'action': 'data', 'data': res}, '*');
-        }
-
-        if (iframe.document.readyState !== 'complete') {
-            iframe.addEventListener('load', send);
-        } else {
-            send();
-        }
+        document.body.appendChild(iframe);
     } else {
         var topo = JSON.parse(res);
         onData({

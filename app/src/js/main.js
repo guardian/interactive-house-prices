@@ -14,7 +14,7 @@ import mainHTML from './templates/main.html!text'
 export function init(el, config) {
     setConfig(config);
 
-    el.innerHTML = mainHTML.replace('%assetPath%', config.assetPath);
+    el.innerHTML = mainHTML;
 
     if (window.guardian) {
         var setContainerSize = throttle(() => {
