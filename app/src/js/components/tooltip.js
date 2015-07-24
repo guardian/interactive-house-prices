@@ -6,7 +6,7 @@ import template from './templates/tooltip.html!text'
 import areaName from '../data/areas-name.json!json'
 import districtCodes from '../data/codes.json!json'
 
-const tooltipWidth = 320;
+const tooltipWidth = 300;
 const tooltipHeight = 200;
 const lineWidth = 280;
 const lineHeight = 64;
