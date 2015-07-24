@@ -11,7 +11,7 @@ import Linechart from './linechart'
 export default function User(el, onUpdate) {
     var yearEl, ratioEl, thumblineEl, minimapImgs = [];
     var periodSplits;
-    var currentValue = {'year': startYear, 'threshold': 0};
+    var currentValue = {'year': endYear, 'threshold': 0};
     var linechart;
 
     function init() {

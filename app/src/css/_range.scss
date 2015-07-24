@@ -21,6 +21,7 @@ $thumb-size: 14px;
     position: absolute;
     z-index: 5;
     top: 50%;
+    left: 100%;
     margin: (-$thumb-size / 2) 0 0 (-$thumb-size / 2);
     width: $thumb-size;
     height: $thumb-size;
@@ -30,7 +31,7 @@ $thumb-size: 14px;
 
 .hp-range-slider__thumbline {
     position: absolute;
-    left: 0;
+    left: 100%;
     bottom: 0;
     border-left: 1px dotted #333;
 }
