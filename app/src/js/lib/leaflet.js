@@ -1,5 +1,5 @@
 /*
- Leaflet 1.0-dev (76cd73c), a JS library for interactive maps. http://leafletjs.com
+ Leaflet 1.0-dev (558e2eb), a JS library for interactive maps. http://leafletjs.com
  (c) 2010-2015 Vladimir Agafonkin, (c) 2010-2011 CloudMade
 */
 (function (window, document, undefined) {
@@ -6203,9 +6203,11 @@ L.Canvas = L.Renderer.extend({
 	},
 
 	_redraw: function () {
-		this._redrawRequest = null;
+        var bounds = this._redrawBounds, size = bounds.getSize();
 
-		this._draw(true); // clear layers in redraw bounds
+		this._redrawRequest = null;
+        this._ctx.clearRect(bounds.min.x, bounds.min.y, size.x, size.y);
+		//this._draw(true); // clear layers in redraw bounds
 		this._draw(); // draw layers
 
 		this._redrawBounds = null;
@@ -6328,9 +6330,8 @@ L.Canvas = L.Renderer.extend({
 
 	_handleMouseOut: function (e, point) {
 		var layer = this._hoveredLayer;
-		if (layer && (e.type === 'mouseout' || !layer._containsPoint(point))) {
+		if (layer && !this._map.dragging._draggable._moving && (e.type === 'mouseout' || !layer._containsPoint(point))) {
 			// if we're leaving the layer, fire mouseout
-			L.DomUtil.removeClass(this._container, 'leaflet-interactive');
 			this._fireEvent(layer, e, 'mouseout');
 			this._hoveredLayer = null;
 		}
@@ -6338,11 +6339,10 @@ L.Canvas = L.Renderer.extend({
 
 	_handleMouseHover: function (e, point) {
 		var id, layer;
-		if (!this._hoveredLayer) {
+		if (!this._hoveredLayer && !this._map.dragging._draggable._moving) {
 			for (id in this._layers) {
 				layer = this._layers[id];
 				if (layer.options.interactive && layer._containsPoint(point)) {
-					L.DomUtil.addClass(this._container, 'leaflet-interactive'); // change cursor
 					this._fireEvent(layer, e, 'mouseover');
 					this._hoveredLayer = layer;
 					break;
@@ -7049,8 +7049,6 @@ L.Draggable = L.Evented.extend({
 			this._moved = true;
 			this._startPos = L.DomUtil.getPosition(this._element).subtract(offset);
 
-			L.DomUtil.addClass(document.body, 'leaflet-dragging');
-
 			this._lastTarget = e.target || e.srcElement;
 			L.DomUtil.addClass(this._lastTarget, 'leaflet-drag-target');
 		}
@@ -7071,8 +7069,6 @@ L.Draggable = L.Evented.extend({
 	},
 
 	_onUp: function () {
-		L.DomUtil.removeClass(document.body, 'leaflet-dragging');
-
 		if (this._lastTarget) {
 			L.DomUtil.removeClass(this._lastTarget, 'leaflet-drag-target');
 			this._lastTarget = null;

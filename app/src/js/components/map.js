@@ -41,7 +41,7 @@ export default function Map(el) {
         renderer._initContainer();
         renderer._container.className += ' hp-map__highlight';
 
-        highlightLayer = L.geoJson(undefined, {
+        /*highlightLayer = L.geoJson(undefined, {
             renderer: renderer,
             style: {
                 fill: false,
@@ -49,7 +49,7 @@ export default function Map(el) {
                 color: '#333',
                 weight: 2
             }
-        }).addTo(map);
+        }).addTo(map);*/
 
         // Region layer
         var regionRenderer = L.canvas();
@@ -87,14 +87,8 @@ export default function Map(el) {
         var color;
 
         if (price) {
-            let ratio = price / userInput.threshold, colorIndex = 0;
-
-            if (ratio > 2) colorIndex++;
-            if (ratio > 3) colorIndex++;
-            if (ratio > 4) colorIndex++;
-            if (ratio > 5) colorIndex++;
-            if (ratio > 6) colorIndex++;
-            color = colors[colorIndex];
+            let ratio = price / userInput.threshold;
+            color = colors[Math.min(5, Math.floor(ratio) - 1)];
         } else {
             color = '#cccccc';
         }
@@ -109,14 +103,14 @@ export default function Map(el) {
     function setOnEachFeature(feature, layer) {
         layer.on({
             mouseover: evt => {
-                highlightLayer.addData([feature]);
+                //highlightLayer.addData([feature]);
                 tooltip.show(evt, userInput);
             },
             mousemove: evt => {
                 tooltip.move(evt);
             },
             mouseout: () => {
-                highlightLayer.clearLayers();
+                //highlightLayer.clearLayers();
                 tooltip.hide();
             }
         });
