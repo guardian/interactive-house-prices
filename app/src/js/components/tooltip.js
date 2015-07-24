@@ -12,13 +12,22 @@ const lineWidth = 280;
 const lineHeight = 64;
 const rangeWidth = 250;
 
+var setTranslate = (function () {
+    var anim, translate;
+    return function (el, x, y) {
+        translate = `translate(${x}px, ${y}px)`;
+
+        if (!anim) {
+            anim = window.requestAnimationFrame(() => {
+                el.style.transform = translate;
+                el.style.msTransform = translate;
+                el.style.webkitTransform = translate;
+                anim = null;
+            });
+        }
+    };
+})();
 function setTranslate(el, x, y) {
-    var translate = `translate(${x}px, ${y}px)`;
-    window.requestAnimationFrame(() => {
-        el.style.transform = translate;
-        el.style.msTransform = translate;
-        el.style.webkitTransform = translate;
-    });
 }
 
 export default function Tooltip(root) {
@@ -26,7 +35,7 @@ export default function Tooltip(root) {
         medEls, salaryEls, factorEl, yearUserEl, yearAffordableEl, pipeEl;
     var upfPos, medPos;
     var linechart;
-    var hidden = false, viewWidth, viewHeight;
+    var hidden = true, viewWidth, viewHeight;
     var tooltipStats;
 
     function getDistrictStats(district, year) {
@@ -45,6 +54,7 @@ export default function Tooltip(root) {
     function init(stats) {
         tooltipStats = stats;
 
+        el = root.querySelector('.js-tooltip');
         el.innerHTML = template;
 
         // els for data
@@ -185,7 +195,5 @@ export default function Tooltip(root) {
         else { setTranslate(el, -1000, -1000); } // hide tooltip if data doesn't exist
     }
 
-    el = root.querySelector('.js-tooltip');
-    this.hide();
     getTooltipStats(init);
 }

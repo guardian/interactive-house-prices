@@ -125,5 +125,10 @@ export default function Map(el) {
         }
     }
 
-    require('http://localhost:8000/leaflet.js', init);
+    var script = document.createElement('script');
+    script.src = 'http://93f9fca.ngrok.com/leaflet.js';
+    script.onload = function (evt) {
+        init(window.L);
+    }
+    document.body.appendChild(script);
 };
