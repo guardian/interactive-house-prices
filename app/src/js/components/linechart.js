@@ -38,7 +38,7 @@ export default function Linechart(elClassName, styleClassName, width, height, ma
         }
     }
 
-    var updateLine = this.updateLine = function(data, el, lineType, minRange, maxRange) {
+    this.updateLine = function(data, el, lineType, minRange, maxRange) {
         var num = data.length,
             rangeX = [
                 minRange || 0,
@@ -72,7 +72,7 @@ export default function Linechart(elClassName, styleClassName, width, height, ma
             {x: 0, y: data[0].y}
         ].concat(data);
 
-        updateLine(dataMask, el, lineType, minX, maxX);
+        this.updateLine(dataMask, el, lineType, minX, maxX);
     }
 
     this.updateAxis = function (data) {

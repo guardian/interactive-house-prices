@@ -36,7 +36,7 @@ export default function Tooltip(root) {
             'upper_fence': stats[2] * 100,
             'max': stats[3] * 100,
             'histogram': stats.slice(4)
-        }
+        };
     }
 
     function init(stats) {
@@ -82,17 +82,21 @@ export default function Tooltip(root) {
     }
 
     this.show = function (evt, userInput) {
-        if (!tooltipStats) return;
+        // return if json is not yet loaded
+        if (!tooltipStats) { return; }
 
         var districtObj = evt.target.feature,
             district = districtObj.id,
             area = areaName[district.replace(/[0-9].*/,'')] + " area";
 
-        var prices = getDistrictStats(district, userInput.year),
-            salary = userInput.threshold,
-            factor = prices.med/salary;
+        var prices = getDistrictStats(district, userInput.year);
+        
+        // return and hide if data doesn't exist
+        if (prices===null) { hidden = true; return; }
 
-        var ratio = 100/prices.upper_fence, //TODO
+        var salary = userInput.threshold,
+            factor = prices.med/salary,
+            ratio = 100/prices.upper_fence, //TODO
             ratioMin = ratio*prices.min,
             ratioMed = ratio*prices.med,
             ratioSalary = ratio*salary,
@@ -154,7 +158,7 @@ export default function Tooltip(root) {
         linechart.updateLabels(dataBins);
 
         hidden = false;
-        move(evt);
+        this.move(evt);
     }
 
     this.hide = function () {
@@ -162,7 +166,7 @@ export default function Tooltip(root) {
         setTranslate(el, -1000, -1000);
     }
 
-    var move = this.move = function (evt) {
+    this.move = function (evt) {
         var x = evt.containerPoint.x;
         var y = evt.containerPoint.y;
         if (x + tooltipWidth > viewWidth) {
@@ -171,8 +175,9 @@ export default function Tooltip(root) {
         if (y + tooltipHeight > viewHeight) {
             y -= tooltipHeight;
         }
-
-        setTranslate(el, x, y);
+        
+        if (!hidden) { setTranslate(el, x, y); }
+        else { setTranslate(el, -1000, -1000); } // hide tooltip if data doesn't exist
     }
 
     el = root.querySelector('.js-tooltip');
