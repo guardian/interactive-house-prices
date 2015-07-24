@@ -15,6 +15,10 @@
     pointer-events: none;
     user-select: none;
 
+    transform: translate(-1000px, -1000px);
+    -ms-transform: translate(-1000px, -1000px);
+    -webkit-transform: translate(-1000px, -1000px);
+
     h3, p { 
         margin: 0; 
         line-height: 1.5em;   
