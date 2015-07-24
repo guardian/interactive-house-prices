@@ -38,27 +38,20 @@ export default function Linechart(elClassName, styleClassName, width, height, ma
         }
     }
 
-    this.updateLine = function(data, el, lineType, minRange, maxRange) {
+    this.updateLine = function(data, el, rangeX, rangeY, lineType) {
         var num = data.length,
-            rangeX = [
-                minRange || 0,
-                maxRange || width
-            ],
-            domainX = [
-                minRange || data[0].x,
-                maxRange || data[num-1].x
-            ],
-            domainY = [0, 100];//d3.max(data, d => d.y)];
+            domainX = (rangeX !== undefined && rangeX !== null) ? rangeX : [data[0].x, data[num-1].x],
+            domainY = (rangeY !== undefined && rangeY !== null) ? rangeY : [0, d3.max(data, d => d.y)];
 
-        x.domain(domainX).range(rangeX);
+        x.domain(domainX);
         y.domain(domainY);
 
         svg.select("." + el).datum(data)
             .transition().duration(250)
             .attr("d", valueline(lineType));
-    }
+    };
 
-    this.updateMask = function (data, el, lineType) {
+    this.updateMask = function(data, el, lineType) {
         var num = data.length,
             minX = data[0].x,
             maxX = data[num-1].x,
@@ -72,8 +65,8 @@ export default function Linechart(elClassName, styleClassName, width, height, ma
             {x: 0, y: data[0].y}
         ].concat(data);
 
-        this.updateLine(dataMask, el, lineType, minX, maxX);
-    }
+        this.updateLine(dataMask, el, [minX, maxX], null, lineType);
+    };
 
     this.updateAxis = function (data) {
         var num = data.length,
@@ -89,7 +82,7 @@ export default function Linechart(elClassName, styleClassName, width, height, ma
         //TODO: debug!
         svg.select(".x.axis .domain")
             .attr("d", "M0,6V0H"+dataTick[dataTick.length-1]+"V6");
-    }
+    };
 
     this.updateLabels = function (data) {
         var label = svg.selectAll(".label")
@@ -105,7 +98,7 @@ export default function Linechart(elClassName, styleClassName, width, height, ma
             .text(d => d.y);
 
         label.exit().remove();
-    }
+    };
 
     init();
 }

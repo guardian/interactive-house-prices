@@ -59,7 +59,7 @@ export default function User(el, onUpdate) {
                 `${config.assetPath}/assets/minimap/${year}-${yearSplit.unaffordable}.png`;
         });
 
-        linechart.updateLine(lineData, 'line');
+        linechart.updateLine(lineData, 'line', null, [0, 100]);
 
         change();
     }
