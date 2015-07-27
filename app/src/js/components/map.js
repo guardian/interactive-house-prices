@@ -1,5 +1,5 @@
-import { periodMedians, getDistricts, getRegionPrices } from '../lib/region';
-import { config } from '../lib/cfg';
+import { periodMedians, getDistricts, getRegionPrices } from '../lib/region'
+import { config } from '../lib/cfg'
 import throttle from '../lib/throttle'
 
 import Tooltip from './tooltip';
@@ -23,20 +23,17 @@ function hackL(L) {
     };
 }
 
-export default function Map(root) {
+export default function Map(el) {
     var tooltip, districtLayer, highlightLayer, userInput;
 
     function init(L) {
-        var el = root.querySelector('.js-map');
         hackL(L);
 
-        if (window.guardian) {
-            var setContainerSize = throttle(() => {
-                el.style.height = window.innerHeight + 'px';
-            }, 100);
-            window.addEventListener('resize', () => window.requestAnimationFrame(setContainerSize));
-            setContainerSize();
-        }
+        var setContainerSize = throttle(() => {
+            el.style.height = (window.innerHeight - (window.guardian ? 48 : 0)) + 'px';
+        }, 100);
+        window.addEventListener('resize', () => window.requestAnimationFrame(setContainerSize));
+        setContainerSize();
 
         var map = L.map(el, {
             'center': [53, -2.3],

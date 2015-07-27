@@ -22,6 +22,6 @@ export function init(el, config) {
         el.querySelector('.js-intro').style.display = 'none';
     }
 
-    var map = new Map(el);
+    var map = new Map(el.querySelector('.js-map'));
     var user = new User(el.querySelector('.js-user'), map.update);
 }
