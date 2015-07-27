@@ -45,12 +45,14 @@ export default function User(el, onUpdate) {
         isMobile = window.innerWidth < 740;
     }
 
-    function change() {
+    function change(type) {
         var ratio = periodSplits[currentValue.year].ratio;
         thumblineEl.style.height = (10 + ratio / 2) + 'px';
         ratioEl.textContent = Math.floor(ratio) + '%';
 
-        onUpdate(currentValue);
+        if (isMobile && type === 'end' || !isMobile && type === 'move') {
+            onUpdate(currentValue);
+        }
     }
 
     function changeThreshold(threshold) {
@@ -67,18 +69,15 @@ export default function User(el, onUpdate) {
 
         linechart.updateLine(lineData, 'line', null, [0, 100]);
 
-        change();
+        change('end');
     }
 
     function changeYear(year, type) {
         minimapImgs[currentValue.year].style.display = 'none';
         minimapImgs[year].style.display = 'block';
-
         yearEl.textContent = currentValue.year = year;
 
-        if (isMobile ^ type === 'move') {
-            change(type);
-        }
+        change(type);
     }
 
     init();

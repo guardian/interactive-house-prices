@@ -1,3 +1,5 @@
+import Hammer from './hammer.min'
+
 function tics(min, max, ticStep) {
     var range = max - min;
     var v, tics = document.createElement('div');
@@ -36,8 +38,16 @@ export default function (el, min, max, onchange, ticStep) {
         el.appendChild(tics(min, max, ticStep));
     }
 
+    function premove() {
+        var rect = el.getBoundingClientRect();
+        xMin = rect.left;
+        xWidth = rect.width;
+        xStep = xWidth / range;
+    }
+
     function move(evt) {
-        var x = Math.floor(evt.pageX - xMin);
+        var pageX = evt.center.x;
+        var x = Math.floor(pageX - xMin);
         var newValue;
 
         if (x >= 0 && x <= xWidth) {
@@ -46,32 +56,12 @@ export default function (el, min, max, onchange, ticStep) {
                 thumb.style.left = (newValue / range * 100) + '%';
                 thumbline.style.left = (newValue / range * 100) + '%';
                 value = newValue;
-                onchange(value + min, 'move');
+                onchange(value + min, evt.isFinal ? 'end' : 'move');
             }
         }
-
-        evt.preventDefault();
     }
 
-    function up(evt) {
-        onchange(value + min, 'end');
-
-        document.removeEventListener('mousemove', move);
-        document.removeEventListener('mouseup', up);
-    }
-
-    function down(evt) {
-        var rect = el.getBoundingClientRect();
-        xMin = rect.left;
-        xWidth = rect.width;
-        xStep = xWidth / range;
-
-        move(evt);
-
-        document.addEventListener('mousemove', move);
-        document.addEventListener('mouseup', up);
-    }
-
-    thumb.addEventListener('mousedown', down);
-    el.addEventListener('mousedown', down);
+    var hammer = new Hammer(el);
+    hammer.on('panstart tap', premove)
+    hammer.on('pan tap', move);
 }

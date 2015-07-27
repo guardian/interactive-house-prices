@@ -1,14 +1,17 @@
 $thumb-size: 14px;
+$line-offset: 22px;
 
 .hp-range-slider {
     position: relative;
     cursor: pointer;
-    margin: 0 ($thumb-size / 2) 22px ($thumb-size / 2);
+    margin: -70px ($thumb-size / 2) 0 ($thumb-size / 2);
+    padding-bottom: $line-offset;
+    height: 70px;
 
     &::before {
         content: "";
         position: absolute;
-        top: 50%;
+        bottom: $line-offset;
         left: 0;
         right: -1px;
         background-color: #bdbdbd;
@@ -20,9 +23,9 @@ $thumb-size: 14px;
 .hp-range-slider__thumb {
     position: absolute;
     z-index: 5;
-    top: 50%;
+    bottom: $line-offset;
     left: 100%;
-    margin: (-$thumb-size / 2) 0 0 (-$thumb-size / 2);
+    margin: 0 0 (-$thumb-size / 2) (-$thumb-size / 2);
     width: $thumb-size;
     height: $thumb-size;
     background-color: #333;
@@ -32,13 +35,19 @@ $thumb-size: 14px;
 .hp-range-slider__thumbline {
     position: absolute;
     left: 100%;
-    bottom: 0;
+    bottom: $line-offset;
     border-left: 1px dotted #333;
+}
+
+.hp-range-slider__tics {
+    position: absolute;
+    bottom: $line-offset;
+    left: 0;
+    right: 0;
 }
 
 .hp-range-slider__tics__tic {
     position: absolute;
-    top: 50%;
     border-left: 1px solid #bdbdbd;
     padding-top: 5px;
 
