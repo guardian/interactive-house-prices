@@ -37,7 +37,7 @@ var periodStats = _(districtStats)
         var districts = _(yearStats)
             .indexBy(function (stat) { return stat.postcode_district; })
             .mapValues(function (stat) {
-                var limits = [stat.min, stat.upper_fence, stat.actual_max];
+                var limits = [stat.min, stat.max, stat.actual_max];
                 var histogram = stat.histogram.replace(/\[0:\d+\]={/, '').replace('}', '')
                     .split(',').concat([stat.outliers]);
 

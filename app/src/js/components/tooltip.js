@@ -9,6 +9,10 @@ import districtCodes from '../data/codes.json!json'
 const tooltipWidth = 300;
 const tooltipHeight = 200;
 
+const lineWidth = 280;
+const lineHeight = 64;
+const rangeWidth = 250;
+
 var setTranslate = (function () {
     var anim, translate;
     return function (el, x, y) {
@@ -24,12 +28,10 @@ var setTranslate = (function () {
         }
     };
 })();
-function setTranslate(el, x, y) {
-}
 
 export default function Tooltip(root) {
     var el, areaEl, districtEl, numEl, upfEl, minEl, maxEl,
-        medEls, salaryEls, factorEl, yearUserEl, yearAffordableEl, rangeEl;
+        medEls, salaryEls, factorEl, yearUserEl, yearAffordableEl, pipeEl;
     var upfPos, medPos;
     var linechart;
     var hidden = true, viewWidth, viewHeight;
@@ -73,10 +75,10 @@ export default function Tooltip(root) {
         upfPos = el.querySelector('.pos-a-upf'); //upper fence
         medPos = el.querySelector('.pos-a-med');
 
-        rangeEl = el.querySelector('.js-pipes');
+        pipeEl = el.querySelector('.js-pipes');
 
         // init line chart
-        linechart = new Linechart("js-lines", "line-mask", 280, 64, 10, 5, true);
+        linechart = new Linechart("js-lines", "line-mask", lineWidth, lineHeight, 10, 5, true);
 
         var resize = debounce(function () {
             viewWidth = root.clientWidth;
@@ -105,27 +107,27 @@ export default function Tooltip(root) {
         if (prices===null) { hidden = true; return; }
 
         var salary = userInput.threshold,
-            factor = prices.med/salary,
-            ratio = 100/prices.upper_fence, //TODO
-            ratioMin = ratio*prices.min,
-            ratioMed = ratio*prices.med,
-            ratioSalary = ratio*salary,
-            range = ratioSalary*8;
+            factor = prices.med/salary;
+            //ratio = 100/prices.upper_fence, //TODO
+            //ratioMin = ratio*prices.min,
+            //ratioMed = ratio*prices.med,
+            //ratioSalary = ratio*salary;
+            //pipe = ratioSalary*8;
 
         var count = prices.count;
 
         var numBins = prices.histogram.length, // number of bins
-            diff = 280/numBins,
-            rangeDiff = numBins!==0 ? 100/(numBins-1):0,
-            rangeWidth  = (8*(100-rangeDiff)*salary/(prices.upper_fence-prices.min));
+            diff = rangeWidth/(numBins-1),
+            pipeDiff = 100/(numBins-1),
+            pipeWidth = (8*(100-pipeDiff)*salary/(prices.upper_fence-prices.min));
 
-        upfPos.style.right = rangeDiff + "%";
-        medPos.style.left  = ((prices.med-prices.min)*rangeWidth/(8*salary)) + "%";
+        upfPos.style.right = (lineWidth-rangeWidth) + "px";
+        medPos.style.left  = ((prices.med-prices.min)*pipeWidth/(8*salary)) + "%";
+        // color pipes
+        pipeEl.style.width = pipeWidth + "%";
+        pipeEl.style.marginLeft = (-prices.min*pipeWidth/(8*salary)) + "%";
 
-        rangeEl.style.width = rangeWidth + "%";
-        rangeEl.style.marginLeft = (-prices.min*rangeWidth/(8*salary)) + "%";
-
-        factorEl.style.fontSize = 12 + ((factor<20)?factor:20) + "px";
+        factorEl.style.fontSize = 12 + ((factor<20) ? factor/2 : 12) + "px";
 
 
         // load data
@@ -158,13 +160,15 @@ export default function Tooltip(root) {
 
         // update line chart
         var dataBins = prices.histogram.map((l, i, arr) => {
+            //TODO: remove outlier if value is 0
+            if (i===(numBins-1) && l===0) console.log(i, l);
             return {
-                x: diff*(i+0.5), // range
-                y: l                   // count
+                x: diff*(i+0.5), //Range
+                y: l             //count
             };
         });
         linechart.updateMask(dataBins, "line-mask", "monotone");
-        linechart.updateAxis(dataBins);
+        linechart.updateAxis(dataBins.slice(0, -1), rangeWidth);
         linechart.updateLabels(dataBins);
 
         hidden = false;

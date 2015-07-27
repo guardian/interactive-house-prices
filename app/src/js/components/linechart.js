@@ -42,8 +42,8 @@ export default function Linechart(elClassName, styleClassName, width, height, ma
         var num = data.length,
             domainX = (rangeX !== undefined && rangeX !== null) ? rangeX : [data[0].x, data[num-1].x],
             domainY = (rangeY !== undefined && rangeY !== null) ? rangeY : [0, d3.max(data, d => d.y)];
-
-        x.domain(domainX);
+        
+        x.domain(domainX); if (rangeX) { x.range(rangeX); }
         y.domain(domainY);
 
         svg.select("." + el).datum(data)
@@ -68,10 +68,10 @@ export default function Linechart(elClassName, styleClassName, width, height, ma
         this.updateLine(dataMask, el, [minX, maxX], null, lineType);
     };
 
-    this.updateAxis = function (data) {
+    this.updateAxis = function (data, axisWidth) {
         var num = data.length,
             dataTick = data.map((d, i) =>
-            (width/num)*i
+            i*axisWidth/num
         );
 
         xAxis.tickValues(dataTick);
@@ -81,7 +81,7 @@ export default function Linechart(elClassName, styleClassName, width, height, ma
 
         //TODO: debug!
         svg.select(".x.axis .domain")
-            .attr("d", "M0,6V0H"+dataTick[dataTick.length-1]+"V6");
+            .attr("d", "M0,6V0H"+axisWidth+"V6");
     };
 
     this.updateLabels = function (data) {
