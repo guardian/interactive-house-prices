@@ -1,4 +1,5 @@
 import { periodMedians, getDistricts, getRegionPrices } from '../lib/region';
+import { config } from '../lib/cfg';
 
 import Tooltip from './tooltip';
 
@@ -126,7 +127,7 @@ export default function Map(el) {
     }
 
     var script = document.createElement('script');
-    script.src = 'http://93f9fca.ngrok.com/leaflet.js';
+    script.src = config.assetPath + '/leaflet.js';
     script.onload = function (evt) {
         init(window.L);
     }
