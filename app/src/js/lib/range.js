@@ -46,7 +46,7 @@ export default function (el, min, max, onchange, ticStep) {
                 thumb.style.left = (newValue / range * 100) + '%';
                 thumbline.style.left = (newValue / range * 100) + '%';
                 value = newValue;
-                onchange(value + min);
+                onchange(value + min, 'move');
             }
         }
 
@@ -54,6 +54,8 @@ export default function (el, min, max, onchange, ticStep) {
     }
 
     function up(evt) {
+        onchange(value + min, 'end');
+
         document.removeEventListener('mousemove', move);
         document.removeEventListener('mouseup', up);
     }
@@ -72,8 +74,4 @@ export default function (el, min, max, onchange, ticStep) {
 
     thumb.addEventListener('mousedown', down);
     el.addEventListener('mousedown', down);
-
-    return {
-        'get': () => value
-    }
 }

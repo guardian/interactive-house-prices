@@ -13,6 +13,7 @@ export default function User(el, onUpdate) {
     var periodSplits;
     var currentValue = {'year': endYear, 'threshold': 0};
     var linechart;
+    var isMobile;
 
     function init() {
         var minimap, year, img;
@@ -37,6 +38,11 @@ export default function User(el, onUpdate) {
         linechart = new Linechart('js-line', 'line', 266, 55, 5, 0);
 
         changeThreshold(25000); // ugly way to initialise line chart
+
+        window.addEventListener('resize', () => {
+            isMobile = window.innerWidth < 740;
+        });
+        isMobile = window.innerWidth < 740;
     }
 
     function change() {
@@ -64,14 +70,15 @@ export default function User(el, onUpdate) {
         change();
     }
 
-    function changeYear(year) {
+    function changeYear(year, type) {
         minimapImgs[currentValue.year].style.display = 'none';
         minimapImgs[year].style.display = 'block';
 
-        currentValue.year = year;
-        yearEl.textContent = currentValue.year;
+        yearEl.textContent = currentValue.year = year;
 
-        change();
+        if (isMobile ^ type === 'move') {
+            change(type);
+        }
     }
 
     init();
