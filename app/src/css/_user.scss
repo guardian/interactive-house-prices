@@ -4,7 +4,7 @@
 .hp-user {
     @include f-bodyCopy;
     font-size: 18px;
-    line-height: 1.25;
+    line-height: 1.3;
 
     @include mq(tablet) {
         position: absolute;
@@ -33,31 +33,21 @@
     }
 
     @include mq(tablet) {
-        width: 320px;
+        width: 280px;
         margin: 0 0 0 auto;
     }
 
     &.hp-user__inner--results {
-        background-clip: padding-box;
-
         border-top: 1px solid #bdbdbd;
-        @include mq(tablet) {
-            border-top: 1px solid rgba(255, 255, 255, 0.5);
-        }
+    }
 
-        font-size: 21px;
-        & > p:last-child {
-            margin: 0;
-            font-size: 0;
-        }
+    p:last-child {
+        margin: 0;
     }
 }
 
 .hp-title {
-    @include f-bodyHeading;
-    font-weight: normal;
-    font-size: 50px;
-    line-height: 1;
+    @include fs-headline(6);
     margin-bottom: 12px;
 }
 
@@ -65,13 +55,13 @@
     @include f-header;
     font-size: 14px;
     margin-bottom: 3px;
+    line-height: 1;
 }
 
 .hp-results-minimap {
     float: right;
     background-image: url('assets/minimap/bg.png');
     background-repeat: no-repeat;
-    margin-left: 10px;
 
     & > img {
         display: none;
@@ -81,4 +71,6 @@
 .hp-results-stat {
     color: #ed3d61;
     font-weight: bold;
+    margin-top: -5px;
+    margin-bottom: 0;
 }

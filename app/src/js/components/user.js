@@ -32,9 +32,9 @@ export default function User(el, onUpdate) {
             minimapImgs[year] = img;
             minimap.appendChild(img);
         }
-        minimapImgs[startYear].style.display = 'block';
+        minimapImgs[endYear].style.display = 'block';
 
-        linechart = new Linechart('js-line', 'line', 307, 55, 5, 0);
+        linechart = new Linechart('js-line', 'line', 266, 55, 5, 0);
 
         changeThreshold(25000); // ugly way to initialise line chart
     }

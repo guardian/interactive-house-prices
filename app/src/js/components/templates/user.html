@@ -1,33 +1,38 @@
 <div class="hp-user__inner">
-    <h2 class="hp-subtitle">House prices in England and Wales</h2>
-    <h1 class="hp-title">Unaffordable country</h1>
-    <p>If you earned</p>
+    <h2 class="hp-subtitle">Unaffordable country</h2>
+    <h1 class="hp-title">Do you have the means to live here?</h1>
+    <p>If you wanted to buy a house at the median price and earned</p>
     <form class="hp-madlib js-wage">
-        <p class="hp-madlib__note">Your salary is not stored</p>
+        <button class="hp-madlib__input__btn" type="button" tabindex="2">
+            <svg class="icon-clear" xmlns="http://www.w3.org/2000/svg" width="30" height="30"><path fill="#333" d="M21 9.8l-.8-.8-5.2 4.8-5.2-4.8-.8.8 4.8 5.2-4.8 5.2.8.8 5.2-4.8 5.2 4.8.8-.8-4.8-5.2 4.8-5.2"/></svg>
+            <svg class="icon-submit" xmlns="http://www.w3.org/2000/svg" width="30" height="30"><path fill="white" d="M22.82 14.63l-7.62-7.63-.72.7 5.5 6.57h-13.98v1.46h13.97l-5.5 6.56.73.7 7.62-7.63v-.74"/></svg>
+        </button>
         <div class="hp-madlib__input">
-            <input class="hp-madlib__input__text" type="text" placeholder="25,000" />
+            <input class="hp-madlib__input__text" tabindex="1" type="text" value="25,000" />
         </div>
     </form>
-    <p>and wanted to buy a house at the median price in <span class="js-year"></span></p>
-
-    <div class="hp-range-line-affordable js-line"></div>
-
-    <div class="hp-range-slider js-date">
-        <span class="hp-range-slider__thumb"></span>
-        <span class="hp-range-slider__thumbline"></span>
-    </div>
+    <p class="hp-madlib-options">
+        <button class="js-canned-wage button button--secondary button--xsmall">custom</button>
+        <button class="js-canned-wage button button--primary button--xsmall" data-wage="25000">national average</button>
+        <button class="js-canned-wage button button--secondary button--xsmall" data-wage="14000">minimum wage</button>
+    </p>
 </div>
 <div class="hp-user__inner hp-user__inner--results">
     <div class="hp-results-minimap js-minimap"></div>
     <p>
-        <span class="hp-results-stat">
-            <span class="js-user-ratio"></span> of the country
-        </span>
+        <span class="hp-results-stat"><span class="js-user-ratio"></span> of the country</span>
         would be beyond your means
+        <span class="hp-results-stat">in <span class="js-year">2014</span></span>
     </p>
     <p>
         <button class="hp-share hp-share--facebook"></button>
         <button class="hp-share hp-share--twitter"></button>
         <button class="hp-share hp-share--mail"></button>
     </p>
+
+    <div class="hp-range-line-affordable js-line"></div>
+    <div class="hp-range-slider js-date">
+        <span class="hp-range-slider__thumb"></span>
+        <span class="hp-range-slider__thumbline"></span>
+    </div>
 </div>
