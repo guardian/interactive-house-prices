@@ -23,6 +23,7 @@ export const startYear = periodYears[0], endYear = periodYears[periodYears.lengt
 function processDistricts(onData, res) {
     if (window.Worker) {
         let iframe = document.createElement('iframe'), target;
+        iframe.style.display = 'none';
         iframe.src = config.assetPath + '/worker.html';
         window.addEventListener('message', function (evt) {
             if (target) {

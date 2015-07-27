@@ -1,6 +1,8 @@
 html {
     height: 100%;
-    overflow-y: hidden;
+    @include mq(tablet) {
+        overflow-y: hidden;
+    }
 }
 
 body,
@@ -12,6 +14,9 @@ figure.interactive {
 
 figure.interactive {
     position: relative;
+    @include mq(tablet) {
+        top: -48px;
+    }
 }
 
 #header {

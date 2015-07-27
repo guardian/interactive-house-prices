@@ -3,7 +3,6 @@ import './lib/pointer-events'
 import './lib/raf'
 
 import { set as setConfig } from './lib/cfg'
-import throttle from './lib/throttle'
 
 import Intro from './components/intro'
 import Map from './components/map'
@@ -15,14 +14,6 @@ export function init(el, config) {
     setConfig(config);
 
     el.innerHTML = mainHTML;
-
-    if (window.guardian) {
-        var setContainerSize = throttle(() => {
-            el.style.height = window.innerHeight - document.getElementById('maincontent').offsetTop + 'px';
-        }, 100);
-        window.addEventListener('resize', () => window.requestAnimationFrame(setContainerSize));
-        setContainerSize();
-    }
 
     // While testing
     if (window.location.hash === '#intro') {

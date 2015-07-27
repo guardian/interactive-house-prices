@@ -36,4 +36,9 @@
         display: inline-block;
         height: 50px;
     }
+
+    display: none;
+    @include mq(tablet) {
+        display: block;
+    }
 }
