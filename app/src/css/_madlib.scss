@@ -77,17 +77,10 @@
 
 .hp-madlib-options {
     @include fs-textSans(1);
+    line-height: 18px;
     color: #767676;
-}
-
-.hp-madlib-options__profession {
-    background: 0;
-    border: 0;
-    outline: 0;
-    color: #005689;
-    cursor: pointer;
-
-    &:hover {
-        text-decoration: underline;
+    &::before {
+        content: "Or try: ";
+        margin-right: 6px;
     }
 }
