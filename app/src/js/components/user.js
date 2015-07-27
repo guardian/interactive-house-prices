@@ -50,8 +50,8 @@ export default function User(el, onUpdate) {
         thumblineEl.style.height = (10 + ratio / 2) + 'px';
         ratioEl.textContent = Math.floor(ratio) + '%';
 
-        if (isMobile && type === 'end' || !isMobile && type === 'move') {
-            onUpdate(currentValue);
+        if (type === 'end' || !isMobile) {
+            setTimeout(() => onUpdate(currentValue), 0);
         }
     }
 

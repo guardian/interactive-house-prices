@@ -46,22 +46,27 @@ export default function (el, min, max, onchange, ticStep) {
     }
 
     function move(evt) {
-        var pageX = evt.center.x;
-        var x = Math.floor(pageX - xMin);
-        var newValue;
+        var x = Math.floor(evt.center.x - xMin);
 
-        if (x >= 0 && x <= xWidth) {
-            newValue = Math.round(x / xStep);
+        if ((evt.type !== 'pan' || evt.direction & Hammer.DIRECTION_HORIZONTAL) && x >= 0 && x <= xWidth) {
+            let newValue = Math.round(x / xStep);
             if (newValue != value) {
                 thumb.style.left = (newValue / range * 100) + '%';
                 thumbline.style.left = (newValue / range * 100) + '%';
-                value = newValue;
-                onchange(value + min, evt.isFinal ? 'end' : 'move');
             }
+            if (newValue != value || evt.isFinal) {
+                value = newValue;
+                onchange(value + min, evt.isFinal || evt.type !== 'pan' ? 'end' : 'move');
+            }
+        }
+
+        if (evt.pointerType === 'mouse') {
+            evt.preventDefault();
         }
     }
 
     var hammer = new Hammer(el);
-    hammer.on('panstart tap', premove)
-    hammer.on('pan tap', move);
+    hammer.on('panstart tap press', premove)
+    hammer.on('pan tap press', move);
+    hammer.get('tap').set({'interval': 0, 'threshold': 10});
 }
