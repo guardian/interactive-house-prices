@@ -73,11 +73,13 @@ export default function User(el, onUpdate) {
     }
 
     function changeYear(year, type) {
-        minimapImgs[currentValue.year].style.display = 'none';
-        minimapImgs[year].style.display = 'block';
-        yearEl.textContent = currentValue.year = year;
+        window.requestAnimationFrame(() => {
+            minimapImgs[currentValue.year].style.display = 'none';
+            minimapImgs[year].style.display = 'block';
+            yearEl.textContent = currentValue.year = year;
 
-        change(type);
+            change(type);
+        });
     }
 
     init();
