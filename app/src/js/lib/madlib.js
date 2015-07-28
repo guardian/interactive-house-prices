@@ -4,7 +4,8 @@ export default function (el, onchange) {
     var currentValue = '25,000';
 
     function valid() {
-        return text.value.replace(/[,0-9]+/, '').length === 0;
+        var value = text.value;
+        return value.length && value.replace(/[,0-9]+/, '').length === 0;
     }
 
     function submit() {
