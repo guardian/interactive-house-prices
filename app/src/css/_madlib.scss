@@ -94,6 +94,8 @@
     outline: 0;
     margin-right: 6px;
 
+    transition: 0.2s background-color ease-out;
+
     color: #333;
     background-color: #dcdcdc;
     &:hover {
