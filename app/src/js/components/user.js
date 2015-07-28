@@ -10,7 +10,7 @@ import share from '../lib/share'
 import Linechart from './linechart'
 
 export default function User(el, onUpdate) {
-    const $$ = s => [].slice.call(el.querySelector(s));
+    const $$ = s => [].slice.call(el.querySelectorAll(s));
 
     var yearEl, ratioEl, thumblineEl, minimapImgs = [];
     var periodSplits;

@@ -49,7 +49,7 @@ export default function Map(el) {
         renderer._initContainer();
         renderer._container.className += ' hp-map__highlight';
 
-        /*highlightLayer = L.geoJson(undefined, {
+        highlightLayer = L.geoJson(undefined, {
             renderer: renderer,
             style: {
                 fill: false,
@@ -57,14 +57,15 @@ export default function Map(el) {
                 color: '#333',
                 weight: 2
             }
-        }).addTo(map);*/
+        }).addTo(map);
 
         // Region layer
-        var regionRenderer = L.canvas();
-        regionRenderer.suspendDraw = true;
+        var districtRenderer = L.canvas();
+        districtRenderer.suspendDraw = true;
+        districtRenderer.skipClear = true;
 
         districtLayer = L.geoJson(undefined, {
-            renderer: regionRenderer,
+            renderer: districtRenderer,
             style: setStyle,
             onEachFeature: setOnEachFeature,
             noClip: true
@@ -80,7 +81,7 @@ export default function Map(el) {
 
         getDistricts(res => {
             if (res.districts.length === 0) {
-                regionRenderer.suspendDraw = false;
+                districtRenderer.suspendDraw = false;
             } else {
                 districtLayer.addData(res.districts);
                 res.more();
@@ -111,14 +112,14 @@ export default function Map(el) {
     function setOnEachFeature(feature, layer) {
         layer.on({
             mouseover: evt => {
-                //highlightLayer.addData([feature]);
+                highlightLayer.addData([feature]);
                 tooltip.show(evt, userInput);
             },
             mousemove: evt => {
                 tooltip.move(evt);
             },
             mouseout: () => {
-                //highlightLayer.clearLayers();
+                highlightLayer.clearLayers();
                 tooltip.hide();
             }
         });

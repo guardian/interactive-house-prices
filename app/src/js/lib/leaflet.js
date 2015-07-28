@@ -1,5 +1,5 @@
 /*
- Leaflet 1.0-dev (558e2eb), a JS library for interactive maps. http://leafletjs.com
+ Leaflet 1.0-dev (3377d48), a JS library for interactive maps. http://leafletjs.com
  (c) 2010-2015 Vladimir Agafonkin, (c) 2010-2011 CloudMade
 */
 (function (window, document, undefined) {
@@ -6203,11 +6203,11 @@ L.Canvas = L.Renderer.extend({
 	},
 
 	_redraw: function () {
-        var bounds = this._redrawBounds, size = bounds.getSize();
-
 		this._redrawRequest = null;
-        this._ctx.clearRect(bounds.min.x, bounds.min.y, size.x, size.y);
-		//this._draw(true); // clear layers in redraw bounds
+
+		if (!this.skipClear) {
+			this._draw(true); // clear layers in redraw bounds
+		}
 		this._draw(); // draw layers
 
 		this._redrawBounds = null;
@@ -6230,7 +6230,7 @@ L.Canvas = L.Renderer.extend({
 	},
 
 	_updatePoly: function (layer, closed) {
-        if (this.suspendDraw) return;
+		if (this.suspendDraw) return;
 
 		var i, j, len2, p,
 		    parts = layer._parts,
