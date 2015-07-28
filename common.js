@@ -36,12 +36,13 @@ var periodStats = _(districtStats)
     .mapValues(function (yearStats) {
         var districts = _(yearStats)
             .indexBy(function (stat) { return stat.postcode_district; })
-            .mapValues(function (stat) {
+            .mapValues(function (stat, district) {
                 var limits = [stat.min, stat.max, stat.actual_max];
                 var histogram = stat.histogram.replace(/\[0:\d+\]={/, '').replace('}', '')
                     .split(',').concat([stat.outliers]);
 
                 return {
+                    'district': district,
                     'median': roundNo(1)(stat.median),
                     'count': parseInt(stat.count),
                     'limits': limits.map(roundNo(100)),
