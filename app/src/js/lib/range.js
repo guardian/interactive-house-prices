@@ -38,25 +38,28 @@ export default function (el, min, max, onchange, ticStep) {
         el.appendChild(tics(min, max, ticStep));
     }
 
-    function premove() {
+    function premove(evt) {
         var rect = el.getBoundingClientRect();
         xMin = rect.left;
         xWidth = rect.width;
         xStep = xWidth / range;
+
+        if (evt.type === 'panstart') {
+            document.body.style.MozUserSelect = 'none';
+        }
     }
 
     function move(evt) {
         var x = Math.floor(evt.center.x - xMin);
+        var isPan = evt.type === 'pan';
 
-        if ((evt.type !== 'pan' || evt.direction & Hammer.DIRECTION_HORIZONTAL) && x >= 0 && x <= xWidth) {
+        if ((!isPan || evt.direction & Hammer.DIRECTION_HORIZONTAL) && x >= 0 && x <= xWidth) {
             let newValue = Math.round(x / xStep);
             if (newValue != value) {
+                value = newValue;
                 thumb.style.left = (newValue / range * 100) + '%';
                 thumbline.style.left = (newValue / range * 100) + '%';
-            }
-            if (newValue != value || evt.isFinal) {
-                value = newValue;
-                onchange(value + min, evt.isFinal || evt.type !== 'pan' ? 'end' : 'move');
+                onchange(value + min, isPan ? 'move' : 'end');
             }
         }
 
@@ -65,8 +68,14 @@ export default function (el, min, max, onchange, ticStep) {
         }
     }
 
+    function postmove() {
+        document.body.style.MozUserSelect = '';
+        onchange(value + min, 'end');
+    }
+
     var hammer = new Hammer(el);
     hammer.on('panstart tap press', premove)
     hammer.on('pan tap press', move);
+    hammer.on('panend', postmove);
     hammer.get('tap').set({'interval': 0, 'threshold': 10});
 }
