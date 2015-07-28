@@ -23,21 +23,10 @@ function cartesianTriangleArea(triangle) {
     return Math.abs((a[0] - c[0]) * (b[1] - a[1]) - (a[0] - b[0]) * (c[1] - a[1]));
 }
 
-var options = {
-    'id': function (d) { return d.properties.name; },
-    'coordinate-system': 'cartesian',
-    'pre-quantization': 1e8,
-    'post-quantization': 1e4,
-    'retain-proportion': 0.3
-};
-
-var topo = topojson.topology({'shapes': common.districtGeo}, options);
+// Create district shapes
+var options = common.topoOptions
+var topo = topojson.topology({'shapes': common.validDistrictGeo}, options);
 topojson.simplify(topo, options);
-
-// Create country outline before filter because that seems to break it
-var country = topojson.merge(topo, topo.objects.shapes.geometries);
-fs.writeFileSync('data/country.geojson', JSON.stringify(country));
-
 topojson.filter(topo, options);
 topojson.presimplify(topo, function (triangle) {
     var area = cartesianTriangleArea(triangle);
@@ -52,9 +41,12 @@ topojson.presimplify(topo, function (triangle) {
     // buildup is overlaid) so it makes sense to keep them the same
     if (zoom > 4) {
         zoom += 1;
+    } else {
+        // This is the base zoom level
+        zoom = 3;
     }
 
-    return zoom + 3; // The base map zoom is 7
+    return zoom + 3; // The base map zoom is 6
 });
 
 delete topo.bbox;

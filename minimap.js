@@ -14,19 +14,19 @@ var canvas = new Canvas(IMG_WIDTH, IMG_HEIGHT),
 var projection = d3.geo.mercator().scale(1).translate([0, 0]);
 var path = d3.geo.path().projection(projection).context(ctx);
 
-var b = path.bounds(common.districtGeo),
+var b = path.bounds(common.validDistrictGeo),
     s = .95 / Math.max((b[1][0] - b[0][0]) / IMG_WIDTH, (b[1][1] - b[0][1]) / IMG_HEIGHT),
     t = [(IMG_WIDTH - s * (b[1][0] + b[0][0])) / 2, (IMG_HEIGHT - s * (b[1][1] + b[0][1])) / 2];
 
 projection.scale(s).translate(t);
 
 ctx.fillStyle = ctx.strokeStyle = '#e0e0e0';
-path(common.districtGeo);
+path(common.validDistrictGeo);
 ctx.fill('evenodd');
 ctx.stroke();
 common.writePNG(canvas, 'minimap/bg.png', 4);
 
-var features = _.indexBy(common.districtGeo.features, 'properties.name');
+var features = _.indexBy(common.validDistrictGeo.features, 'properties.name');
 
 ctx.fillStyle = ctx.strokeStyle = '#ed3d61';
 _.forEach(common.periodStats, function (yearStats, year) {

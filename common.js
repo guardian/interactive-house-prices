@@ -65,7 +65,15 @@ var districtFeatures = districtGeo.features.filter(function (district) {
 module.exports = {
     'periodStats': periodStats,
     'districtCodes': districtCodes,
-    'districtGeo': {'features': districtFeatures, 'type': 'FeatureCollection'},
+    'allDistrictGeo': districtGeo,
+    'validDistrictGeo': {'features': districtFeatures, 'type': 'FeatureCollection'},
+    'topoOptions': {
+        'id': function (d) { return d.properties.name; },
+        'coordinate-system': 'cartesian',
+        'pre-quantization': 1e8,
+        'post-quantization': 1e4,
+        'minimum-area': 1e-4
+    },
 
     'writePNG': function (canvas, fn, ncolors) {
         fs.writeFileSync('out.png', canvas.toBuffer());
