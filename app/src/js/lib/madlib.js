@@ -1,4 +1,4 @@
-export default function (el, onchange) {
+export default function (el, presets, onchange) {
     var text = el.querySelector('.hp-madlib__input__text');
     var btn = el.querySelector('.hp-madlib__input__btn');
     var currentValue = '25,000';

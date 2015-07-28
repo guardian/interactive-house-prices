@@ -10,6 +10,8 @@ import share from '../lib/share'
 import Linechart from './linechart'
 
 export default function User(el, onUpdate) {
+    const $$ = s => [].slice.call(el.querySelector(s));
+
     var yearEl, ratioEl, thumblineEl, minimapImgs = [];
     var periodSplits;
     var currentValue = {'year': endYear, 'threshold': 0};
@@ -21,14 +23,11 @@ export default function User(el, onUpdate) {
 
         el.innerHTML = template;
 
+        madlib(el.querySelector('.js-wage'), $$('.js-wage-preset'), changeThreshold);
+
         yearEl = el.querySelector('.js-year');
         ratioEl = el.querySelector('.js-user-ratio');
         thumblineEl = document.querySelector('.hp-range-slider__thumbline');
-
-        madlib(el.querySelector('.js-wage'), changeThreshold);
-
-        linechart = new Linechart('js-line', 'line', 266, 55, 5, 0);
-        range(el.querySelector('.js-date'), startYear, endYear, changeYear, 5);
 
         minimap = el.querySelector('.js-minimap');
         for (year = startYear; year <= endYear; year++) {
@@ -38,13 +37,16 @@ export default function User(el, onUpdate) {
         }
         minimapImgs[endYear].style.display = 'block';
 
-        [].slice.call(el.querySelectorAll('.js-share')).forEach(shareEl => {
+        $$('.js-share').forEach(shareEl => {
             var network = shareEl.getAttribute('data-network');
             shareEl.addEventListener('click', () => {
                 var msg = ratioEl.textContent + ' of the country is beyond my means in ' + currentValue.year + '. ';
                 share(network, msg);
             });
         });
+
+        linechart = new Linechart('js-line', 'line', 266, 55, 5, 0);
+        range(el.querySelector('.js-date'), startYear, endYear, changeYear, 5);
 
         window.addEventListener('resize', () => { isMobile = window.innerWidth < 740; });
         isMobile = window.innerWidth < 740;

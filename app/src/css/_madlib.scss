@@ -84,3 +84,27 @@
         margin-right: 6px;
     }
 }
+
+.hp-button {
+    @include fs-textSans(1);
+    font-weight: bold;
+    border-radius: 100px;
+    background: 0;
+    border: 0;
+    outline: 0;
+    margin-right: 6px;
+
+    color: #333;
+    background-color: #dcdcdc;
+    &:hover {
+        background-color: #bdbdbd;
+    }
+
+    &[data-selected] {
+        color: white;
+        background-color: #005689;
+        &:hover {
+            background-color: #00456e;
+        }
+    }
+}
