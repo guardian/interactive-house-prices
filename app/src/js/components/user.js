@@ -12,7 +12,7 @@ import Linechart from './linechart'
 export default function User(el, onUpdate) {
     const $$ = s => [].slice.call(el.querySelectorAll(s));
 
-    var yearEl, ratioEl, thumblineEl, minimapImgs = [];
+    var currentWageEl, yearEl, ratioEl, thumblineEl, minimapImgs = [];
     var periodSplits;
     var currentValue = {'year': endYear, 'threshold': 0};
     var linechart;
@@ -25,6 +25,7 @@ export default function User(el, onUpdate) {
 
         madlib(el.querySelector('.js-wage'), $$('.js-wage-preset'), changeThreshold);
 
+        currentWageEl = document.querySelector('.js-current-wage');
         yearEl = el.querySelector('.js-year');
         ratioEl = el.querySelector('.js-user-ratio');
         thumblineEl = document.querySelector('.hp-range-slider__thumbline');
@@ -68,6 +69,7 @@ export default function User(el, onUpdate) {
         var lineData = [];
 
         currentValue.threshold = threshold;
+        currentWageEl.textContent = threshold.toLocaleString();
 
         periodSplits = getPeriodSplits(threshold);
         periodSplits.forEach((yearSplit, year) => {

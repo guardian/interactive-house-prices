@@ -37,7 +37,7 @@ export default function (el, presets, onchange) {
         if (valid(text.value)) {
             var value = parseInt(text.value.replace(/[^0-9]/g, ''));
             if (value !== currentValue) {
-                change(parseInt(text.value.replace(/[^0-9]/g, '')), null, true);
+                change(value, null, true);
             }
             text.blur();
             btn.removeAttribute('data-focus');
