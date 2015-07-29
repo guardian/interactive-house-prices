@@ -6205,7 +6205,10 @@ L.Canvas = L.Renderer.extend({
 	_redraw: function () {
 		this._redrawRequest = null;
 
-		if (!this.skipClear) {
+		if (this.skipClear) {
+			var bounds = this._redrawBounds, size = bounds.getSize();
+			this._ctx.clearRect(bounds.min.x, bounds.min.y, size.x, size.y);
+		} else {
 			this._draw(true); // clear layers in redraw bounds
 		}
 		this._draw(); // draw layers
