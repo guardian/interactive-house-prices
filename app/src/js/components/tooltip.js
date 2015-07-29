@@ -1,16 +1,16 @@
-import { periodMedians, getTooltips } from '../lib/region'
-import debounce from '../lib/debounce'
-import Linechart from './linechart'
+import { periodMedians, getTooltips } from '../lib/region';
+import debounce from '../lib/debounce';
+import Linechart from './linechart';
 
-import template from './templates/tooltip.html!text'
-import districtCodes from '../data/codes.json!json'
+import template from './templates/tooltip.html!text';
+import districtCodes from '../data/codes.json!json';
 
 const tooltipWidth = 300;
 const tooltipHeight = 200;
 
-const lineWidth = 280;
-const lineHeight = 64;
-const rangeWidth = 250;
+const chartWidth = 280;
+const chartHeight = 64;
+const outlierWidth = 30;
 
 var setTranslate = (function () {
     var anim, translate;
@@ -29,8 +29,8 @@ var setTranslate = (function () {
 })();
 
 export default function Tooltip(root) {
-    var el, areaEl, districtEl, numEl, upfEl, minEl, maxEl,
-        medEls, salaryEls, factorEl, yearUserEl, yearAffordableEl, pipeEl;
+    var el, areaEl, districtEl, numEl, upfEl, minEl, maxEl, medEls, salaryEls, 
+        factorEl, yearUserEl, yearAffordableEl, pipeRangeEl, pipeOutlierEl, outlierEl;
     var upfPos, medPos;
     var linechart;
     var hidden = true, viewWidth, viewHeight;
@@ -67,6 +67,7 @@ export default function Tooltip(root) {
         maxEl = el.querySelector('.js-max');
         medEls = [].slice.call(el.querySelectorAll('.js-med'));
         salaryEls = [].slice.call(el.querySelectorAll('.js-salary'));
+        
         factorEl = el.querySelector('.js-factor');
         yearUserEl = el.querySelector('.js-year-user');
         yearAffordableEl = el.querySelector('.js-year-affordable');
@@ -75,10 +76,12 @@ export default function Tooltip(root) {
         upfPos = el.querySelector('.pos-a-upf'); //upper fence
         medPos = el.querySelector('.pos-a-med');
 
-        pipeEl = el.querySelector('.js-pipes');
+        pipeRangeEl = el.querySelector('.js-range');
+        pipeOutlierEl = el.querySelector('.js-outlier-pipe');
+        outlierEl = el.querySelector('.js-outlier');
 
         // init line chart
-        linechart = new Linechart("js-lines", "line-mask", lineWidth, lineHeight, 10, 5, true);
+        linechart = new Linechart("js-lines", "line-mask", chartWidth, chartHeight, 9, 5, true);
 
         var resize = debounce(function () {
             viewWidth = root.clientWidth;
@@ -104,31 +107,55 @@ export default function Tooltip(root) {
         
         // return and hide if data doesn't exist
         if (prices===null) { hidden = true; return; }
-
+        
         var salary = userInput.threshold,
             factor = prices.med/salary;
-            //ratio = 100/prices.upper_fence, //TODO
-            //ratioMin = ratio*prices.min,
-            //ratioMed = ratio*prices.med,
-            //ratioSalary = ratio*salary;
-            //pipe = ratioSalary*8;
 
-        var count = prices.count;
+        var count = prices.count,               // number of sales
+            numBins = prices.histogram.length;  // number of bins
+        
+        //hotfix: move outlier to the last bin if upf is max
+        var hasOutlier = true,
+            rangeWidth = 250;
+        
+        if (prices.upper_fence === prices.max) {
+            prices.histogram[numBins-2]++;
+            rangeWidth = chartWidth;
+            hasOutlier = false;
+        }
+        
+        var pipeEnd = salary*8,
+            pipeRangeWidth = pipeEnd*(rangeWidth-2)/(prices.upper_fence-prices.min),
+            pipeOutlierWidth = pipeEnd*(outlierWidth-2)/(prices.max-prices.upper_fence);
 
-        var numBins = prices.histogram.length, // number of bins
-            diff = rangeWidth/(numBins-1),
-            pipeDiff = 100/(numBins-1),
-            pipeWidth = (8*(100-pipeDiff)*salary/(prices.upper_fence-prices.min));
-
-        upfPos.style.right = (lineWidth-rangeWidth) + "px";
-        medPos.style.left  = ((prices.med-prices.min)*pipeWidth/(8*salary)) + "%";
         // color pipes
-        pipeEl.style.width = pipeWidth + "%";
-        pipeEl.style.marginLeft = (-prices.min*pipeWidth/(8*salary)) + "%";
+        pipeRangeEl.style.width = pipeRangeWidth + "px";
+        pipeRangeEl.style.marginLeft = (-prices.min*pipeRangeWidth/pipeEnd) + "px";
+ 
+        // hotfix: move outlier to the last bin if upf is max
+        if (prices.upper_fence === prices.max) {
+            prices.histogram[numBins-2] += prices.histogram[numBins-1];
+            rangeWidth = chartWidth;
+            // TODO: check IE9!!!
+            if (!upfPos.classList.contains("d-n")) {
+                upfPos.classList.add("d-n");
+                outlierEl.classList.add("d-n");
+            }
+        } else {
+            if (upfPos.classList.contains("d-n")) {
+                upfPos.classList.remove("d-n");
+                outlierEl.classList.remove("d-n");
+            }
+        }
 
+        pipeOutlierEl.style.width = pipeOutlierWidth + "px";
+        pipeOutlierEl.style.marginLeft = (-prices.upper_fence*pipeOutlierWidth/pipeEnd) + "px";
+        
+        upfPos.style.right = outlierWidth + "px";
+        medPos.style.left  = ((prices.med-prices.min)*pipeRangeWidth/pipeEnd) + "px";
+        
         factorEl.style.fontSize = 12 + ((factor<20) ? factor/2 : 12) + "px";
-
-
+        
         // load data
         areaEl.textContent = tooltipNames[district];
         districtEl.textContent = district;
@@ -158,15 +185,17 @@ export default function Tooltip(root) {
         yearAffordableEl.textContent = textAffordable;
 
         // update line chart
-        var dataBins = prices.histogram.map((l, i, arr) => {
+        var dataDiff = rangeWidth / (numBins-1),
+            dataBins = prices.histogram.map((l, i, arr) => {
             //TODO: remove outlier if value is 0
             if (i===(numBins-1) && l===0) console.log(i, l);
             return {
-                x: diff*(i+0.5), //Range
-                y: l             //count
+                x: dataDiff*(i+0.5), //Range
+                y: l                 //count
             };
         });
-        linechart.updateMask(dataBins, "line-mask", "monotone");
+        
+        linechart.updateMask(dataBins, "line-mask", "monotone", hasOutlier);
         linechart.updateAxis(dataBins.slice(0, -1), rangeWidth);
         linechart.updateLabels(dataBins);
 
@@ -175,8 +204,8 @@ export default function Tooltip(root) {
     }
 
     this.hide = function () {
-        hidden = true;
-        setTranslate(el, -1000, -1000);
+        //hidden = true;
+        //setTranslate(el, -1000, -1000);
     }
 
     this.move = function (evt) {
@@ -189,7 +218,7 @@ export default function Tooltip(root) {
             y -= tooltipHeight;
         }
         
-        if (!hidden) { setTranslate(el, x, y); }
+        if (!hidden) { setTranslate(el, 10, 10/*x, y*/); }
         else { setTranslate(el, -1000, -1000); } // hide tooltip if data doesn't exist
     }
 

@@ -21,12 +21,17 @@
     margin-top: 20px;
 }    
 
-.chart-range {
+.chart-color {
     width: 100%;
-    height: 54px; //64(svg)-10(margin-top)
+    height: 56px; //64(svg)-10(margin-top)
     white-space:nowrap;
     overflow:hidden;
-    top: 23px;
+    top: 22px;
+}
+.chart-color-outlier {
+    @extend .chart-color;
+    width: 28px; 
+    right: 0;
 }
 
 .chart-lines {
@@ -55,7 +60,7 @@
     .pos-a-min { bottom:    0; left:  0; }
     .pos-a-max { top:  1.15em; right: 0; }
     .pos-a-med { top: -1.15em; transition: left  0.25s ease; }
-    .pos-a-upf { bottom:    0; transition: right 0.25s ease; margin-right: -2px; }
+    .pos-a-upf { bottom:    0; margin-right: -2px; }
 
     .pin-min {
         width: 1px;
@@ -82,13 +87,13 @@
 }
 
 
-.range-extra {
+.color-extra {
     width: 100%;
-    height: 60px;
+    height: 100%;
     background-color: #ed3d61;
 }
-.range-pipes {
-    height: 60px;
+.color-pipes {
+    height: 100%;
     transition: width 0.25s ease;
     background-image: url('assets/range/gradient-ie9.svg');
     background-image: linear-gradient(90deg,
@@ -101,7 +106,7 @@
     );
     
 }  
-.range-pipes-blur {
+.color-pipes-blur {
     height: 60px;
     transition: width 0.25s ease;
     background-image: linear-gradient(90deg,

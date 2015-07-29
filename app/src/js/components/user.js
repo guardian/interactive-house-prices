@@ -77,9 +77,13 @@ export default function User(el, onUpdate) {
             minimapImgs[year].src =
                 `${config.assetPath}/assets/minimap/${year}-${yearSplit.unaffordable}.png`;
         });
-
-        linechart.updateLine(lineData, 'line', null, [0, 100]);
-
+        
+        /*var last = lineData.length-1;
+        lineData = lineData.concat(
+            {x: lineData[last].x, y: 0}, 
+            {x: lineData[0].x,    y: 0}
+        );*/
+        linechart.updateLine(lineData, 'line', null, [0, 100], "basis");
         change('end');
     }
 
