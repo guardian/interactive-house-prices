@@ -12,10 +12,10 @@ var countryCodes = common.districtCodes.concat(['CA19', 'E20', 'LL39', 'LL66', '
 var countryFeatures = common.allDistrictGeo.features.filter(function (district) {
     return countryCodes.indexOf(district.properties.name) !== -1;
 });
+var countryGeo = {'features': countryFeatures, 'type': 'FeatureCollection'};
 
-var options = common.topoOptions;
-var topo = topojson.topology({'shapes': {'features': countryFeatures, 'type': 'FeatureCollection'}}, options);
-topojson.simplify(topo, options);
+var topo = topojson.topology({'shapes': countryGeo}, common.topoOptions);
+topojson.simplify(topo, common.topoOptions);
 var country = topojson.merge(topo, topo.objects.shapes.geometries);
 fs.writeFileSync('data/country.geojson', JSON.stringify(country));
 

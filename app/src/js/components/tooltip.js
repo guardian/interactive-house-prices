@@ -1,9 +1,8 @@
-import { periodMedians, getTooltipStats } from '../lib/region'
+import { periodMedians, getTooltips } from '../lib/region'
 import debounce from '../lib/debounce'
 import Linechart from './linechart'
 
 import template from './templates/tooltip.html!text'
-import areaName from '../data/areas-name.json!json'
 import districtCodes from '../data/codes.json!json'
 
 const tooltipWidth = 300;
@@ -35,7 +34,7 @@ export default function Tooltip(root) {
     var upfPos, medPos;
     var linechart;
     var hidden = true, viewWidth, viewHeight;
-    var tooltipStats;
+    var tooltipNames, tooltipStats;
 
     function getDistrictStats(district, year) {
         var stats = tooltipStats[year][districtCodes.indexOf(district)];
@@ -50,7 +49,8 @@ export default function Tooltip(root) {
         };
     }
 
-    function init(stats) {
+    function init(names, stats) {
+        tooltipNames = names;
         tooltipStats = stats;
 
         el = root.querySelector('.js-tooltip');
@@ -98,8 +98,7 @@ export default function Tooltip(root) {
         if (!tooltipStats) { return; }
 
         var districtObj = evt.target.feature,
-            district = districtObj.id,
-            area = areaName[district.replace(/[0-9].*/,'')] + " area";
+            district = districtObj.id;
 
         var prices = getDistrictStats(district, userInput.year);
         
@@ -131,7 +130,7 @@ export default function Tooltip(root) {
 
 
         // load data
-        areaEl.textContent = area;
+        areaEl.textContent = tooltipNames[district];
         districtEl.textContent = district;
 
         numEl.textContent = prices.count;
@@ -194,5 +193,5 @@ export default function Tooltip(root) {
         else { setTranslate(el, -1000, -1000); } // hide tooltip if data doesn't exist
     }
 
-    getTooltipStats(init);
+    getTooltips(init);
 }

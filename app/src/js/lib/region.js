@@ -58,12 +58,21 @@ export function getDistricts(onData) {
     });
 }
 
-export function getTooltipStats(onData) {
+export function getTooltips(onData) {
     reqwest({
-        url: config.assetPath + '/assets/stats.json',
+        url: config.assetPath + '/assets/tooltip.json',
         type: 'json', // TODO: put in worker
         crossOrigin: true,
-        success: res => onData(res),
+        success: res => {
+            var names = {};
+            // Reverse name -> district code lookup
+            Object.keys(res.names).forEach(function (name) {
+                res.names[name].forEach(function (district) {
+                    names[district] = name;
+                });
+            });
+            onData(names, res.stats);
+        },
         error: err => console.log('Could not load tooltip stats', err)
     });
 }

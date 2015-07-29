@@ -10,12 +10,22 @@ var periodMedians = _.mapValues(common.periodStats, function (yearStats) {
 });
 fs.writeFileSync('app/src/js/data/medians.json', JSON.stringify(periodMedians));
 
+var allDistrictNames = JSON.parse(fs.readFileSync('data/district-names.json'));
 var periodOtherStats = _.mapValues(common.periodStats, function (yearStats) {
     return yearStats.map(function (district) {
         return district && [district.count].concat(district.limits, district.histogram);
     });
 });
-fs.writeFileSync('app/src/assets/stats.json', JSON.stringify(periodOtherStats));
+
+var districtNames = _(allDistrictNames)
+    .mapValues(function (districts) {
+        return _.intersection(districts, common.districtCodes);
+    })
+    .pick(function (districts) { return districts.length > 0; })
+    .value();
+
+var tooltip = {'stats': periodOtherStats, 'names': districtNames};
+fs.writeFileSync('app/src/assets/tooltip.json', JSON.stringify(tooltip));
 
 // This is topojson's default presimplify function
 function cartesianTriangleArea(triangle) {
@@ -23,11 +33,9 @@ function cartesianTriangleArea(triangle) {
     return Math.abs((a[0] - c[0]) * (b[1] - a[1]) - (a[0] - b[0]) * (c[1] - a[1]));
 }
 
-// Create district shapes
-var options = common.topoOptions
-var topo = topojson.topology({'shapes': common.validDistrictGeo}, options);
-topojson.simplify(topo, options);
-topojson.filter(topo, options);
+var topo = topojson.topology({'shapes': common.validDistrictGeo}, common.topoOptions);
+topojson.simplify(topo, common.topoOptions);
+topojson.filter(topo, common.topoOptions);
 topojson.presimplify(topo, function (triangle) {
     var area = cartesianTriangleArea(triangle);
 
