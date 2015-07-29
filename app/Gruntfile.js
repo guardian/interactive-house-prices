@@ -215,7 +215,7 @@ module.exports = function(grunt) {
                 'sourceMaps': true
             });
         }).then(this.async()).catch(function (e) {
-            console.log(e);
+            grunt.fail.fatal(e);
         });
     });
 
