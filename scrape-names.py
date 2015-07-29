@@ -9,10 +9,12 @@ for tr in soup.find(class_='wikitable').find_all('tr'):
     if len(tds):
         _, districts, town, _ = tds
         if town.a:
-            town_name = town.a['title'].split(',')[0].strip()
+            town_name = town.a['title']
             district_lists = districts.find_all(text=True, recursive=False)
             district_names = [re.sub('[A-Z]+$', '', name.strip()) for names in district_lists for name in names.split(',')]
 
+            # try to remove wiki page title disambiguations
+            town_name = town_name.split(',')[0].strip().replace(' (town)', '')
             if town_name == 'London postal district':
                 town_name = 'London'
 
