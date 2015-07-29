@@ -14,6 +14,10 @@ module.exports = function(grunt) {
                 files: ['src/js/**/*', 'src/worker.html'],
                 tasks: ['buildInteractive', 'copy:interactive'],
             },
+            assets: {
+                files: ['src/assets/*', '!src/assets/minimap'],
+                tasks: ['copy:assets']
+            },
             css: {
                 files: ['src/css/**/*'],
                 tasks: ['sass:interactive'],
@@ -79,9 +83,10 @@ module.exports = function(grunt) {
                 ]
             },
             assets: {
-                files: [
-                    {expand: true, cwd: 'src/', src: ['assets/**/*'], dest: 'build'},
-                ]
+                files: [{expand: true, cwd: 'src/', src: ['assets/*', '!assets/minimap'], dest: 'build'}]
+            },
+            minimap: {
+                files: [{expand: true, cwd: 'src/', src: ['assets/minimap/*'], dest: 'build'}]
             },
             deploy: {
                 files: [
@@ -231,7 +236,7 @@ module.exports = function(grunt) {
     })
 
     grunt.registerTask('harness', ['copy:harness', 'template:harness', 'sass:harness', 'symlink:fonts'])
-    grunt.registerTask('interactive', ['buildInteractive', 'copy:interactive', 'template:bootjs', 'sass:interactive', 'copy:assets'])
+    grunt.registerTask('interactive', ['buildInteractive', 'copy:interactive', 'template:bootjs', 'sass:interactive', 'copy:assets', 'copy:minimap'])
     grunt.registerTask('default', ['clean', 'harness', 'interactive', 'connect', 'watch']);
     grunt.registerTask('build', ['clean', 'interactive']);
     grunt.registerTask('deploy', ['loadDeployConfig', 'prompt:visuals', 'build', 'copy:deploy', 'aws_s3', 'boot_url']);
