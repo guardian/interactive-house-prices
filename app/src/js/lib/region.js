@@ -66,10 +66,8 @@ export function getTooltips(onData) {
         success: res => {
             var names = {};
             // Reverse name -> district code lookup
-            Object.keys(res.names).forEach(function (name) {
-                res.names[name].forEach(function (district) {
-                    names[district] = name;
-                });
+            Object.keys(res.names).forEach(name => {
+                res.names[name].forEach(code => names[code] = name);
             });
             onData(names, res.stats);
         },
