@@ -5,6 +5,14 @@ You need to install `pngquant`, then run:
 ./start.sh
 ```
 
+`data.zip` comes with a list of postcode district town names, but if you want to get a fresh scrape
+run:
+```
+wget https://en.wikipedia.org/wiki/List_of_postcode_districts_in_the_United_Kingdom -O tmp.html
+python scrape-names.py < tmp.html > data/district-names.json`
+```
+You will need BeautifulSoup (`pip install beautifulsoup4`)
+
 ## Queries
 
 NOTE: The table `houseprice_test` has a reduced dataset for testing, use instead of `houseprice` for
