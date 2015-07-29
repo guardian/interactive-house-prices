@@ -12,7 +12,7 @@ module.exports = function(grunt) {
         watch: {
             js: {
                 files: ['src/js/**/*', 'src/worker.html'],
-                tasks: ['buildInteractive', 'copy:districts'],
+                tasks: ['buildInteractive', 'copy:interactive'],
             },
             css: {
                 files: ['src/css/**/*'],
@@ -70,7 +70,7 @@ module.exports = function(grunt) {
                     {expand: true, cwd: 'harness/', src: ['curl.js', 'index.html'], dest: 'build'},
                 ]
             },
-            districts: {
+            interactive: {
                 files: [
                     {src: 'src/worker.html', dest: 'build/worker.html'},
                     {src: 'src/js/districts.js', dest: 'build/districts.js'},
@@ -231,7 +231,7 @@ module.exports = function(grunt) {
     })
 
     grunt.registerTask('harness', ['copy:harness', 'template:harness', 'sass:harness', 'symlink:fonts'])
-    grunt.registerTask('interactive', ['buildInteractive', 'copy:districts', 'template:bootjs', 'sass:interactive', 'copy:assets'])
+    grunt.registerTask('interactive', ['buildInteractive', 'copy:interactive', 'template:bootjs', 'sass:interactive', 'copy:assets'])
     grunt.registerTask('default', ['clean', 'harness', 'interactive', 'connect', 'watch']);
     grunt.registerTask('build', ['clean', 'interactive']);
     grunt.registerTask('deploy', ['loadDeployConfig', 'prompt:visuals', 'build', 'copy:deploy', 'aws_s3', 'boot_url']);
