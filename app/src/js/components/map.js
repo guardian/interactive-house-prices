@@ -4,22 +4,67 @@ import throttle from '../lib/throttle'
 
 import Tooltip from './tooltip';
 
+const projectionMultiplier = 250;
 const colors = ['#39a4d8', '#8ac7cd', '#daeac1', '#fdd09e', '#f58680', '#ed3d61'];
 
+// Hacky way of using presimiplified, preprojected points
 function hackL(L) {
-    // Hacky way of using presimplified TopoJSON
-    var projectLatlngs = L.Polyline.prototype._projectLatlngs;
+    function unproject(point) {
+        return L.CRS.EPSG3857.pointToLatLng(point, -8);
+
+    }
 
     L.LineUtil.simplify = function (points, tolerance) {
         return points;
     };
 
-    L.Polyline.prototype._projectLatlngs = function (latlngs, result) {
-        var zoom = this._map.getZoom();
-        if (latlngs[0] instanceof L.LatLng) {
-            latlngs = latlngs.filter(latlng => !latlng.alt || latlng.alt <= zoom);
+    L.Polyline.prototype._convertLatLngs = function (latlngs) {
+        var result = [],
+            flat = L.Polyline._flat(latlngs),
+            bounds, tr, bl;
+
+        if (flat) {
+            bounds = new L.Bounds();
+            for (var i = 0, len = latlngs.length; i < len; i++) {
+                result[i] = new L.Point(latlngs[i].lng / projectionMultiplier, latlngs[i].lat / projectionMultiplier);
+                bounds = bounds.extend(result[i]);
+            }
+            tr = bounds.getTopRight();
+            bl = bounds.getBottomLeft();
+            this._bounds = this._bounds.extend(new L.LatLngBounds(unproject(tr), unproject(bl)));
+        } else {
+            for (var i = 0, len = latlngs.length; i < len; i++) {
+                result[i] = this._convertLatLngs(latlngs[i]);
+            }
         }
-        projectLatlngs.call(this, latlngs, result);
+
+        return result;
+    };
+
+    L.Polyline.prototype._projectedToPoint = function (points) {
+        var scale = this._map.options.crs.scale(this._map.getZoom()),
+            origin = this._map.getPixelOrigin();
+
+        var i, len = points.length, ring = [];
+        for (i = 0; i < len; i++) {
+            ring[i] = new L.Point(
+                Math.round(points[i].x * scale) - origin.x,
+                Math.round(points[i].y * scale) - origin.y
+            );
+        }
+        return ring;
+    }
+
+    L.Polyline.prototype._projectLatlngs = function (latlngs, result) {
+        var i, len;
+
+        if (latlngs[0] instanceof L.Point) {
+            result.push(this._projectedToPoint(latlngs));
+        } else {
+            for (i = 0, len = latlngs.length; i < len; i++) {
+                this._projectLatlngs(latlngs[i], result);
+            }
+        }
     };
 }
 

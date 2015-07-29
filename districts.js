@@ -3,6 +3,9 @@ var fs = require('fs');
 var _ = require('lodash');
 var topojson = require('topojson');
 
+// MUST MATCH app/src/js/components/map.js
+var PROJECTION_MULTIPLIER = 250;
+
 fs.writeFileSync('app/src/js/data/codes.json', JSON.stringify(common.districtCodes));
 
 var periodMedians = _.mapValues(common.periodStats, function (yearStats) {
@@ -27,6 +30,43 @@ var districtNames = _(allDistrictNames)
 var tooltip = {'stats': periodOtherStats, 'names': districtNames};
 fs.writeFileSync('app/src/assets/tooltip.json', JSON.stringify(tooltip));
 
+// Based on Leaflet's projection/transformation functions
+var project = (function () {
+    var R = 6378137, d = Math.PI / 180, max = 1 - 1E-15;
+    var a = 0.5 / (Math.PI * R);
+
+    function _project(lat, lng) {
+        var sin = Math.max(Math.min(Math.sin(lat * d), max), -max);
+        return [R * lng * d, R * Math.log((1 + sin) / (1 - sin)) / 2];
+    }
+
+    function _transform(x, y) {
+        return [a * x + 0.5, -a * y + 0.5];
+    }
+
+    return function(lat, lng) {
+        var projected = _project(lat, lng);
+        var transformed = _transform(projected[0], projected[1]);
+        return transformed.map(function (n) { return  n * PROJECTION_MULTIPLIER; });
+    };
+})();
+
+function projectPolygon(rings) {
+    rings.forEach(function (ring) {
+        ring.forEach(function (point, i) {
+            ring[i] = project(point[1], point[0]);
+        });
+    });
+}
+
+common.validDistrictGeo.features.forEach(function (feature) {
+    if (feature.geometry.type === 'Polygon') { 
+        projectPolygon(feature.geometry.coordinates);
+    } else {
+        feature.geometry.coordinates.forEach(projectPolygon);
+    }
+});
+
 // This is topojson's default presimplify function
 function cartesianTriangleArea(triangle) {
     var a = triangle[0], b = triangle[1], c = triangle[2];
@@ -36,26 +76,6 @@ function cartesianTriangleArea(triangle) {
 var topo = topojson.topology({'shapes': common.validDistrictGeo}, common.topoOptions);
 topojson.simplify(topo, common.topoOptions);
 topojson.filter(topo, common.topoOptions);
-topojson.presimplify(topo, function (triangle) {
-    var area = cartesianTriangleArea(triangle);
-
-    // This might all look a bit arbitrary, thats because it pretty much is
-    var zoom = 4;
-    while ((1 / Math.pow(10, zoom)) > area && zoom <= 9) {
-        zoom++;
-    }
-
-    // Basically don't allow zoom 5, because 4 and 5 are the same view (before the
-    // buildup is overlaid) so it makes sense to keep them the same
-    if (zoom > 4) {
-        zoom += 1;
-    } else {
-        // This is the base zoom level
-        zoom = 3;
-    }
-
-    return zoom + 3; // The base map zoom is 6
-});
 
 delete topo.bbox;
 
