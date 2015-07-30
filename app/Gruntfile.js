@@ -212,7 +212,7 @@ module.exports = function(grunt) {
                 'runtime': false,
                 'minified': minified,
                 'mangle': minified,
-                'sourceMaps': true
+                'sourceMaps': minified ? true : 'inline'
             });
         }).then(this.async()).catch(function (e) {
             grunt.fail.fatal(e);
