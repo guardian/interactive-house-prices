@@ -6,9 +6,6 @@
     height: 100%;
 }
 
-.leaflet-overlay-pane img {
-    pointer-events: none;
-}
 
 .hp-map__highlight {
     pointer-events: none;
@@ -83,6 +80,13 @@ $pips-width: 100% / (length($pips) + 2);
     width: ($pips-width * 2);
 }
 
+.leaflet-container {
+    background-color: #cccccc;
+}
+
+.leaflet-overlay-pane img {
+    pointer-events: none;
+}
 .leaflet-control-attribution {
     height: 16px;
     text-overflow: ellipsis;
