@@ -1,5 +1,5 @@
 /*
- Leaflet 1.0.0-beta.2 (2ddd222), a JS library for interactive maps. http://leafletjs.com
+ Leaflet 1.0.0-beta.2 (ab9b346), a JS library for interactive maps. http://leafletjs.com
  (c) 2010-2015 Vladimir Agafonkin, (c) 2010-2011 CloudMade
 */
 (function (window, document, undefined) {
@@ -5426,6 +5426,7 @@ L.Polyline = L.Path.extend({
 
 	// recursively turns latlngs into a set of rings with projected coordinates
 	_projectLatlngs: function (latlngs, result) {
+
 		var flat = latlngs[0] instanceof L.LatLng,
 		    len = latlngs.length,
 		    i, ring;
@@ -5636,6 +5637,7 @@ L.Polygon = L.Polyline.extend({
 
 	_clipPoints: function () {
 		// polygons need a different clipping algorithm so we redefine that
+
 		var bounds = this._renderer._bounds,
 		    w = this.options.weight,
 		    p = new L.Point(w, w);
@@ -6297,9 +6299,11 @@ L.Canvas = L.Renderer.extend({
 		ctx.beginPath();
 
 		for (i = 0; i < len; i++) {
-			for (j = 0, len2 = parts[i].length; j < len2; j++) {
+			p = parts[i][0];
+			ctx.moveTo(p.x, p.y);
+			for (j = 1, len2 = parts[i].length; j < len2; j++) {
 				p = parts[i][j];
-				ctx[j ? 'lineTo' : 'moveTo'](p.x, p.y);
+				ctx.lineTo(p.x, p.y);
 			}
 			if (closed) {
 				ctx.closePath();
