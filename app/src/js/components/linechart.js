@@ -5,11 +5,11 @@ export default function Linechart(elClassName, styleClassName, width, height, ma
 
     function init() {
         svg = d3.select("." + elClassName)
-                     .append("svg")
-                     .attr("width", width)
-                     .attr("height", height + marginTop)
-                     .append("g")
-                     .attr("transform", "translate(0," + marginTop + ")");
+                .append("svg")
+                .attr("width", width)
+                .attr("height", height + marginTop)
+                .append("g")
+                .attr("transform", "translate(0," + marginTop + ")");
 
         // Set the ranges
         x = d3.scale.linear().range([0, width]);
@@ -26,10 +26,12 @@ export default function Linechart(elClassName, styleClassName, width, height, ma
             .y(d => y(d.y))
             .interpolate(type)
         );
-
+        
+        // Add a path
         svg.append("path")
             .attr("class", styleClassName);
 
+        // Add axis
         if (isAxis) {
             svg.append("g")
             .attr("class", "x axis")
@@ -37,20 +39,32 @@ export default function Linechart(elClassName, styleClassName, width, height, ma
             .call(xAxis);
         }
     }
-
-    this.updateLine = function(data, el, rangeX, rangeY, lineType) {
-        var num = data.length,
-            domainX = (rangeX !== undefined && rangeX !== null) ? rangeX : [data[0].x, data[num-1].x],
-            domainY = (rangeY !== undefined && rangeY !== null) ? rangeY : [0, d3.max(data, d => d.y)];
-        
-        x.domain(domainX); if (rangeX) { x.range(rangeX); }
-        y.domain(domainY);
-        
-        svg.select("." + el).datum(data)
-            .transition().duration(250)
-            .attr("d", valueline(lineType));
+    
+    this.updateWidth = function(el, width) {
+        svg = d3.select(el).attr("width", width);
     };
 
+    this.updateLine = function(data, el, rangeX, rangeY, domainX, domainY, lineType) {
+        var num = data.length;
+        
+        // default domian values
+        domainX = domainX || [data[0].x, data[num-1].x];
+        domainY = domainY || [0, d3.max(data, d => d.y)];
+        
+        //rangeX = rangeX || domainX;
+        //rangeY = rangeY || domainY;
+        console.log(domainX);
+        console.log(rangeX);
+        console.log(domainY);
+        console.log(rangeY);
+        x.domain(domainX); if (rangeX) { x.range(rangeX); }
+        y.domain(domainY); //if (rangeY) { y.range(rangeY); }
+        
+        svg.select("." + el).datum(data)
+           .transition().duration(250)
+           .attr("d", valueline(lineType));
+    };
+     
     this.updateMask = function(data, el, lineType, hasOutlier) {
         var num = data.length,
             minX = data[0].x,
@@ -75,7 +89,7 @@ export default function Linechart(elClassName, styleClassName, width, height, ma
             ].concat(data.slice(0, -1), {x: width, y: 0}, {x: width, y: 0});
         }
 
-        this.updateLine(dataMask, el, [minX, maxX], null, lineType);
+        this.updateLine(dataMask, el, [minX, maxX], null, [minX, maxX], null, lineType);
     };
 
     this.updateAxis = function(data, axisWidth) {

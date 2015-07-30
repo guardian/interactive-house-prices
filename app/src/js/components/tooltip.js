@@ -201,12 +201,12 @@ export default function Tooltip(root) {
 
         hidden = false;
         this.move(evt);
-    }
+    };
 
     this.hide = function () {
-        //hidden = true;
-        //setTranslate(el, -1000, -1000);
-    }
+        hidden = true;
+        setTranslate(el, -1000, -1000);
+    };
 
     this.move = function (evt) {
         var x = evt.containerPoint.x;
@@ -218,9 +218,9 @@ export default function Tooltip(root) {
             y -= tooltipHeight;
         }
         
-        if (!hidden) { setTranslate(el, 10, 10/*x, y*/); }
+        if (!hidden) { setTranslate(el, x, y); }
         else { setTranslate(el, -1000, -1000); } // hide tooltip if data doesn't exist
-    }
+    };
 
     getTooltips(init);
 }
