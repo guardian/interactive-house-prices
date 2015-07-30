@@ -16,6 +16,7 @@ function hackL(L) {
 
     L.Polyline.prototype._setLatLngs = function (latlngs) {
         this._bounds = new L.Bounds();
+        this._pxBounds = new L.Bounds(new L.Point(), new L.Point());
         this._latlngs = latlngs;
         this._points = [];
         this._rings = [];
@@ -50,17 +51,14 @@ function hackL(L) {
         this._projectLatlngs(this._points, this._rings, scale, origin);
 
         // project bounds as well to use later for Canvas hit detection/etc.
-        var w = this._clickTolerance(),
-            bl = this._bounds.getBottomLeft(),
-            tr = this._bounds.getTopRight();
+        var w = this._clickTolerance();
+        var pxB = this._pxBounds, b = this._bounds;
 
-        bl.x = Math.round(bl.x * scale) - origin.x - w;
-        bl.y = Math.round(bl.y * scale) - origin.y + w;
-        tr.x = Math.round(tr.x * scale) - origin.x + w;
-        tr.y = Math.round(tr.y * scale) - origin.y - w;
-
-        if (this._bounds.isValid()) {
-            this._pxBounds = new L.Bounds(bl, tr);
+        if (b.isValid()) {
+            pxB.min.x = Math.round(b.min.x * scale) - origin.x - w;
+            pxB.max.y = Math.round(b.max.y * scale) - origin.y + w;
+            pxB.max.x = Math.round(b.max.x * scale) - origin.x + w;
+            pxB.min.y = Math.round(b.min.y * scale) - origin.y - w;
         }
     };
 
