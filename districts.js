@@ -3,9 +3,6 @@ var fs = require('fs');
 var _ = require('lodash');
 var topojson = require('topojson');
 
-// MUST MATCH app/src/js/components/map.js
-var PROJECTION_MULTIPLIER = 250;
-
 fs.writeFileSync('app/src/js/data/codes.json', JSON.stringify(common.districtCodes));
 
 var periodMedians = _.mapValues(common.periodStats, function (yearStats) {
@@ -44,10 +41,13 @@ var project = (function () {
         return [a * x + 0.5, -a * y + 0.5];
     }
 
+    function _scale(zoom) {
+        return 256 * Math.pow(2, zoom);
+    }
+
     return function(lat, lng) {
-        var projected = _project(lat, lng);
-        var transformed = _transform(projected[0], projected[1]);
-        return transformed.map(function (n) { return  n * PROJECTION_MULTIPLIER; });
+        var p = _project(lat, lng);
+        return _transform(p[0], p[1]).map(function (n) { return n * _scale(0); });
     };
 })();
 

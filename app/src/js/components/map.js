@@ -2,67 +2,80 @@ import { periodMedians, getDistricts, getRegionPrices } from '../lib/region'
 import { config } from '../lib/cfg'
 import throttle from '../lib/throttle'
 
-import Tooltip from './tooltip';
+import Tooltip from './tooltip'
 
-const projectionMultiplier = 250;
 const colors = ['#39a4d8', '#8ac7cd', '#daeac1', '#fdd09e', '#f58680', '#ed3d61'];
 
 // Hacky way of using presimiplified, preprojected points
 function hackL(L) {
-    function unproject(point) {
-        return L.CRS.EPSG3857.pointToLatLng(point, -8);
-
-    }
+    var unitScale = L.CRS.EPSG3857.scale(0);
 
     L.LineUtil.simplify = function (points, tolerance) {
         return points;
     };
 
-    L.Polyline.prototype._convertLatLngs = function (latlngs) {
-        var result = [],
-            flat = L.Polyline._flat(latlngs),
-            bounds, tr, bl;
-
-        if (flat) {
-            bounds = new L.Bounds();
-            for (var i = 0, len = latlngs.length; i < len; i++) {
-                result[i] = new L.Point(latlngs[i].lng / projectionMultiplier, latlngs[i].lat / projectionMultiplier);
-                bounds = bounds.extend(result[i]);
-            }
-            tr = bounds.getTopRight();
-            bl = bounds.getBottomLeft();
-            this._bounds = this._bounds.extend(new L.LatLngBounds(unproject(tr), unproject(bl)));
-        } else {
-            for (var i = 0, len = latlngs.length; i < len; i++) {
-                result[i] = this._convertLatLngs(latlngs[i]);
-            }
-        }
-
-        return result;
+    L.Polyline.prototype._setLatLngs = function (latlngs) {
+        this._bounds = new L.Bounds();
+        this._latlngs = latlngs;
+        this._points = [];
+        this._rings = [];
+        this._convertLatLngs(latlngs, this._points, this._rings, this._bounds);
     };
 
-    L.Polyline.prototype._projectedToPoint = function (points) {
-        var scale = this._map.options.crs.scale(this._map.getZoom()),
-            origin = this._map.getPixelOrigin();
+    L.Polyline.prototype._convertLatLngs =
+    L.Polygon.prototype._convertLatLngs = function (latlngs, points, rings, bounds) {
+        var i, len = latlngs.length, point, ring, p;
 
-        var i, len = points.length, ring = [];
-        for (i = 0; i < len; i++) {
-            ring[i] = new L.Point(
-                Math.round(points[i].x * scale) - origin.x,
-                Math.round(points[i].y * scale) - origin.y
-            );
+        if (L.Polyline._flat(latlngs)) {
+            point = []; ring = [];
+            for (i = 0; i < len; i++) {
+                p  = new L.Point(latlngs[i].lng / unitScale, latlngs[i].lat / unitScale);
+                point.push(p);
+                ring.push(p.clone());
+                bounds = bounds.extend(p);
+            }
+            points.push(point);
+            rings.push(ring);
+        } else {
+            for (i = 0; i < len; i++) {
+
+                this._convertLatLngs(latlngs[i], points, rings, bounds);
+            }
         }
-        return ring;
     }
 
-    L.Polyline.prototype._projectLatlngs = function (latlngs, result) {
-        var i, len;
+    L.Polyline.prototype._project = function () {
+        var scale = this._map.options.crs.scale(this._map.getZoom()),
+            origin = this._map.getPixelOrigin();
+        this._projectLatlngs(this._points, this._rings, scale, origin);
 
-        if (latlngs[0] instanceof L.Point) {
-            result.push(this._projectedToPoint(latlngs));
+        // project bounds as well to use later for Canvas hit detection/etc.
+        var w = this._clickTolerance(),
+            bl = this._bounds.getBottomLeft(),
+            tr = this._bounds.getTopRight();
+
+        bl.x = Math.round(bl.x * scale) - origin.x - w;
+        bl.y = Math.round(bl.y * scale) - origin.y + w;
+        tr.x = Math.round(tr.x * scale) - origin.x + w;
+        tr.y = Math.round(tr.y * scale) - origin.y - w;
+
+        if (this._bounds.isValid()) {
+            this._pxBounds = new L.Bounds(bl, tr);
+        }
+    };
+
+    L.Polyline.prototype._projectLatlngs = function (points, rings, scale, origin) {
+        var i, len = points.length;
+
+        if (points[0] instanceof L.Point) {
+            for (i = 0; i < len; i++) {
+                var point = points[i], ring = rings[i];
+                ring.x = Math.round(point.x * scale) - origin.x;
+                ring.y = Math.round(point.y * scale) - origin.y;
+            }
         } else {
-            for (i = 0, len = latlngs.length; i < len; i++) {
-                this._projectLatlngs(latlngs[i], result);
+            for (i = 0; i < len; i++) {
+                this._projectLatlngs(points[i], rings[i], scale, origin);
             }
         }
     };
