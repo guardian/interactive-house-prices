@@ -19,7 +19,6 @@ function hackL(L) {
         'onAdd': function (map) {
             var container = L.DomUtil.create('div', 'hp-map-location');
             container.innerHTML = locationTemplate;
-            madlib(container.querySelector('.hp-location'), [], v => v.length, v => v, v => v, () => {})
             return container;
         }
     });
@@ -159,6 +158,12 @@ export default function Map(el) {
                 res.more();
             }
         });
+
+        madlib(el.querySelector('.hp-location'), [], v => v.length, v => v, v => v, postcode => {
+            var district = postcode; //TODO
+            //console.log(districtLayer.getLayers());
+            //map.flyToBounds(districtLayer.getLayers()[0]._bounds);
+        })
 
         tooltip = new Tooltip(el);
     }
