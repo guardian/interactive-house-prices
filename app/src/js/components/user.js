@@ -1,13 +1,13 @@
-import template from './templates/user.html!text'
+import template from './templates/user.html!text';
 
-import throttle from '../lib/throttle'
-import { startYear, endYear, getPeriodSplits } from '../lib/region'
-import { config } from '../lib/cfg'
-import madlib from '../lib/madlib'
-import range from '../lib/range'
-import share from '../lib/share'
+import throttle from '../lib/throttle';
+import { startYear, endYear, getPeriodSplits } from '../lib/region';
+import { config } from '../lib/cfg';
+import madlib from '../lib/madlib';
+import range from '../lib/range';
+import share from '../lib/share';
 
-import Linechart from './linechart'
+import Linechart from './linechart';
 
 function validThreshold(value) {
     return value.length && value.replace(/[,0-9]+/, '').length === 0;
@@ -34,7 +34,7 @@ export default function User(el, onUpdate) {
     var currentWageEl, yearEl, ratioEl, thumblineEl, minimapImgs = [];
     var periodSplits;
     var currentValue = {'year': endYear, 'threshold': 0};
-    var linechart, lineData, width, height = 55;
+    var linechart, areachart, lineData, width, height = 55;
     var isMobile;
 
     function init() {
@@ -66,11 +66,15 @@ export default function User(el, onUpdate) {
             });
         });
 
-        linechart = new Linechart('js-line', 'line', 266, height, 5, 0);
+        areachart = new Linechart('js-area', 'line-area', 266, height, 5, 0);
+        //linechart = new Linechart('js-line', 'line', 266, height, 5, 0);
         range(el.querySelector('.js-date'), startYear, endYear, changeYear, 5);
 
         //resize line chart
-        var resize = throttle(function(){ drawLinechart(); }, 200); 
+        var resize = throttle(function(){ 
+            drawAreachart(); 
+            //drawLinechart(linechart, "js-line", "line", lineData); 
+        }, 200); 
         window.addEventListener('resize', () => { 
             resize();
             isMobile = window.innerWidth < 740; 
@@ -82,7 +86,7 @@ export default function User(el, onUpdate) {
 
     function change(type) {
         var ratio = periodSplits[currentValue.year].ratio;
-        thumblineEl.style.height = (10 + ratio / 2) + 'px';
+        thumblineEl.style.height = (2 + ratio/2) + 'px';
         ratioEl.textContent = Math.floor(ratio) + '%';
 
         if (type === 'end' || !isMobile) {
@@ -103,7 +107,8 @@ export default function User(el, onUpdate) {
                 `${config.assetPath}/assets/minimap/${year}-${yearSplit.unaffordable}.png`;
         }); 
 
-        drawLinechart(); 
+        drawAreachart(); 
+        //drawLinechart(linechart, "js-line", "line", lineData); 
         change('end');   
     }
 
@@ -117,19 +122,20 @@ export default function User(el, onUpdate) {
         });
     }
     
-    function drawLinechart() {
-        /*
-        //CHECK: draw an area!?
-        var last = lineData.length-1;
-        lineData = lineData.concat(
-            {x: lineData[last].x, y: 0}, 
-            {x: lineData[0].x,    y: 0},
-            lineData[0]
-        );*/
-        width  = document.querySelector(".js-line").clientWidth + 2; //2, tweak
+    function drawAreachart() {
+        var areaData = [{x:lineData[0].x, y:-0}].concat(
+            lineData,
+            {x: lineData[lineData.length-1].x, y: 0} 
+        );
         
-        linechart.updateWidth(".js-line svg", width);
-        linechart.updateLine(lineData, 'line', [0, width], [0, height], null, [0, 100]);
+        drawLinechart(areachart, "js-area", "line-area", areaData);
+    }
+
+    function drawLinechart(chart, el, cn, data) {
+        width  = document.querySelector("." + el).parentElement.clientWidth + 1; //1, tweak
+        
+        chart.updateWidth("." + el + " svg", width);
+        chart.updateLine(data, cn, [0, width], [0, height], null, [0, 100]);
     }
 
     init();

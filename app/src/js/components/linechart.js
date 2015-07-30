@@ -51,12 +51,8 @@ export default function Linechart(elClassName, styleClassName, width, height, ma
         domainX = domainX || [data[0].x, data[num-1].x];
         domainY = domainY || [0, d3.max(data, d => d.y)];
         
-        //rangeX = rangeX || domainX;
-        //rangeY = rangeY || domainY;
-        console.log(domainX);
-        console.log(rangeX);
-        console.log(domainY);
-        console.log(rangeY);
+        //console.log(domainX, domainY);
+        //console.log(rangeX, rangeY);
         x.domain(domainX); if (rangeX) { x.range(rangeX); }
         y.domain(domainY); //if (rangeY) { y.range(rangeY); }
         
