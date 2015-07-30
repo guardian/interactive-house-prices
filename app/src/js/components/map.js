@@ -1,6 +1,8 @@
 import { periodMedians, getDistricts, getRegionPrices } from '../lib/region'
 import { config } from '../lib/cfg'
 import throttle from '../lib/throttle'
+import madlib from '../lib/madlib'
+import locationTemplate from './templates/mapLocation.html!text';
 
 import Tooltip from './tooltip'
 
@@ -9,6 +11,18 @@ const colors = ['#39a4d8', '#8ac7cd', '#daeac1', '#fdd09e', '#f58680', '#ed3d61'
 // Hacky way of using presimiplified, preprojected points
 function hackL(L) {
     var unitScale = L.CRS.EPSG3857.scale(0);
+
+    L.Control.Location = L.Control.extend({
+        'options': {
+            'position': 'bottomright'
+        },
+        'onAdd': function (map) {
+            var container = L.DomUtil.create('div', 'hp-map-location');
+            container.innerHTML = locationTemplate;
+            madlib(container.querySelector('.hp-location'), [], v => v.length, v => v, v => v, () => {})
+            return container;
+        }
+    });
 
     L.LineUtil.simplify = function (points, tolerance) {
         return points;
@@ -99,7 +113,8 @@ export default function Map(el) {
             'zoom': el.clientWidth > 600 ? 7 : 6,
             'fadeAnimation': false
         });
-        map.zoomControl.setPosition('bottomright');
+
+        new L.Control.Location().addTo(map);
 
         var renderer = L.canvas();
         renderer._initContainer();

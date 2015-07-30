@@ -1,18 +1,9 @@
 .hp-madlib {
     border: 1px solid #bdbdbd;
     border-radius: 100px;
-    margin-bottom: 8px;
+    background: white;
 
     @include f-headline;
-    font-size: 30px;
-
-    &::before {
-        color: #bdbdbd;
-        font-size: 18px;
-        content: "£";
-        float: left;
-        padding: 8px 4px 0 6px;
-    }
 }
 
 .hp-madlib__input {
@@ -21,10 +12,10 @@
 
 .hp-madlib__input__text {
     width: 100%;
-    background: 0;
+    background: none;
     border: 0;
     margin: 0;
-    padding: 4px 0 3px;
+    padding: 4px 10px 3px;
     outline: 0;
 }
 
@@ -41,6 +32,8 @@
     &:hover {
         background: #bdbdbd;
     }
+
+    visibility: hidden;
 
     &::after {
         content: "";

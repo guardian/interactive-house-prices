@@ -1,21 +1,13 @@
-function valid(value) {
-    return value.length && value.replace(/[,0-9]+/, '').length === 0;
-}
-
-function format(value) {
-    var newValue = '';
-    value = value + '';
-    while (value.length > 3) {
-        newValue = ',' + value.substr(-3) + newValue;
-        value = value.substr(0, value.length - 3);
-    }
-    return value + newValue;
-}
-
-export default function (el, presets, onchange) {
+export default function (el, presets, valid, format, parse, onchange) {
     var text = el.querySelector('.hp-madlib__input__text');
     var btn = el.querySelector('.hp-madlib__input__btn');
-    var currentValue = 25000, currentPreset = presets[0];
+    var currentValue = '', currentPreset;
+
+    presets.forEach(function (preset) {
+        if (preset.hasAttribute('data-selected')) {
+            change(parse(preset.getAttribute('data-value')), preset);
+        }
+    });
 
     function change(value, preset, notify=false) {
         text.value = format(value);
@@ -35,7 +27,7 @@ export default function (el, presets, onchange) {
 
     function submit() {
         if (valid(text.value)) {
-            var value = parseInt(text.value.replace(/[^0-9]/g, ''));
+            var value = parse(text.value);
             if (value !== currentValue) {
                 change(value, null, true);
             }
@@ -81,7 +73,7 @@ export default function (el, presets, onchange) {
     });
 
     presets.forEach(preset => {
-        var value = parseInt(preset.getAttribute('data-value'));
+        var value = parse(preset.getAttribute('data-value'));
         preset.addEventListener('click', () => {
             change(value, preset, true);
         });

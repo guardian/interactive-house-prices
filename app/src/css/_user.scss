@@ -1,5 +1,4 @@
 @import 'range';
-@import 'madlib';
 
 .hp-user {
     @include f-bodyCopy;
@@ -56,6 +55,23 @@
     font-size: 14px;
     margin-bottom: 3px;
     line-height: 1;
+}
+
+.hp-wage {
+    font-size: 30px;
+    margin-bottom: 8px;
+
+    &::before {
+        color: #bdbdbd;
+        font-size: 18px;
+        content: "£";
+        float: left;
+        padding: 8px 4px 0 6px;
+    }
+
+    .hp-madlib__input__text {
+        padding-left: 0;
+    }
 }
 
 .hp-results-minimap {

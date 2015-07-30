@@ -9,6 +9,25 @@ import share from '../lib/share'
 
 import Linechart from './linechart'
 
+function validThreshold(value) {
+    return value.length && value.replace(/[,0-9]+/, '').length === 0;
+}
+
+function formatThreshold(value) {
+    var newValue = '';
+    value = value + '';
+    while (value.length > 3) {
+        newValue = ',' + value.substr(-3) + newValue;
+        value = value.substr(0, value.length - 3);
+    }
+    return value + newValue;
+}
+
+function parseThreshold(value) {
+    return parseInt(value.replace(/[^0-9]/g, ''));
+}
+
+
 export default function User(el, onUpdate) {
     const $$ = s => [].slice.call(el.querySelectorAll(s));
 
@@ -23,7 +42,8 @@ export default function User(el, onUpdate) {
 
         el.innerHTML = template;
 
-        madlib(el.querySelector('.js-wage'), $$('.js-wage-preset'), changeThreshold);
+        madlib(el.querySelector('.js-wage'), $$('.js-wage-preset'), validThreshold, formatThreshold,
+            parseThreshold, changeThreshold);
 
         currentWageEl = document.querySelector('.js-current-wage');
         yearEl = el.querySelector('.js-year');
