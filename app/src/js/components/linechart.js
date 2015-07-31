@@ -41,7 +41,11 @@ export default function Linechart(elClassName, styleClassName, width, height, ma
     }
     
     this.updateWidth = function(el, width) {
-        svg = d3.select(el).attr("width", width);
+        d3.select(el).attr("width", width);
+    };
+    
+    this.updateHeight = function(el, height) {
+        d3.select(el).style("height", (66-y(height)) + "px");
     };
 
     this.updateLine = function(data, el, rangeX, rangeY, domainX, domainY, lineType) {
@@ -75,16 +79,25 @@ export default function Linechart(elClassName, styleClassName, width, height, ma
                 {x: width, y: maxY},
                 {x: -0, y: maxY},
                 {x: 0, y: data[0].y}
-            ].concat(data.slice(0, -1), {x: width-30, y: data[num-1].y});
+            ].concat(data.slice(0, -1), 
+                {x: width-30, y: data[num-1].y}
+            );
         } else {
             dataMask = [
-                {x: width, y: 0},
+                {x: width-15, y: data[num-2].y},
+                {x: width, y: data[num-2].y},
                 {x: width, y: maxY},
                 {x: -0, y: maxY},
                 {x: 0, y: data[0].y}
-            ].concat(data.slice(0, -1), {x: width, y: 0}, {x: width, y: 0});
+            ].concat(data.slice(0, -1), 
+                {x: width-15, y: data[num-2].y}
+            );
         }
-
+        /*
+        var temp = [];
+        dataMask.forEach(d => temp = temp.concat(d.y));
+        console.log(dataMask.length, temp);
+        */
         this.updateLine(dataMask, el, [minX, maxX], null, [minX, maxX], null, lineType);
     };
 
@@ -104,7 +117,7 @@ export default function Linechart(elClassName, styleClassName, width, height, ma
             .attr("d", "M0,6V0H"+axisWidth+"V6");
     };
 
-    this.updateLabels = function(data) {
+    this.updateText = function(data) {
         var label = svg.selectAll(".label")
             .data(data)
             .attr("x", d => x(d.x)-5)

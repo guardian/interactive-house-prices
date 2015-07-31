@@ -197,7 +197,8 @@ export default function Tooltip(root) {
         
         linechart.updateMask(dataBins, "line-mask", "monotone", hasOutlier);
         linechart.updateAxis(dataBins.slice(0, -1), rangeWidth);
-        linechart.updateLabels(dataBins);
+        linechart.updateText(dataBins);
+        linechart.updateHeight(".chart-pin-upf", dataBins[numBins-1].y);
 
         hidden = false;
         this.move(evt);
