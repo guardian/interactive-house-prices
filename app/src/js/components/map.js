@@ -106,8 +106,8 @@ export default function Map(el) {
         var color;
 
         if (price) {
-            let ratio = price / userInput.threshold;
-            color = colors[Math.min(5, Math.floor(ratio) - 1)];
+            let index = Math.floor(price / userInput.threshold) - 1;
+            color = colors[Math.max(0, Math.min(5, index))];
         } else {
             color = '#cccccc';
         }
