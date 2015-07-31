@@ -58,12 +58,15 @@ function projectPolygon(rings) {
         });
     });
 }
-
 common.validDistrictGeo.features.forEach(function (feature) {
-    if (feature.geometry.type === 'Polygon') { 
-        projectPolygon(feature.geometry.coordinates);
-    } else {
-        feature.geometry.coordinates.forEach(projectPolygon);
+    var coordinates = feature.geometry.coordinates;
+
+    switch (feature.geometry.type) {
+      case 'Polygon':
+        coordinates = [coordinates];
+      case 'MultiPolygon':
+        coordinates.forEach(projectPolygon);
+        break;
     }
 });
 

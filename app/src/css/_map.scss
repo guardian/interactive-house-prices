@@ -94,8 +94,10 @@ $pips-width: 100% / (length($pips) + 2);
 
 .hp-location {
     width: 160px;
-    text-transform: uppercase;
     font-size: 20px;
+    .hp-madlib__input__text {
+        text-transform: uppercase;
+    }
 }
 
 .leaflet-container {

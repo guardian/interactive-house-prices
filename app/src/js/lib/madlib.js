@@ -10,8 +10,9 @@ export default function (el, presets, valid, format, parse, onchange) {
     });
 
     function change(value, preset, notify=false) {
-        text.value = format(value);
-        btn.style.visibility = valid(value + '') ? 'visible' : 'hidden';
+        var strValue = value + '';
+        text.value = format(strValue);
+        btn.style.visibility = strValue.length && valid(strValue) ? 'visible' : 'hidden';
         currentValue = value;
 
         presets.forEach(p => p.removeAttribute('data-selected'));
@@ -51,7 +52,8 @@ export default function (el, presets, valid, format, parse, onchange) {
         }, 0);
     });
     text.addEventListener('input', () => {
-        btn.style.visibility = valid(text.value) ? 'visible' : 'hidden';
+        var value = text.value;
+        btn.style.visibility = value.length && valid(value) ? 'visible' : 'hidden';
         presets.forEach(p => p.removeAttribute('data-selected'));
     });
 

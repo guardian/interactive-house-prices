@@ -10,8 +10,6 @@ const colors = ['#39a4d8', '#8ac7cd', '#daeac1', '#fdd09e', '#f58680', '#ed3d61'
 
 // Hacky way of using presimiplified, preprojected points
 function hackL(L) {
-    var unitScale = L.CRS.EPSG3857.scale(0);
-
     L.Control.Location = L.Control.extend({
         'options': {
             'position': 'bottomright'
@@ -23,73 +21,7 @@ function hackL(L) {
         }
     });
 
-    L.LineUtil.simplify = function (points, tolerance) {
-        return points;
-    };
-
-    L.Polyline.prototype._setLatLngs = function (latlngs) {
-        this._bounds = new L.Bounds();
-        this._pxBounds = new L.Bounds(new L.Point(), new L.Point());
-        this._latlngs = latlngs;
-        this._points = [];
-        this._rings = [];
-        this._convertLatLngs(latlngs, this._points, this._rings, this._bounds);
-    };
-
-    L.Polyline.prototype._convertLatLngs =
-    L.Polygon.prototype._convertLatLngs = function (latlngs, points, rings, bounds) {
-        var i, len = latlngs.length, point, ring, p;
-
-        if (L.Polyline._flat(latlngs)) {
-            point = []; ring = [];
-            for (i = 0; i < len; i++) {
-                p  = new L.Point(latlngs[i].lng / unitScale, latlngs[i].lat / unitScale);
-                point.push(p);
-                ring.push(p.clone());
-                bounds = bounds.extend(p);
-            }
-            points.push(point);
-            rings.push(ring);
-        } else {
-            for (i = 0; i < len; i++) {
-
-                this._convertLatLngs(latlngs[i], points, rings, bounds);
-            }
-        }
-    }
-
-    L.Polyline.prototype._project = function () {
-        var scale = this._map.options.crs.scale(this._map.getZoom()),
-            origin = this._map.getPixelOrigin();
-        this._projectLatlngs(this._points, this._rings, scale, origin);
-
-        // project bounds as well to use later for Canvas hit detection/etc.
-        var w = this._clickTolerance();
-        var pxB = this._pxBounds, b = this._bounds;
-
-        if (b.isValid()) {
-            pxB.min.x = Math.round(b.min.x * scale) - origin.x - w;
-            pxB.max.y = Math.round(b.max.y * scale) - origin.y + w;
-            pxB.max.x = Math.round(b.max.x * scale) - origin.x + w;
-            pxB.min.y = Math.round(b.min.y * scale) - origin.y - w;
-        }
-    };
-
-    L.Polyline.prototype._projectLatlngs = function (points, rings, scale, origin) {
-        var i, len = points.length;
-
-        if (points[0] instanceof L.Point) {
-            for (i = 0; i < len; i++) {
-                var point = points[i], ring = rings[i];
-                ring.x = Math.round(point.x * scale) - origin.x;
-                ring.y = Math.round(point.y * scale) - origin.y;
-            }
-        } else {
-            for (i = 0; i < len; i++) {
-                this._projectLatlngs(points[i], rings[i], scale, origin);
-            }
-        }
-    };
+    L.Polygon.prototype._simplifyPoints = function () {};
 }
 
 export default function Map(el) {
@@ -126,7 +58,8 @@ export default function Map(el) {
                 stroke: true,
                 color: '#333',
                 weight: 2
-            }
+            },
+            noClip: true
         }).addTo(map);
 
         // Region layer
@@ -159,7 +92,7 @@ export default function Map(el) {
             }
         });
 
-        madlib(el.querySelector('.hp-location'), [], v => v.length, v => v, v => v, postcode => {
+        madlib(el.querySelector('.hp-location'), [], () => true, v => v, v => v, postcode => {
             var district = postcode; //TODO
             //console.log(districtLayer.getLayers());
             //map.flyToBounds(districtLayer.getLayers()[0]._bounds);

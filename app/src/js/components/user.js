@@ -15,7 +15,6 @@ function validThreshold(value) {
 
 function formatThreshold(value) {
     var newValue = '';
-    value = value + '';
     while (value.length > 3) {
         newValue = ',' + value.substr(-3) + newValue;
         value = value.substr(0, value.length - 3);
