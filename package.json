@@ -7,6 +7,7 @@
     "canvas": "^1.2.3",
     "d3": "^3.5.5",
     "d3-geo-projection": "^0.2.15",
+    "gifencoder": "^1.0.6",
     "humanize": "0.0.9",
     "lodash": "^3.9.3",
     "moment": "^2.10.3",
