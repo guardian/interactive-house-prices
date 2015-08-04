@@ -1,5 +1,6 @@
 // Polyfills
 import './lib/pointer-events'
+import './lib/classList'
 import './lib/raf'
 
 import { set as setConfig } from './lib/cfg'

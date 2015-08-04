@@ -125,12 +125,12 @@ export default function Tooltip(root) {
         }
         
         var pipeEnd = salary*8,
-            pipeRangeWidth = pipeEnd*(rangeWidth-2)/(prices.upper_fence-prices.min),
-            pipeOutlierWidth = pipeEnd*(outlierWidth-2)/(prices.max-prices.upper_fence);
+            pipeRangeWidth = Math.round(pipeEnd*(rangeWidth-2)/(prices.upper_fence-prices.min)),
+            pipeOutlierWidth = Math.round(pipeEnd*(outlierWidth-2)/(prices.max-prices.upper_fence));
 
         // color pipes
         pipeRangeEl.style.width = pipeRangeWidth + "px";
-        pipeRangeEl.style.marginLeft = (-prices.min*pipeRangeWidth/pipeEnd) + "px";
+        pipeRangeEl.style.marginLeft = Math.round((-prices.min*pipeRangeWidth/pipeEnd)) + "px";
  
         // hotfix: move outlier to the last bin if upf is max
         if (prices.upper_fence === prices.max) {
@@ -149,7 +149,7 @@ export default function Tooltip(root) {
         }
 
         pipeOutlierEl.style.width = pipeOutlierWidth + "px";
-        pipeOutlierEl.style.marginLeft = (-prices.upper_fence*pipeOutlierWidth/pipeEnd) + "px";
+        pipeOutlierEl.style.marginLeft = Math.round((-prices.upper_fence*pipeOutlierWidth/pipeEnd)) + "px";
         
         upfPos.style.right = outlierWidth + "px";
         medPos.style.left  = ((prices.med-prices.min)*pipeRangeWidth/pipeEnd) + "px";
