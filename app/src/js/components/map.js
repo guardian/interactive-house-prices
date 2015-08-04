@@ -86,6 +86,7 @@ export default function Map(el) {
         getDistricts(res => {
             if (res.districts.length === 0) {
                 districtRenderer.suspendDraw = false;
+                districtLayer.setStyle(setStyle);
             } else {
                 districtLayer.addData(res.districts);
                 res.more();
