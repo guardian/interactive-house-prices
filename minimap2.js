@@ -1,0 +1,79 @@
+var common = require('./common');
+var fs = require('fs');
+var _ = require('lodash');
+var Canvas = require('canvas');
+var pngparse = require('pngparse');
+var deasync = require('deasync');
+var d3 = require('d3');
+require('d3-geo-projection')(d3);
+
+var IMG_WIDTH = 100;
+var IMG_HEIGHT = 120;
+
+var canvas = new Canvas(IMG_WIDTH, IMG_HEIGHT),
+    ctx = canvas.getContext('2d');
+
+var projection = d3.geo.mercator().scale(1).translate([0, 0]);
+var path = d3.geo.path().projection(projection).context(ctx);
+
+var b = path.bounds(common.validDistrictGeo),
+    s = .95 / Math.max((b[1][0] - b[0][0]) / IMG_WIDTH, (b[1][1] - b[0][1]) / IMG_HEIGHT),
+    t = [(IMG_WIDTH - s * (b[1][0] + b[0][0])) / 2, (IMG_HEIGHT - s * (b[1][1] + b[0][1])) / 2];
+
+projection.scale(s).translate(t);
+
+var width = 0, height = 0;
+var images = common.validDistrictGeo.features.map(function (feature) {
+    process.stdout.write('.');
+
+    ctx.clearRect(0, 0, IMG_WIDTH, IMG_HEIGHT);
+
+    ctx.strokeStyle = ctx.fillStyle = '#ed3d61';
+    ctx.beginPath();
+    path(feature);
+    ctx.fill('evenodd');
+    ctx.stroke();
+
+    common.writePNG(canvas, 'minimap2/' + feature.properties.name + '.png', 4);
+    var imgData;
+    pngparse.parseFile('app/src/assets/minimap2/' + feature.properties.name + '.png', function (err, img) {
+        imgData = img;
+    });
+    deasync.loopWhile(function() { return !imgData;} );
+
+    var transparent = imgData.getPixel(0, 0);
+    var xMin = 10000, yMin = 10000, xMax = 0, yMax = 0;
+    var x, y;
+    for (x = 0; x < imgData.width; x++) {
+        for (y = 0; y < imgData.height; y++) {
+            if (imgData.getPixel(x, y) !== transparent) {
+                xMin = Math.min(xMin, x);
+                yMin = Math.min(yMin, y);
+                xMax = Math.max(xMax, x);
+                yMax = Math.max(yMax, y);
+            }
+        }
+    }
+
+    width = Math.max(width, xMax - xMin);
+    height = Math.max(height, yMax - yMin);
+
+    return {
+        x: xMin,
+        y: yMin,
+        fn: 'app/src/assets/minimap2/' + feature.properties.name + '.png'
+    };
+});
+process.stdout.write('\n');
+
+var canvas = new Canvas(width, height * images.length),
+    ctx = canvas.getContext('2d');
+
+images.forEach(function (img) {
+    var imgEl = new Canvas.Image;
+    imgEl.src = fs.readFileSync(img.fn);
+    ctx.drawImage(imgEl, img.x, img.y, width, height, 0, 0, width, height);
+    ctx.translate(0, height);
+});
+
+common.writePNG(canvas, 'minimap2.png', 8);
