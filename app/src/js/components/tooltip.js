@@ -1,5 +1,6 @@
 import { periodMedians, getTooltips } from '../lib/region';
 import debounce from '../lib/debounce';
+import translate from '../lib/translate';
 import Linechart from './linechart';
 
 import template from './templates/tooltip.html!text';
@@ -12,25 +13,10 @@ const chartWidth = 280;
 const chartHeight = 64;
 const outlierWidth = 30;
 
-var setTranslate = (function () {
-    var anim, translate;
-    return function (el, x, y) {
-        translate = `translate(${x}px, ${y}px)`;
-
-        if (!anim) {
-            anim = window.requestAnimationFrame(() => {
-                el.style.transform = translate;
-                el.style.msTransform = translate;
-                el.style.webkitTransform = translate;
-                anim = null;
-            });
-        }
-    };
-})();
-
 export default function Tooltip(root) {
-    var el, areaEl, districtEl, numEl, upfEl, minEl, maxEl, medEls, salaryEls, 
+    var areaEl, districtEl, numEl, upfEl, minEl, maxEl, medEls, salaryEls, 
         factorEl, yearUserEl, yearAffordableEl, pipeRangeEl, pipeOutlierEl, outlierEl;
+    var translateEl;
     var upfPos, medPos;
     var linechart;
     var hidden = true, viewWidth, viewHeight;
@@ -53,8 +39,9 @@ export default function Tooltip(root) {
         tooltipNames = names;
         tooltipStats = stats;
 
-        el = root.querySelector('.js-tooltip');
+        var el = root.querySelector('.js-tooltip');
         el.innerHTML = template;
+        translateEl = translate(el);
 
         // els for data
         // header
@@ -206,7 +193,7 @@ export default function Tooltip(root) {
 
     this.hide = function () {
         hidden = true;
-        setTranslate(el, -1000, -1000);
+        translateEl(-1000, -1000);
     };
 
     this.move = function (evt) {
@@ -219,8 +206,8 @@ export default function Tooltip(root) {
             y -= tooltipHeight;
         }
         
-        if (!hidden) { setTranslate(el, x, y); }
-        else { setTranslate(el, -1000, -1000); } // hide tooltip if data doesn't exist
+        if (!hidden) { translateEl(x, y); }
+        else { translateEl(-1000, -1000); } // hide tooltip if data doesn't exist
     };
 
     getTooltips(init);

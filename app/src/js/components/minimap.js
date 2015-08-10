@@ -1,4 +1,5 @@
 import { config } from '../lib/cfg'
+import translate from '../lib/translate';
 
 import districtCodes from '../data/codes.json!json'
 import positions from '../data/positions.json!json'
@@ -14,14 +15,15 @@ const DISTRICT_HEIGHT = 18;
 const SPRITE_CHUNK_SIZE = districtCodes.length / 2;
 
 export default function Minimap(el) {
-    var canvas, ctx;
+    var ctx, translateEl;
 
     function init() {
         minimapLoaded = true;
 
-        canvas = document.createElement('canvas');
+        var canvas = document.createElement('canvas');
         canvas.width = MINIMAP_WIDTH;
         canvas.height = MINIMAP_HEIGHT;
+        translateEl = translate(canvas);
 
         el.appendChild(canvas);
         ctx = canvas.getContext('2d');
@@ -41,11 +43,11 @@ export default function Minimap(el) {
     };
 
     this.show = function () {
-        if (canvas) canvas.style.display = 'block';
+        if (translateEl) translateEl(0, 0);
     };
 
     this.hide = function () {
-        if (canvas) canvas.style.display = 'none';
+        if (translateEl) translateEl(-2000, -2000);
     }
 
     if (!minimapImg) {

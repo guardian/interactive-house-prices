@@ -75,6 +75,7 @@
 }
 
 .hp-results-minimap {
+    position: relative;
     float: right;
     background-image: url('assets/minimap/bg.png');
     background-size: cover;
@@ -82,8 +83,13 @@
     height: 120px;
 
     & > canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
         width: 100%;
-        display: none;
+        transform: translate(-2000px, -2000px);
+        -ms-transform: translate(-2000px, -2000px);
+        -webkit-transform: translate(-2000px, -2000px);
     }
 }
 
