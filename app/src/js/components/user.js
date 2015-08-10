@@ -31,9 +31,9 @@ function parseThreshold(value) {
 
 
 export default function User(el, onUpdate) {
-    const $$ = s => [].slice.call(el.querySelectorAll(s));
+    const $$ = (s, root=el) => [].slice.call(root.querySelectorAll(s));
 
-    var currentWageEl, yearEl, ratioEl, thumblineEl, minimapImgs = [];
+    var currentWageEls, yearEls, ratioEls, thumblineEl, minimapImgs = [], summaryEl;
     var periodSplits;
     var currentValue = {'year': endYear, 'threshold': 0};
     var linechart, areachart, lineData, width, height = 55;
@@ -47,9 +47,9 @@ export default function User(el, onUpdate) {
         madlib(el.querySelector('.js-wage'), $$('.js-wage-preset'), validThreshold, formatThreshold,
             parseThreshold, changeThreshold);
 
-        currentWageEl = document.querySelector('.js-current-wage');
-        yearEl = el.querySelector('.js-year');
-        ratioEl = el.querySelector('.js-user-ratio');
+        currentWageEls = $$('.js-current-wage', document);
+        yearEls = $$('.js-year');
+        ratioEls = $$('.js-user-ratio');
         thumblineEl = document.querySelector('.hp-range-slider__thumbline');
 
         minimap = el.querySelector('.js-minimap');
@@ -62,12 +62,13 @@ export default function User(el, onUpdate) {
         $$('.js-share').forEach(shareEl => {
             var network = shareEl.getAttribute('data-network');
             shareEl.addEventListener('click', () => {
-                var msg = ratioEl.textContent + ' of the country is beyond my means in ' + currentValue.year + '. ';
+                var msg = ratioEls[0].textContent + ' of the country is beyond my means in ' + currentValue.year + '. ';
                 share(network, msg);
             });
         });
 
-        stickyBar(el.querySelector('.js-summary'), el.querySelector('.js-summary-anchor'));
+        summaryEl = el.querySelector('.js-summary');
+        stickyBar(el.querySelector('.js-summary-bar'), el.querySelector('.js-summary-anchor'));
 
         areachart = new Linechart('js-area', 'line-area', 266, height, 5, 0);
         //linechart = new Linechart('js-line', 'line', 266, height, 5, 0);
@@ -90,7 +91,7 @@ export default function User(el, onUpdate) {
     function change(type) {
         var ratio = periodSplits[currentValue.year].ratio;
         thumblineEl.style.height = (2 + ratio/2) + 'px';
-        ratioEl.textContent = Math.floor(ratio) + '%';
+        ratioEls.forEach(el => el.textContent = Math.floor(ratio) + '%');
 
         if (type === 'end' || !isMobile) {
             setTimeout(() => onUpdate(currentValue), 0);
@@ -101,7 +102,7 @@ export default function User(el, onUpdate) {
         lineData = [];
 
         currentValue.threshold = threshold;
-        currentWageEl.textContent = threshold.toLocaleString();
+        currentWageEls.forEach(el => el.textContent = threshold.toLocaleString());
 
         periodSplits = getPeriodSplits(threshold);
         minimapImgs[currentValue.year].draw(periodSplits[currentValue.year].unaffordable);
@@ -120,7 +121,7 @@ export default function User(el, onUpdate) {
         window.requestAnimationFrame(() => {
             minimapImgs[currentValue.year].hide();
             minimapImgs[year].show();
-            yearEl.textContent = currentValue.year = year;
+            yearEls.forEach(el => el.textContent = currentValue.year = year);
 
             change(type);
         });

@@ -104,7 +104,7 @@
 
 .hp-sticky-bar {
     &.is-sticky {
-        background-color: rgba(255, 255, 255, 0.7);
+        background-color: rgba(255, 255, 255, 0.9);
         padding: 10px;
         @include mq(mobileLandscape) {
             padding: 10px 20px;
@@ -113,6 +113,7 @@
 }
 
 .hp-summary {
+    @include fs-bodyCopy(1);
     display: none;
     height: 40px;
     .is-sticky & {

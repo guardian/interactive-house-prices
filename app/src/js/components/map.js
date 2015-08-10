@@ -44,6 +44,7 @@ export default function Map(el) {
             'zoom': el.clientWidth > 600 ? 7 : 6,
             'fadeAnimation': false
         });
+        map.zoomControl.setPosition('bottomright');
 
         new L.Control.Location().addTo(map);
 
