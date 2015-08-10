@@ -3,6 +3,8 @@ import template from './templates/user.html!text';
 import throttle from '../lib/throttle';
 import { startYear, endYear, getPeriodSplits } from '../lib/region';
 import { config } from '../lib/cfg';
+
+import stickyBar from '../lib/sticky-bar';
 import madlib from '../lib/madlib';
 import range from '../lib/range';
 import share from '../lib/share';
@@ -65,18 +67,20 @@ export default function User(el, onUpdate) {
             });
         });
 
+        stickyBar(el.querySelector('.js-summary'), el.querySelector('.js-summary-anchor'));
+
         areachart = new Linechart('js-area', 'line-area', 266, height, 5, 0);
         //linechart = new Linechart('js-line', 'line', 266, height, 5, 0);
         range(el.querySelector('.js-date'), startYear, endYear, changeYear, 5);
 
         //resize line chart
-        var resize = throttle(function(){ 
-            drawAreachart(); 
-            //drawLinechart(linechart, "js-line", "line", lineData); 
-        }, 200); 
-        window.addEventListener('resize', () => { 
+        var resize = throttle(function() {
+            drawAreachart();
+        }, 200);
+
+        window.addEventListener('resize', () => {
             resize();
-            isMobile = window.innerWidth < 740; 
+            isMobile = window.innerWidth < 740;
         });
         isMobile = window.innerWidth < 740;
 

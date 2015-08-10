@@ -8,6 +8,13 @@ $line-offset: 22px;
     padding-bottom: $line-offset;
     height: 70px;
 
+    @include mq($until: tablet) {
+        .is-sticky & {
+            margin-top: -20px;
+            height: 20px;
+        }
+    }
+
     &::before {
         content: "";
         position: absolute;
@@ -37,6 +44,12 @@ $line-offset: 22px;
     left: 100%;
     bottom: $line-offset;
     border-left: 1px dotted #333;
+
+    @include mq($until: tablet) {
+        .is-sticky & {
+            display: none;
+        }
+    }
 }
 
 .hp-range-slider__tics {

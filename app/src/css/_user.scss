@@ -1,4 +1,5 @@
 @import 'range';
+@import 'sticky-bar';
 
 .hp-user {
     @include f-bodyCopy;
@@ -37,6 +38,7 @@
     }
 
     &.hp-user__inner--results {
+        position: relative;
         border-top: 1px solid #bdbdbd;
     }
 
@@ -98,4 +100,30 @@
     font-weight: bold;
     margin-top: -5px;
     margin-bottom: 0;
+}
+
+.hp-sticky-bar {
+    &.is-sticky {
+        background-color: rgba(255, 255, 255, 0.7);
+        padding: 10px;
+        @include mq(mobileLandscape) {
+            padding: 10px 20px;
+        }
+    }
+}
+
+.hp-summary {
+    display: none;
+    height: 40px;
+    .is-sticky & {
+        display: block;
+    }
+}
+
+.hp-summary-anchor {
+    clear: both;
+}
+
+.hp-summary-anchor.is-sticky + .hp-range-line-affordable {
+    margin-bottom: 12px;
 }

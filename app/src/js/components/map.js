@@ -31,7 +31,7 @@ export default function Map(el) {
         hackL(L);
 
         var setContainerSize = throttle(() => {
-            el.style.height = (window.innerHeight - (window.guardian ? 48 : 0)) + 'px';
+            el.style.height = (window.innerHeight) + 'px';
         }, 100);
         window.addEventListener('resize', () => window.requestAnimationFrame(setContainerSize));
         setContainerSize();
