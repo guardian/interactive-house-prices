@@ -2,11 +2,13 @@ var common = require('./common');
 var fs = require('fs');
 var _ = require('lodash');
 var Canvas = require('canvas');
+var pngparse = require('pngparse');
+var deasync = require('deasync');
 var d3 = require('d3');
 require('d3-geo-projection')(d3);
 
-var IMG_WIDTH = 100;
-var IMG_HEIGHT = 120;
+var IMG_WIDTH = 200;
+var IMG_HEIGHT = 240;
 
 var canvas = new Canvas(IMG_WIDTH, IMG_HEIGHT),
     ctx = canvas.getContext('2d');
@@ -26,27 +28,82 @@ ctx.fill('evenodd');
 ctx.stroke();
 common.writePNG(canvas, 'minimap/bg.png', 4);
 
-var features = _.indexBy(common.validDistrictGeo.features, 'properties.name');
-
-ctx.fillStyle = ctx.strokeStyle = '#ed3d61';
-_.forEach(common.periodStats, function (yearStats, year) {
-    console.log(year);
-
-    var sortedDistricts = yearStats
-        .filter(function (stat) { return stat; })
-        .sort(function (a, b) { return b.median - a.median; })
-        .map(function (stat) { return stat.district; });
+var width = 0, height = 0;
+var images = {};
+common.validDistrictGeo.features.forEach(function (feature) {
+    process.stdout.write('.');
 
     ctx.clearRect(0, 0, IMG_WIDTH, IMG_HEIGHT);
-    sortedDistricts.forEach(function (district, i) {
-        process.stdout.write('.');
-        ctx.beginPath();
-        path(features[district]);
-        ctx.fill('evenodd');
-        ctx.stroke();
 
-        common.writePNG(canvas, 'minimap/' + year + '-' + i + '.png', 4);
+    ctx.strokeStyle = ctx.fillStyle = '#ed3d61';
+    ctx.beginPath();
+    path(feature);
+    ctx.fill('evenodd');
+    ctx.stroke();
+
+    // We need to quantize the canvas before determining its x/y co-ordinates
+    common.writePNG(canvas, 'minimap/' + feature.properties.name + '.png', 4);
+
+    var imgData;
+    pngparse.parseFile('app/src/assets/minimap/' + feature.properties.name + '.png', function (err, img) {
+        imgData = img;
     });
-    process.stdout.write('\n');
+    deasync.loopWhile(function() { return !imgData;} );
+
+    var transparent = imgData.getPixel(0, 0);
+    var xMin = 10000, yMin = 10000, xMax = 0, yMax = 0;
+    var x, y;
+    for (x = 0; x < imgData.width; x++) {
+        for (y = 0; y < imgData.height; y++) {
+            if (imgData.getPixel(x, y) !== transparent) {
+                xMin = Math.min(xMin, x);
+                yMin = Math.min(yMin, y);
+                xMax = Math.max(xMax, x);
+                yMax = Math.max(yMax, y);
+            }
+        }
+    }
+
+    width = Math.max(width, xMax - xMin);
+    height = Math.max(height, yMax - yMin);
+
+    images[feature.properties.name] = {
+        x: xMin,
+        y: yMin,
+        fn: 'app/src/assets/minimap/' + feature.properties.name + '.png'
+    };
+});
+process.stdout.write('\n');
+
+console.log(width, height);
+
+// Cairo can't handle PNGs with a large dimension, so we need to create
+// multiple columns in our sprite
+var codeChunks = _.chunk(common.districtCodes, common.districtCodes.length / 2);
+
+var canvas = new Canvas(width * codeChunks.length, height * codeChunks[0].length);
+    ctx = canvas.getContext('2d');
+
+var positionChunks = codeChunks.map(function (codes, i) {
+    ctx.save();
+
+    var positions = codes.map(function (code) {
+        var img = images[code];
+
+        var imgEl = new Canvas.Image;
+        imgEl.src = fs.readFileSync(img.fn);
+        ctx.drawImage(imgEl, img.x, img.y, width, height, 0, 0, width, height);
+        ctx.translate(0, height);
+
+        return [img.x, img.y];
+    });
+
+    ctx.restore();
+    ctx.translate(width, 0);
+
+    return positions;
 });
 
+common.writePNG(canvas, 'minimap/districts.png', 8);
+
+fs.writeFileSync('app/src/js/data/positions.json', JSON.stringify(_.flatten(positionChunks)));

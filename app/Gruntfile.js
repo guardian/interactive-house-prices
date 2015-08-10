@@ -15,7 +15,7 @@ module.exports = function(grunt) {
                 tasks: ['buildInteractive', 'copy:interactive'],
             },
             assets: {
-                files: ['src/assets/*', '!src/assets/minimap'],
+                files: ['src/assets/*', '!src/assets/minimap', 'src/assets/minimap/bg.png', 'src/assets/minimap/districts.png'],
                 tasks: ['copy:assets']
             },
             css: {
@@ -83,10 +83,7 @@ module.exports = function(grunt) {
                 ]
             },
             assets: {
-                files: [{expand: true, cwd: 'src/', src: ['assets/*', '!assets/minimap'], dest: 'build'}]
-            },
-            minimap: {
-                files: [{expand: true, cwd: 'src/', src: ['assets/minimap/*'], dest: 'build'}]
+                files: [{expand: true, cwd: 'src/', src: ['assets/*', '!assets/minimap', 'assets/minimap/bg.png', 'assets/minimap/districts.png'], dest: 'build'}]
             },
             deploy: {
                 files: [
@@ -236,7 +233,7 @@ module.exports = function(grunt) {
     })
 
     grunt.registerTask('harness', ['copy:harness', 'template:harness', 'sass:harness', 'symlink:fonts'])
-    grunt.registerTask('interactive', ['buildInteractive', 'copy:interactive', 'template:bootjs', 'sass:interactive', 'copy:assets', 'copy:minimap'])
+    grunt.registerTask('interactive', ['buildInteractive', 'copy:interactive', 'template:bootjs', 'sass:interactive', 'copy:assets'])
     grunt.registerTask('default', ['clean', 'harness', 'interactive', 'connect', 'watch']);
     grunt.registerTask('build', ['clean', 'interactive']);
     grunt.registerTask('deploy', ['loadDeployConfig', 'prompt:visuals', 'build', 'copy:deploy', 'aws_s3', 'boot_url']);

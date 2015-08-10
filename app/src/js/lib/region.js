@@ -80,12 +80,12 @@ export function getPeriodSplits(wage) {
     var periodSplits = [];
 
     periodYears.map(year => {
-        var unaffordable = 0, nosales = 0;
-        periodMediansRaw[year].forEach(function (median) {
+        var unaffordable = [], nosales = 0;
+        periodMediansRaw[year].forEach((median, i) => {
             if (!median) nosales++;
-            else if (median > threshold) unaffordable++;
+            else if (median > threshold) unaffordable.push(i);
         });
-        var ratio = unaffordable / (districtsCount - nosales) * 100;
+        var ratio = unaffordable.length / (districtsCount - nosales) * 100;
         periodSplits[year] =  {ratio, unaffordable};
     });
 

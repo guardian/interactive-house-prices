@@ -8,6 +8,7 @@ import range from '../lib/range';
 import share from '../lib/share';
 
 import Linechart from './linechart';
+import Minimap from './minimap';
 
 function validThreshold(value) {
     return value.length && value.replace(/[,0-9]+/, '').length === 0;
@@ -52,10 +53,9 @@ export default function User(el, onUpdate) {
         minimap = el.querySelector('.js-minimap');
         for (year = startYear; year <= endYear; year++) {
             img = document.createElement('img');
-            minimapImgs[year] = img;
-            minimap.appendChild(img);
+            minimapImgs[year] = new Minimap(minimap);
         }
-        minimapImgs[endYear].style.display = 'block';
+        minimapImgs[endYear].show();
 
         $$('.js-share').forEach(shareEl => {
             var network = shareEl.getAttribute('data-network');
@@ -100,10 +100,11 @@ export default function User(el, onUpdate) {
         currentWageEl.textContent = threshold.toLocaleString();
 
         periodSplits = getPeriodSplits(threshold);
+        minimapImgs[currentValue.year].draw(periodSplits[currentValue.year].unaffordable);
+
         periodSplits.forEach((yearSplit, year) => {
             lineData.push({'x': year, 'y': yearSplit.ratio});
-            minimapImgs[year].src =
-                `${config.assetPath}/assets/minimap/${year}-${yearSplit.unaffordable}.png`;
+            window.requestAnimationFrame(() => minimapImgs[year].draw(yearSplit.unaffordable));
         }); 
 
         drawAreachart(); 
@@ -113,8 +114,8 @@ export default function User(el, onUpdate) {
 
     function changeYear(year, type) {
         window.requestAnimationFrame(() => {
-            minimapImgs[currentValue.year].style.display = 'none';
-            minimapImgs[year].style.display = 'block';
+            minimapImgs[currentValue.year].hide();
+            minimapImgs[year].show();
             yearEl.textContent = currentValue.year = year;
 
             change(type);

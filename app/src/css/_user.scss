@@ -77,9 +77,12 @@
 .hp-results-minimap {
     float: right;
     background-image: url('assets/minimap/bg.png');
-    background-repeat: no-repeat;
+    background-size: cover;
+    width: 100px;
+    height: 120px;
 
-    & > img {
+    & > canvas {
+        width: 100%;
         display: none;
     }
 }
