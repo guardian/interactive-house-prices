@@ -207,7 +207,7 @@ module.exports = function(grunt) {
             return builder.buildSFX('./src/js/main.js', './build/main.js', {
                 'sfxFormat': 'amd',
                 'runtime': false,
-                'minified': minified,
+                'minify': minified,
                 'mangle': minified,
                 'sourceMaps': minified ? true : 'inline'
             });
