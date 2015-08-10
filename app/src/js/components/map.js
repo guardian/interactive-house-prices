@@ -108,7 +108,8 @@ export default function Map(el) {
 
         if (price) {
             let index = Math.floor(price / userInput.threshold) - 1;
-            color = colors[Math.max(0, Math.min(5, index))];
+            if (index > 8) color = '#c33e5a';
+            else color = colors[Math.max(0, Math.min(5, index))];
         } else {
             color = '#cccccc';
         }
