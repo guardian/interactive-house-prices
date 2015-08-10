@@ -57,12 +57,23 @@ $line-offset: 22px;
     bottom: $line-offset;
     left: 0;
     right: 0;
+
 }
 
 .hp-range-slider__tics__tic {
     position: absolute;
+    top: 0;
+
     border-left: 1px solid #bdbdbd;
-    padding-top: 5px;
+    padding-top: 4px;
+
+    transition: 0.1s top linear;
+    .is-sticky & {
+        top: -3px;
+        &.hp-range-slider__tics__tic--major {
+            top: -5px;
+        }
+    }
 
     &.hp-range-slider__tics__tic--major {
         @include fs-textSans(1);
