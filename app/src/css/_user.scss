@@ -103,6 +103,8 @@
 }
 
 .hp-sticky-bar {
+    background-color: transparent;
+    transition: 0.5s background-color ease-out;
     &.is-sticky {
         background-color: rgba(255, 255, 255, 0.9);
         padding: 10px;
@@ -114,10 +116,11 @@
 
 .hp-summary {
     @include fs-bodyCopy(1);
-    display: none;
     height: 40px;
+    opacity: 0;
     .is-sticky & {
-        display: block;
+        transition: 0.5s opacity ease-out;
+        opacity: 1;
     }
 }
 
