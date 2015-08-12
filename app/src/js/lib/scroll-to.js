@@ -11,7 +11,8 @@ export default function scrollTo(el) {
     var elapsed = 0;
 
     window.requestAnimationFrame(function scrollHandler() {
-        window.scrollTo(0, Math.floor(start + distance * (elapsed / total)));
+        var t = elapsed / total;
+        window.scrollTo(0, Math.floor(start + distance * t * (2 - t)));
         if (elapsed < total) {
             elapsed += interval;
             window.requestAnimationFrame(scrollHandler);
