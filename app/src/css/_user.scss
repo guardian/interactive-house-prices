@@ -27,6 +27,8 @@
 .hp-user__inner {
     padding: 10px;
     background-color: white;
+    position: relative;
+    z-index: 2001;
 
     @include mq(mobileLandscape) {
         padding: 20px;
@@ -38,7 +40,6 @@
     }
 
     &.hp-user__inner--results {
-        position: relative;
         border-top: 1px solid #bdbdbd;
     }
 }
@@ -104,15 +105,27 @@
     margin-bottom: 0;
 }
 
-.hp-sticky-bar {
-    background-color: transparent;
-    transition: 0.5s background-color ease-out;
-    &.is-sticky {
-        background-color: rgba(255, 255, 255, 0.9);
-        padding: 10px;
-        @include mq(mobileLandscape) {
-            padding: 10px 20px;
-        }
+.hp-sticky-bar.is-sticky {
+    padding: 10px;
+    @include mq(mobileLandscape) {
+        padding: 10px 20px;
+    }
+}
+
+.hp-sticky-bar-bg {
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 90px;
+
+    .is-map-active & {
+        background: rgba(255, 255, 255, 0.7);
+    }
+
+    @include mq(tablet) {
+        display: none;
     }
 }
 
@@ -127,8 +140,9 @@
     }
 }
 
-.hp-summary__up {
-    @include fs-textSans(1);
+.hp-summary__toggle {
+    @include fs-textSans(3);
+    font-weight: bold;
     position: absolute;
     z-index: 2003;
     top: 100%;
@@ -147,19 +161,23 @@
         background: #00456E
     }
 
-    opacity: 0;
-    pointer-events: none;
-    transition: 0.2s opacity ease-out;
-    @include mq($until: tablet) {
+    &.hp-summary__toggle--up {
+        display: none;
         .is-map-active & {
-            opacity: 1;
-            pointer-events: auto;
+            display: block;
         }
+    }
+    .is-map-active &.hp-summary__toggle--down {
+        display: none;
+    }
+
+    @include mq(tablet) {
+        display: none;
     }
 }
 
-.hp-summary__up__text,
-.hp-summary__up__icon {
+.hp-summary__toggle__text,
+.hp-summary__toggle__icon {
     display: inline-block;
     vertical-align: middle;
 }
@@ -170,4 +188,6 @@
 
 .hp-summary-anchor.is-sticky + .hp-range-line-affordable {
     margin-bottom: 12px;
+    transition: 0.5s opacity ease-out;
+    opacity: 0.3;
 }

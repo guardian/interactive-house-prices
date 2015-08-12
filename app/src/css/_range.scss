@@ -21,7 +21,7 @@ $line-offset: 22px;
         bottom: $line-offset;
         left: 0;
         right: -1px;
-        background-color: #bdbdbd;
+        background-color: #767676;
         margin-top: -1px;
         height: 2px;
     }
@@ -64,12 +64,12 @@ $line-offset: 22px;
     position: absolute;
     top: 0;
 
-    border-left: 1px solid #bdbdbd;
+    border-left: 1px solid #767676;
     padding-top: 4px;
 
     &.hp-range-slider__tics__tic--major {
         @include fs-textSans(1);
-        color: #bdbdbd;
+        color: #767676;
         padding-top: 10px;
 
         & > span {
