@@ -1,37 +1,22 @@
 import { periodMedians, getDistricts, getRegionPrices } from '../lib/region'
 import { config } from '../lib/cfg'
 import throttle from '../lib/throttle'
-import madlib from '../lib/madlib'
 import locationTemplate from './templates/mapLocation.html!text';
 
 import Tooltip from './tooltip'
+import Controls from './controls'
 
 const colors = ['#39a4d8', '#8ac7cd', '#daeac1', '#fdd09e', '#f58680', '#ed3d61'];
-
-// Hacky way of using presimiplified, preprojected points
-function hackL(L) {
-    L.Control.Location = L.Control.extend({
-        'options': {
-            'position': 'bottomright'
-        },
-        'onAdd': function (map) {
-            var container = L.DomUtil.create('div', 'hp-map-location');
-            container.innerHTML = locationTemplate;
-            return container;
-        }
-    });
-
-    L.Polygon.prototype._simplifyPoints = function () {};
-}
 
 export default function Map(el) {
     var tooltip, districtLayer, highlightLayer, userInput;
 
     function init(L) {
-        hackL(L);
+        // Hacky way of using presimiplified, preprojected points
+        L.Polygon.prototype._simplifyPoints = function () {};
 
         var setContainerSize = throttle(() => {
-            el.style.height = (window.innerHeight) + 'px';
+            el.style.height = (window.innerHeight - 48) + 'px';
         }, 100);
         window.addEventListener('resize', () => window.requestAnimationFrame(setContainerSize));
         setContainerSize();
@@ -42,11 +27,9 @@ export default function Map(el) {
             'maxZoom': 17,
             'minZoom': 6,
             'zoom': el.clientWidth > 600 ? 7 : 6,
-            'fadeAnimation': false
+            'fadeAnimation': false,
+            'zoomControl': false
         });
-        map.zoomControl.setPosition('bottomright');
-
-        new L.Control.Location().addTo(map);
 
         var renderer = L.canvas();
         renderer._initContainer();
@@ -78,7 +61,6 @@ export default function Map(el) {
         // Label layer
         L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
             pane: 'overlayPane',
-            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
             id: 'guardian.b71bdefa',
             accessToken: 'pk.eyJ1IjoiZ3VhcmRpYW4iLCJhIjoiNHk1bnF4OCJ9.25tK75EuDdgq5GxQKyD6Fg',
             detectRetina: true
@@ -94,13 +76,8 @@ export default function Map(el) {
             }
         });
 
-        madlib(el.querySelector('.hp-location'), [], () => true, v => v, v => v, postcode => {
-            var district = postcode; //TODO
-            //console.log(districtLayer.getLayers());
-            //map.flyToBounds(districtLayer.getLayers()[0]._bounds);
-        })
-
         tooltip = new Tooltip(el);
+        new Controls(el.querySelector('.js-map-controls'), map);
     }
 
     function setStyle(district) {

@@ -65,18 +65,21 @@
     }
 }
 
-.hp-range {
+.hp-map-controls {
+    position: absolute;
+    z-index: 1000;
+    bottom: 0;
+    right: 0;
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 10px 10px 0;
+    width: 260px;
+}
+
+.hp-range,
+.hp-attribution {
     @include fs-textSans(2);
     line-height: 1.25;
-    position: absolute;
-    background-color: rgba(255, 255, 255, 0.55);
-    z-index: 10;
-    bottom: 20px;
-    left: 4px;
-    width: 200px;
-    @include mq(tablet) {
-        left: 20px;
-    }
+    width: 100%;
 }
 
 .hp-range__desc {
@@ -128,12 +131,6 @@ $pips-width: 100% / (length($pips) + 2);
     width: ($pips-width * 2);
 }
 
-.leaflet-right .hp-map-location {
-    margin: 0;
-    background-color: rgba(255, 255, 255, 0.7);
-    padding: 10px;
-}
-
 .hp-location-label,
 .hp-location {
     display: inline-block;
@@ -156,8 +153,7 @@ $pips-width: 100% / (length($pips) + 2);
     pointer-events: none;
 }
 .leaflet-control-attribution {
-    height: 16px;
-    text-overflow: ellipsis;
+    display: none;
 }
 
 .leaflet-right .leaflet-control-zoom {
