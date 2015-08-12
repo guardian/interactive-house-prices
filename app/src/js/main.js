@@ -4,6 +4,7 @@ import './lib/classList'
 import './lib/raf'
 
 import { set as setConfig } from './lib/cfg'
+import scrollTo from './lib/scroll-to'
 
 import Map from './components/map'
 import User from './components/user'
@@ -15,14 +16,16 @@ export function init(el, config) {
 
     el.innerHTML = mainHTML;
 
-    var map = new Map(el.querySelector('.js-map'));
+    var mapEl = el.querySelector('.js-map')
+    var map = new Map(mapEl);
     var user = new User(el.querySelector('.js-user'), map.update);
 
     el.querySelector('.js-map-activate').addEventListener('click', evt => {
-        evt.preventDefault();
         el.className += ' is-map-active';
+        scrollTo(mapEl);
     });
     el.querySelector('.js-map-deactivate').addEventListener('click', evt => {
         el.className = el.className.replace(/is-map-active/g, '').trim();
+        scrollTo(document.body);
     });
 }
