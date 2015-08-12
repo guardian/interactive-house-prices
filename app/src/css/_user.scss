@@ -41,10 +41,6 @@
         position: relative;
         border-top: 1px solid #bdbdbd;
     }
-
-    p:last-child {
-        margin: 0;
-    }
 }
 
 .hp-title {
@@ -74,6 +70,12 @@
     .hp-madlib__input__text {
         padding-left: 0;
     }
+}
+
+.hp-share-notice {
+    @include fs-textSans(1);
+    color: #767676;
+    margin-top: -10px;
 }
 
 .hp-results-minimap {

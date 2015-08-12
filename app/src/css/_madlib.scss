@@ -20,14 +20,16 @@
 }
 
 .hp-madlib__input__btn {
-    position: relative;
     float: right;
     border: 0;
     border-radius: 100px;
     outline: 0;
-    margin: 4px 5px 0 4px;
     padding: 0;
     font-size: 0;
+    margin: 4px 5px 0 4px;
+
+    transition: 0.1s color ease-out, 0.1s background ease-out;
+    color: #333;
     background: #dcdcdc;
     &:hover {
         background: #bdbdbd;
@@ -35,21 +37,16 @@
 
     visibility: hidden;
 
-    &::after {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-    }
-
     .icon-submit {
         display: none;
     }
 
     &[data-focus] {
+        color: white;
         background: #005689;
+        &:hover {
+            background: #00456E
+        }
         .icon-submit {
             display: block;
         }
@@ -80,6 +77,7 @@
 
 .hp-button {
     @include fs-textSans(1);
+    line-height: 22px;
     font-weight: bold;
     border-radius: 100px;
     background: 0;
@@ -87,7 +85,7 @@
     outline: 0;
     margin-right: 6px;
 
-    transition: 0.2s background-color ease-out;
+    transition: 0.1s background-color ease-out;
 
     color: #333;
     background-color: #dcdcdc;
