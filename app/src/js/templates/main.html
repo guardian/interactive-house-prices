@@ -1,17 +1,22 @@
 <div class="hp-user js-user"></div>
-<div class="hp-map js-map">
-    <div class="hp-range">
-        <p class="hp-range__desc">
-            Multiple of £<span class="js-current-wage">25,000</span> that would buy the median house
-        </p>
-        <div class="hp-range__pips">
-            <span class="hp-range__pips__pip" data-range="0"></span>
-            <span class="hp-range__pips__pip" data-range="2"></span>
-            <span class="hp-range__pips__pip" data-range="3"></span>
-            <span class="hp-range__pips__pip" data-range="4"></span>
-            <span class="hp-range__pips__pip" data-range="5"></span>
-            <span class="hp-range__pips__pip" data-range="6+"></span>
+<div class="hp-map-container">
+    <div class="hp-map js-map">
+        <div class="hp-range">
+            <p class="hp-range__desc">
+                Multiple of £<span class="js-current-wage">25,000</span> that would buy the median house
+            </p>
+            <div class="hp-range__pips">
+                <span class="hp-range__pips__pip" data-range="0"></span>
+                <span class="hp-range__pips__pip" data-range="2"></span>
+                <span class="hp-range__pips__pip" data-range="3"></span>
+                <span class="hp-range__pips__pip" data-range="4"></span>
+                <span class="hp-range__pips__pip" data-range="5"></span>
+                <span class="hp-range__pips__pip" data-range="6+"></span>
+            </div>
         </div>
+        <div class="hp-tooltip js-tooltip"></div>
     </div>
-    <div class="hp-tooltip js-tooltip"></div>
+    <a class="hp-map-container__overlay js-map-activate">
+        <button>Click here to activate the map</button>
+    </a>
 </div>

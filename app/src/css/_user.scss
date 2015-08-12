@@ -118,12 +118,50 @@
 
 .hp-summary {
     @include fs-bodyCopy(1);
+    position: relative;
     height: 40px;
     opacity: 0;
     .is-sticky & {
         transition: 0.5s opacity ease-out;
         opacity: 1;
     }
+}
+
+.hp-summary__up {
+    @include fs-textSans(1);
+    position: absolute;
+    z-index: 2003;
+    top: 100%;
+    right: 10px;
+    margin-top: 10px;
+
+    border: 0;
+    border-radius: 100px;
+    outline: 0;
+    padding: 0 0 0 10px;
+
+    transition: 0.1s background ease-out;
+    color: white;
+    background: #005689;
+    &:hover {
+        background: #00456E
+    }
+
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.2s opacity ease-out;
+    @include mq($until: tablet) {
+        .is-map-active & {
+            opacity: 1;
+            pointer-events: auto;
+        }
+    }
+}
+
+.hp-summary__up__text,
+.hp-summary__up__icon {
+    display: inline-block;
+    vertical-align: middle;
 }
 
 .hp-summary-anchor {

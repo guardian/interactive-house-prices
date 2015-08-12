@@ -1,11 +1,59 @@
 @import "lib/leaflet";
 
+.hp-map-container,
 .hp-map {
     position: relative;
     width: 100%;
     height: 100%;
 }
 
+.hp-map-container__overlay {
+    position: absolute;
+    cursor: pointer;
+    z-index: 2000;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: rgba(255, 255, 255, 0.7);
+    text-align: center;
+
+    &::before {
+        content: "";
+        display: inline-block;
+        height: 100%;
+        vertical-align: middle;
+    }
+
+    & > p {
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    @include mq(tablet) {
+        display: none;
+    }
+}
+
+.hp-map-container {
+    @include mq($until: tablet) {
+        .leaflet-bottom,
+        .hp-range {
+            transition: opacity 0.2s ease-out;
+            opacity: 0;
+        }
+    }
+
+    .is-map-active & {
+        .hp-map-container__overlay {
+            display: none;
+        }
+        .leaflet-bottom,
+        .hp-range {
+            opacity: 1;
+        }
+    }
+}
 
 .hp-map__highlight {
     pointer-events: none;
