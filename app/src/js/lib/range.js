@@ -25,6 +25,7 @@ function tics(min, max, ticStep) {
     return tics;
 }
 
+
 export default function (el, min, max, onchange, ticStep) {
     var range = max - min;
 

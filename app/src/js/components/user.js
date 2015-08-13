@@ -4,7 +4,7 @@ import throttle from '../lib/throttle';
 import { startYear, endYear, getPeriodSplits } from '../lib/region';
 import { config } from '../lib/cfg';
 
-import stickyBar from '../lib/sticky-bar';
+import { stickyBar, setBottomNotSticky } from '../lib/sticky-bar';
 import madlib from '../lib/madlib';
 import range from '../lib/range';
 import share from '../lib/share';
@@ -33,7 +33,7 @@ function parseThreshold(value) {
 export default function User(el, onUpdate) {
     const $$ = (s, root=el) => [].slice.call(root.querySelectorAll(s));
 
-    var currentWageEls, yearEls, ratioEls, thumblineEl, minimapImgs = [], summaryEl;
+    var currentWageEls, yearEls, ratioEls, thumbEl, minimapImgs = [], summaryEl;
     var periodSplits;
     var currentValue = {'year': endYear, 'threshold': 0};
     var linechart, areachart, lineData, width, height = 55;
@@ -50,7 +50,7 @@ export default function User(el, onUpdate) {
         currentWageEls = $$('.js-current-wage', document);
         yearEls = $$('.js-year');
         ratioEls = $$('.js-user-ratio');
-        thumblineEl = document.querySelector('.hp-range-slider__thumbline');
+        thumbEl = document.querySelector('.hp-range-slider__thumb');
 
         minimap = el.querySelector('.js-minimap');
         for (year = startYear; year <= endYear; year++) {
@@ -71,7 +71,6 @@ export default function User(el, onUpdate) {
         stickyBar(el.querySelector('.js-summary-bar'), el.querySelector('.js-summary-anchor'));
 
         areachart = new Linechart('js-area', 'line-area', 266, height, 5, 0);
-        //linechart = new Linechart('js-line', 'line', 266, height, 5, 0);
         range(el.querySelector('.js-date'), startYear, endYear, changeYear, 5);
 
         //resize line chart
@@ -89,10 +88,14 @@ export default function User(el, onUpdate) {
     }
 
     function change(type) {
-        var ratio = periodSplits[currentValue.year].ratio;
-        thumblineEl.style.height = (2 + ratio/2) + 'px';
+        // height of thumb
+        var ratio = periodSplits[currentValue.year].ratio,
+            bottomNotSticky = 30 + ratio/2 + '%',
+            isSticky = document.querySelector(".js-summary-bar").classList.contains("is-sticky");
         ratioEls.forEach(el => el.textContent = Math.floor(ratio) + '%');
-
+        thumbEl.style.bottom = isSticky ? "25px" : bottomNotSticky;
+        setBottomNotSticky(bottomNotSticky);
+        
         if (type === 'end' || !isMobile) {
             setTimeout(() => onUpdate(currentValue), 0);
         }
