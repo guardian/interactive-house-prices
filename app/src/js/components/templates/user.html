@@ -11,10 +11,10 @@
             <input class="hp-madlib__input__text" tabindex="1" type="text" />
         </div>
     </form>
-    <p class="hp-madlib-options">
+    <div class="hp-madlib-options">
         <button class="hp-button js-wage-preset" data-selected data-value="25000">national average</button>
         <button class="hp-button js-wage-preset" data-value="14000">minimum wage</button>
-    </p>
+    </div>
 </div>
 <div class="hp-user__inner hp-user__inner--results">
     <div class="hp-results-minimap js-minimap"></div>
@@ -23,17 +23,13 @@
         would be beyond your means
         <span class="hp-results-stat">in <span class="js-year">2014</span></span>
     </p>
-    <p>
-        <button class="hp-share js-share" data-network="facebook"></button>
-        <button class="hp-share js-share" data-network="twitter"></button>
-        <button class="hp-share js-share" data-network="email"></button>
-    </p>
-    <p class="hp-share-notice">
-        Your salary will not be shared
-    </p>
+    <div class="hp-range-option">Or try other years: </div>
     <div class="hp-summary-anchor js-summary-anchor"></div>
     <div class="hp-range-line-affordable pos-r">
         <div class="js-area"></div>
+        <div class="hp-range-label label-100">100%</div>
+        <div class="hp-range-label label-50">50</div>
+        <div class="hp-range-label label-0"></div>
     </div>
     <div class="hp-sticky-bar js-summary-bar">
         <p class="hp-summary js-summary">
@@ -56,3 +52,13 @@
         </button>
     </div>
 </div>
+<div class="hp-user__inner hp-user__inner--shares">
+    <div class="d-ib">
+        <button class="hp-share js-share" data-network="facebook"></button>
+        <button class="hp-share js-share" data-network="twitter"></button>
+        <button class="hp-share js-share" data-network="email"></button>
+    </div>
+    <p class="hp-share-notice">
+        Your salary will not be shared
+    </p>
+</div> 

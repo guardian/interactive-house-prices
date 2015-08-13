@@ -39,8 +39,13 @@
         margin: 0 0 0 auto;
     }
 
-    &.hp-user__inner--results {
+    &.hp-user__inner--results,
+    &.hp-user__inner--shares {
         border-top: 1px solid #bdbdbd;
+    }
+
+    &.hp-user__inner--shares {
+        padding: 10px 20px 8px 20px;
     }
 }
 
@@ -76,7 +81,10 @@
 .hp-share-notice {
     @include fs-textSans(1);
     color: #767676;
-    margin-top: -10px;
+    width: 110px;
+    margin-left: 6px;
+    margin-bottom: 0;
+    display: inline-block;
 }
 
 .hp-results-minimap {
@@ -86,6 +94,7 @@
     background-size: cover;
     width: 100px;
     height: 120px;
+    margin-top: -10px;
 
     & > canvas {
         position: absolute;

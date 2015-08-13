@@ -1,10 +1,11 @@
-$thumb-size: 12px;
+$thumb-size: 14px;
 $line-offset: 22px;
 
 .hp-range-slider {
     position: relative;
     cursor: pointer;
-    margin: -128px ($thumb-size / 2) 0 ($thumb-size / 2);
+    margin: -128px 4px 0 12px;
+    //margin: -128px ($thumb-size / 2) 0 ($thumb-size / 2);
     padding-bottom: $line-offset;
     height: 70px;
 
@@ -32,7 +33,7 @@ $line-offset: 22px;
     position: absolute;
     left: 100%;
     width: $thumb-size;
-    height: ($thumb-size - 2);
+    height: ($thumb-size - 4);
     border-radius: $thumb-size;
     margin: 0 0 (-$thumb-size / 2) (1 - $thumb-size / 2);
     box-shadow: 0px 1px 2px 1px rgba(100, 100, 100, 0.25);
@@ -42,9 +43,10 @@ $line-offset: 22px;
 .hp-range-slider__thumbline {
     position: absolute;
     left: 100%;
-    height: 57px; //52(100%) + 5(extra)
+    height: 52px; //52(100%) + 5(extra)
     bottom: $line-offset;
     border-left: 1px solid #333;
+    box-shadow: 0px 1px 2px 1px rgba(100, 100, 100, 0.25);
 
     @include mq($until: tablet) {
         .is-sticky & {
@@ -58,7 +60,6 @@ $line-offset: 22px;
     bottom: $line-offset;
     left: 0;
     right: 0;
-
 }
 
 .hp-range-slider__tics__tic {
@@ -82,6 +83,31 @@ $line-offset: 22px;
     }
 }
 
+.hp-range-option {
+    @include fs-textSans(2);
+    color: #767676;
+}
+
 .hp-range-line-affordable {
-    margin: 0 ($thumb-size / 2);
+    margin: 5px 4px 0 12px;
+    //margin: 5px ($thumb-size / 2) 0 ($thumb-size /2);
+    
+    @include mq(tablet) {
+    margin: 5px 5px 0 12px;
+    }
+}
+
+.hp-range-label {
+    @include fs-textSans(1);
+    font-size: 11px;
+    color: #767676;
+
+    @extend .pos-a;
+    left: -12px;
+    width: 12px;
+    border-bottom: 1px solid rgba(118, 118, 118, 0.25);
+
+    &.label-100 { top:-11px; }
+    &.label-50  { top: 13px; }
+    &.label-0   { bottom: 10px; }
 }

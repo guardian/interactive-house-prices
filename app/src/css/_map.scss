@@ -72,7 +72,7 @@
     right: 0;
     background-color: rgba(255, 255, 255, 0.7);
     padding: 10px 10px 0;
-    width: 260px;
+    width: 300px;
 }
 
 .hp-range,
@@ -81,6 +81,8 @@
     line-height: 1.25;
     width: 100%;
 }
+.hp-range { font-size: 12px; }
+.hp-attribution { font-size: 10px; }
 
 .hp-range__desc {
     font-weight: bold;
