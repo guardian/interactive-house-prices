@@ -66,13 +66,20 @@
 }
 
 .hp-map-controls {
-    position: absolute;
     z-index: 1000;
-    bottom: 0;
-    right: 0;
     background-color: rgba(255, 255, 255, 0.7);
     padding: 10px 10px 0;
+    position: absolute;
+    
+    left: 0;
+    bottom: 0;
     width: 300px;
+    
+    @include mq(tablet) {
+    left: 10px;
+    bottom: 10px;
+    width: 240px;
+    }
 }
 
 .hp-range,
@@ -133,18 +140,17 @@ $pips-width: 100% / (length($pips) + 2);
     width: ($pips-width * 2);
 }
 
-.hp-location-label,
-.hp-location {
+.hp-location-label {
     display: inline-block;
-    vertical-align: middle;
+    width: 135px; //tune num
 }
 
 .hp-location {
-    width: 160px;
     font-size: 20px;
-    .hp-madlib__input__text {
-        text-transform: uppercase;
-    }
+    float: right;
+    width: (100% / 2);
+    max-width: 160px;
+    margin-top: -3px;
 }
 
 .leaflet-container {

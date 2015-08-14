@@ -50,8 +50,8 @@ export default function User(el, onUpdate) {
         currentWageEls = $$('.js-current-wage', document);
         yearEls = $$('.js-year');
         ratioEls = $$('.js-user-ratio');
-        thumbEl = document.querySelector('.hp-range-slider__thumb');
-
+        thumbEl = document.querySelector('.js-thumb');
+        
         minimap = el.querySelector('.js-minimap');
         for (year = startYear; year <= endYear; year++) {
             img = document.createElement('img');
@@ -105,6 +105,9 @@ export default function User(el, onUpdate) {
         lineData = [];
 
         currentValue.threshold = threshold;
+        
+        //TODO: maybe remove this! .. fix due to one of els doesn't exisit at init stage
+        currentWageEls = $$('.js-current-wage', document); 
         currentWageEls.forEach(el => el.textContent = threshold.toLocaleString());
 
         periodSplits = getPeriodSplits(threshold);

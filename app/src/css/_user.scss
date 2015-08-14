@@ -39,9 +39,12 @@
         margin: 0 0 0 auto;
     } 
 }
-.hp-user__inner--results,
-.hp-user__inner--shares {
-    border-top: 1px solid #bdbdbd;
+.hp-user__inner--location {
+    padding: 15px 20px;
+    
+    @include mq($until: tablet) {
+    display: none;
+    }
 }
 .hp-user__inner--shares {
     padding: 10px 20px 8px 20px;

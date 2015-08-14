@@ -36,7 +36,7 @@ $line-offset: 22px;
     height: ($thumb-size - 6);
     border-radius: $thumb-size;
     margin: 0 0 (2 - $thumb-size / 2) (1 - $thumb-size / 2);
-    box-shadow: 0 1px 2px 1px rgba(51, 51, 51, 0.3);
+    box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.25);
     z-index: 5;
 }
 
@@ -46,7 +46,7 @@ $line-offset: 22px;
     height: 52px; //52(100%) + 5(extra)
     bottom: $line-offset;
     border-left: 1px solid $c-hp-red;
-    box-shadow: 0 1px 2px 1px rgba(51, 51, 51, 0.3);
+    box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.25);
 
     @include mq($until: tablet) {
         .is-sticky & {

@@ -25,7 +25,8 @@ $c-hp-red: #ed3d61;
 .d-n  { display: none; }
 .d-ib { display: inline-block; }
 
-.bb-s { border-bottom: 1px solid $c-neutral-5; }
+.bt-s { border-top:    1px solid  $c-neutral-3; }
+.bb-s { border-bottom: 1px solid  $c-neutral-5; }
 .bb-d { border-bottom: 1px dotted $c-neutral-1; }
 
 .mt-15 { margin-top: 15px; }
