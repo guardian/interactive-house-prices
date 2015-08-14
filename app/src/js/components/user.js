@@ -30,7 +30,7 @@ function parseThreshold(value) {
 }
 
 
-export default function User(el, onUpdate) {
+export default function User(el, onUpdate, tooltip) {
     const $$ = (s, root=el) => [].slice.call(root.querySelectorAll(s));
 
     var currentWageEls, yearEls, ratioEls, thumbEl, minimapImgs = [], summaryEl;
@@ -38,7 +38,8 @@ export default function User(el, onUpdate) {
     var currentValue = {'year': endYear, 'threshold': 0};
     var linechart, areachart, lineData, width, height = 55;
     var isMobile;
-
+    var district;
+    
     function init() {
         var minimap, year, img;
 
@@ -46,6 +47,17 @@ export default function User(el, onUpdate) {
 
         madlib(el.querySelector('.js-wage'), $$('.js-wage-preset'), validThreshold, formatThreshold,
             parseThreshold, changeThreshold);
+        
+        //TODO: move temp code to proper place
+        madlib(el.querySelector('.js-location'), [], () => true, v => v, v => v, postcode => {
+            district = postcode.split(' ')[0].toUpperCase();
+            //TODO:
+            //if postcode is valid
+            //zoom to the distrct and
+            //show its tooltip
+            tooltip.show(currentValue, district/*, coord*/);
+        });
+        //TODO: tooltip.hide() when icon-clear is clicked
 
         currentWageEls = $$('.js-current-wage', document);
         yearEls = $$('.js-year');
@@ -99,6 +111,9 @@ export default function User(el, onUpdate) {
         if (type === 'end' || !isMobile) {
             setTimeout(() => onUpdate(currentValue), 0);
         }
+        
+        tooltip.show(currentValue, district/*, coord*/);
+        //tooltip.hide();
     }
 
     function changeThreshold(threshold) {

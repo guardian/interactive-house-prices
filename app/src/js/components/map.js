@@ -1,14 +1,12 @@
-import { periodMedians, getDistricts, getRegionPrices } from '../lib/region'
-import { config } from '../lib/cfg'
-import throttle from '../lib/throttle'
+import { periodMedians, getDistricts, getRegionPrices } from '../lib/region';
+import { config } from '../lib/cfg';
+import throttle from '../lib/throttle';
 import locationTemplate from './templates/mapLocation.html!text';
-
-import Tooltip from './tooltip'
 
 const colors = ['#39a4d8', '#8ac7cd', '#daeac1', '#fdd09e', '#f58680', '#ed3d61'];
 
-export default function Map(el) {
-    var tooltip, districtLayer, highlightLayer, userInput;
+export default function Map(el, tooltip) {
+    var districtLayer, highlightLayer, userInput;
 
     function init(L) {
         // Hacky way of using presimiplified, preprojected points
@@ -74,8 +72,6 @@ export default function Map(el) {
                 res.more();
             }
         });
-
-        tooltip = new Tooltip(el);
     }
 
     function setStyle(district) {
@@ -101,7 +97,7 @@ export default function Map(el) {
         layer.on({
             mouseover: evt => {
                 highlightLayer.addData([feature]);
-                tooltip.show(evt, userInput);
+                tooltip.show(userInput, evt.target.feature.id, evt);
             },
             mousemove: evt => {
                 tooltip.move(evt);
@@ -120,12 +116,12 @@ export default function Map(el) {
         if (districtLayer) {
             districtLayer.eachLayer(district => districtLayer.resetStyle(district));
         }
-    }
+    };
 
     var script = document.createElement('script');
     script.src = config.assetPath + '/leaflet.js';
     script.onload = function (evt) {
         init(window.L);
-    }
+    };
     document.body.appendChild(script);
-};
+}

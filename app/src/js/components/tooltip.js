@@ -13,7 +13,7 @@ const chartWidth = 280;
 const chartHeight = 64;
 const outlierWidth = 30;
 
-export default function Tooltip(root) {
+export default function Tooltip(mapEl) {
     var areaEl, districtEl, numEl, upfEl, minEl, maxEl, medEls, salaryEls, 
         factorEl, yearUserEl, yearAffordableEl, pipeRangeEl, pipeOutlierEl, outlierEl;
     var translateEl;
@@ -39,7 +39,7 @@ export default function Tooltip(root) {
         tooltipNames = names;
         tooltipStats = stats;
 
-        var el = root.querySelector('.js-tooltip');
+        var el = mapEl.querySelector('.js-tooltip');
         el.innerHTML = template;
         translateEl = translate(el);
 
@@ -71,8 +71,8 @@ export default function Tooltip(root) {
         linechart = new Linechart("js-lines", "line-mask", chartWidth, chartHeight, 9, 5, true);
 
         var resize = debounce(function () {
-            viewWidth = root.clientWidth;
-            viewHeight = root.clientHeight;
+            viewWidth = mapEl.clientWidth;
+            viewHeight = mapEl.clientHeight;
         }.bind(this), 200);
 
         window.addEventListener('resize', () => {
@@ -83,15 +83,12 @@ export default function Tooltip(root) {
         resize();
     }
 
-    this.show = function (evt, userInput) {
+    this.show = function (userInput, district, evt) {
         // return if json is not yet loaded
         if (!tooltipStats) { return; }
-
-        var districtObj = evt.target.feature,
-            district = districtObj.id;
-
-        var prices = getDistrictStats(district, userInput.year);
+        if (!district) { return; }
         
+        var prices = getDistrictStats(district, userInput.year);
         // return and hide if data doesn't exist
         if (prices===null) { hidden = true; return; }
         
@@ -181,7 +178,6 @@ export default function Tooltip(root) {
                 y: l                 //count
             };
         });
-        
         linechart.updateMask(dataBins, "line-mask", "monotone", hasOutlier);
         linechart.updateAxis(dataBins.slice(0, -1), rangeWidth);
         linechart.updateText(dataBins);
@@ -197,8 +193,8 @@ export default function Tooltip(root) {
     };
 
     this.move = function (evt) {
-        var x = evt.containerPoint.x;
-        var y = evt.containerPoint.y;
+        var x = evt ? evt.containerPoint.x : 10;
+        var y = evt ? evt.containerPoint.y : (document.querySelector(".js-map-controls").offsetTop) -  230;
         if (x + tooltipWidth > viewWidth) {
             x -= tooltipWidth;
         }

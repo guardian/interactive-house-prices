@@ -78,7 +78,7 @@
     @include mq(tablet) {
     left: 10px;
     bottom: 10px;
-    width: 240px;
+    width: 280px;
     }
 }
 
@@ -151,6 +151,16 @@ $pips-width: 100% / (length($pips) + 2);
     width: (100% / 2);
     max-width: 160px;
     margin-top: -3px;
+    
+    .hp-madlib__input__text {
+        text-transform: uppercase;
+    }
+    .hp-madlib__input__btn {
+        margin-top: 1.5px; 
+    }
+    svg {
+        transform: translate(-3px, -3px);
+    }
 }
 
 .leaflet-container {
