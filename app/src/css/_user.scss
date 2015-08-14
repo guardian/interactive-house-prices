@@ -37,16 +37,14 @@
     @include mq(tablet) {
         width: 280px;
         margin: 0 0 0 auto;
-    }
-
-    &.hp-user__inner--results,
-    &.hp-user__inner--shares {
-        border-top: 1px solid #bdbdbd;
-    }
-
-    &.hp-user__inner--shares {
-        padding: 10px 20px 8px 20px;
-    }
+    } 
+}
+.hp-user__inner--results,
+.hp-user__inner--shares {
+    border-top: 1px solid #bdbdbd;
+}
+.hp-user__inner--shares {
+    padding: 10px 20px 8px 20px;
 }
 
 .hp-title {
@@ -94,7 +92,10 @@
     background-size: cover;
     width: 100px;
     height: 120px;
-    margin-top: -10px;
+    margin-top: -5px;
+    @include mq(tablet) {
+    margin-top: -15px;
+    }
 
     & > canvas {
         position: absolute;

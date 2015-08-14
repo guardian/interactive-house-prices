@@ -15,7 +15,8 @@ export function setBottomNotSticky(value) {
 export function stickyBar(el, anchorEl) {
     var sticky = false;
 
-    var thumbEl = document.querySelector('.hp-range-slider__thumb');
+    var thumbEl = document.querySelector('.js-thumb');
+    var shareEl = document.querySelector('.js-shares');
 
     var eventHandler = throttle(function () {
         var newSticky = window.pageYOffset >= getOffset(el.parentNode) + anchorEl.offsetTop;
@@ -24,11 +25,13 @@ export function stickyBar(el, anchorEl) {
             if (sticky) {
                 el.className += ' is-sticky';
                 anchorEl.className += ' is-sticky';
+                shareEl.className += ' d-n';
                 setBottomNotSticky(thumbEl.style.bottom);
                 thumbEl.style.bottom = "25px";
             } else {
                 el.className = el.className.replace(/is-sticky/g, '').trim();
                 anchorEl.className = anchorEl.className.replace(/is-sticky/g, '').trim();
+                shareEl.className = shareEl.className.replace(/d-n/g, '').trim();
                 thumbEl.style.bottom = getBottomNotSticky();
             }
         }
