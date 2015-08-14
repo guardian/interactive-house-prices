@@ -4,7 +4,6 @@ import throttle from '../lib/throttle'
 import locationTemplate from './templates/mapLocation.html!text';
 
 import Tooltip from './tooltip'
-import Controls from './controls'
 
 const colors = ['#39a4d8', '#8ac7cd', '#daeac1', '#fdd09e', '#f58680', '#ed3d61'];
 
@@ -77,7 +76,6 @@ export default function Map(el) {
         });
 
         tooltip = new Tooltip(el);
-        new Controls(el.querySelector('.js-map-controls'), map);
     }
 
     function setStyle(district) {

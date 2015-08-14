@@ -8,6 +8,7 @@ import scrollTo from './lib/scroll-to'
 
 import Map from './components/map'
 import User from './components/user'
+import Controls from './components/controls'
 
 import mainHTML from './templates/main.html!text'
 
@@ -19,6 +20,7 @@ export function init(el, config) {
     var mapEl = el.querySelector('.js-map')
     var map = new Map(mapEl);
     var user = new User(el.querySelector('.js-user'), map.update);
+    var controls = new Controls(el.querySelector('.js-map-controls'), map);
 
     el.querySelector('.js-map-activate').addEventListener('click', evt => {
         el.className += ' is-map-active';
