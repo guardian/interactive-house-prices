@@ -1,6 +1,7 @@
 import { periodMedians, getDistricts, getRegionPrices } from '../lib/region';
 import { config } from '../lib/cfg';
 import throttle from '../lib/throttle';
+import isMobile from '../lib/is-mobile';
 import locationTemplate from './templates/mapLocation.html!text';
 
 const colors = ['#39a4d8', '#8ac7cd', '#daeac1', '#fdd09e', '#f58680', '#ed3d61'];
@@ -13,7 +14,7 @@ export default function Map(el, tooltip) {
         L.Polygon.prototype._simplifyPoints = function () {};
 
         var setContainerSize = throttle(() => {
-            el.style.height = (window.innerHeight - 48) + 'px';
+            el.style.height = (window.innerHeight - (isMobile() ? 0 : 48)) + 'px';
         }, 100);
         window.addEventListener('resize', () => window.requestAnimationFrame(setContainerSize));
         setContainerSize();

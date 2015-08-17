@@ -8,6 +8,7 @@ import { stickyBar, setBottomNotSticky } from '../lib/sticky-bar';
 import madlib from '../lib/madlib';
 import range from '../lib/range';
 import share from '../lib/share';
+import isMobile from '../lib/is-mobile';
 
 import Linechart from './linechart';
 import Minimap from './minimap';
@@ -37,9 +38,8 @@ export default function User(el, onUpdate, tooltip) {
     var periodSplits;
     var currentValue = {'year': endYear, 'threshold': 0};
     var linechart, areachart, lineData, width, height = 55;
-    var isMobile;
     var district;
-    
+
     function init() {
         var minimap, year, img;
 
@@ -47,17 +47,17 @@ export default function User(el, onUpdate, tooltip) {
 
         madlib(el.querySelector('.js-wage'), $$('.js-wage-preset'), validThreshold, formatThreshold,
             parseThreshold, changeThreshold);
-        
+
         //TODO: move temp code to proper place
         madlib(el.querySelector('.js-location'), [], () => true, v => v, v => v, postcode => {
-            district = postcode.split(' ')[0].toUpperCase();
-            //TODO:
-            //if postcode is valid
-            //zoom to the distrct and
-            //show its tooltip
-            tooltip.show(currentValue, district/*, coord*/);
+            if (postcode.length > 0) {
+                var district = (postcode.length > 4 ? postcode.substring(0, postcode.length - 3) : postcode)
+                    .trim().toUpperCase();
+                tooltip.show(currentValue, district/*, coord*/);
+            } else {
+                tooltip.hide();
+            }
         });
-        //TODO: tooltip.hide() when icon-clear is clicked
 
         currentWageEls = $$('.js-current-wage', document);
         yearEls = $$('.js-year');
@@ -85,16 +85,7 @@ export default function User(el, onUpdate, tooltip) {
         areachart = new Linechart('js-area', 'line-area', 266, height, 5, 0);
         range(el.querySelector('.js-date'), startYear, endYear, changeYear, 5);
 
-        //resize line chart
-        var resize = throttle(function() {
-            drawAreachart();
-        }, 200);
-
-        window.addEventListener('resize', () => {
-            resize();
-            isMobile = window.innerWidth < 740;
-        });
-        isMobile = window.innerWidth < 740;
+        window.addEventListener('resize', throttle(drawAreachart, 200));
 
         changeThreshold(25000); // ugly way to initialise line chart
     }
@@ -108,7 +99,7 @@ export default function User(el, onUpdate, tooltip) {
         thumbEl.style.bottom = isSticky ? "25px" : bottomNotSticky;
         setBottomNotSticky(bottomNotSticky);
         
-        if (type === 'end' || !isMobile) {
+        if (type === 'end' || !isMobile()) {
             setTimeout(() => onUpdate(currentValue), 0);
         }
         

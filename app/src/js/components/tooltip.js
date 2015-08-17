@@ -187,7 +187,7 @@ export default function Tooltip(mapEl) {
         this.move(evt);
     };
 
-    this.hide = function () {
+    var hide = this.hide = function () {
         hidden = true;
         translateEl(-1000, -1000);
     };
