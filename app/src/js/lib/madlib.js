@@ -44,9 +44,7 @@ export default function (el, presets, valid, format, parse, onchange) {
         // Wait for new activeElement
         setTimeout(() => {
             if (document.activeElement !== btn) {
-                if (!submit()) {
-                    change(currentValue, currentPreset);
-                }
+                change(currentValue, currentPreset);
                 btn.removeAttribute('data-focus');
             }
         }, 0);
