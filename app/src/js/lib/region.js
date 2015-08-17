@@ -22,20 +22,19 @@ export const startYear = periodYears[0], endYear = periodYears[periodYears.lengt
 
 function processDistricts(onData, res) {
     if (window.Worker) {
-        let iframe = document.createElement('iframe'), target;
+        let iframe = document.createElement('iframe'), target, origin;
         iframe.style.display = 'none';
         iframe.src = config.assetPath + '/worker.html';
         window.addEventListener('message', function (evt) {
-            if (target) {
-                if (evt.source === target) {
-                    onData({
-                        'districts': evt.data,
-                        'more': () => target.postMessage({'action': 'more'}, '*')
-                    });
-                }
-            } else {
+            if (evt.source === target) {
+                onData({
+                    'districts': evt.data,
+                    'more': () => target.postMessage({'action': 'more'}, origin)
+                });
+            } else if (evt.data === 'worker') {
                 target = evt.source;
-                target.postMessage({'action': 'data', 'data': res}, '*');
+                origin = evt.origin;
+                target.postMessage({'action': 'data', 'data': res}, origin);
             }
         });
         document.body.appendChild(iframe);
