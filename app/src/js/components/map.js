@@ -16,7 +16,7 @@ export default function Map(el, tooltip) {
         var setContainerSize = throttle(() => {
             el.style.height = (window.innerHeight - (isMobile() ? 0 : 48)) + 'px';
         }, 100);
-        window.addEventListener('resize', () => window.requestAnimationFrame(setContainerSize));
+        window.addEventListener('resize', setContainerSize);
         setContainerSize();
 
         var map = L.map(el, {
