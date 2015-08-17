@@ -7,7 +7,7 @@ import locationTemplate from './templates/mapLocation.html!text';
 const colors = ['#39a4d8', '#8ac7cd', '#daeac1', '#fdd09e', '#f58680', '#ed3d61'];
 
 export default function Map(el, tooltip) {
-    var districtLayer, highlightLayer, userInput;
+    var map, districtLayer, highlightLayer, userInput;
 
     function init(L) {
         // Hacky way of using presimiplified, preprojected points
@@ -19,7 +19,7 @@ export default function Map(el, tooltip) {
         window.addEventListener('resize', throttle(setContainerSize, 100));
         setContainerSize();
 
-        var map = L.map(el, {
+        map = L.map(el, {
             'center': [53, -2.3],
             //'maxBounds': [[50, -6.5], [56, 1.8]],
             'maxZoom': 17,
@@ -117,6 +117,14 @@ export default function Map(el, tooltip) {
         if (districtLayer) {
             districtLayer.eachLayer(district => districtLayer.resetStyle(district));
         }
+    };
+
+    this.flyTo = function (districtCode) {
+        districtLayer.eachLayer(district => {
+            if (district.feature.id === districtCode) {
+                map.flyTo(district.getCenter(), 12);
+            }
+        });
     };
 
     var script = document.createElement('script');

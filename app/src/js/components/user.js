@@ -31,7 +31,7 @@ function parseThreshold(value) {
 }
 
 
-export default function User(el, onUpdate, tooltip) {
+export default function User(el, onUpdate, tooltip, map) {
     const $$ = (s, root=el) => [].slice.call(root.querySelectorAll(s));
 
     var currentWageEls, yearEls, ratioEls, thumbEl, minimapImgs = [], summaryEl;
@@ -54,6 +54,7 @@ export default function User(el, onUpdate, tooltip) {
                 var district = (postcode.length > 4 ? postcode.substring(0, postcode.length - 3) : postcode)
                     .trim().toUpperCase();
                 tooltip.show(currentValue, district/*, coord*/);
+                map.flyTo(district);
             } else {
                 tooltip.hide();
             }
