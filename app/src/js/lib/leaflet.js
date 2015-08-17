@@ -1,5 +1,5 @@
 /*
- Leaflet 1.0.0-beta.2 (e698a4e), a JS library for interactive maps. http://leafletjs.com
+ Leaflet 1.0.0-beta.2 (0e03a45), a JS library for interactive maps. http://leafletjs.com
  (c) 2010-2015 Vladimir Agafonkin, (c) 2010-2011 CloudMade
 */
 (function (window, document, undefined) {
@@ -31,6 +31,7 @@ if (typeof module === 'object' && typeof module.exports === 'object') {
 if (typeof window !== 'undefined') {
 	expose();
 }
+
 
 
 /*
@@ -238,6 +239,7 @@ L.stamp = L.Util.stamp;
 L.setOptions = L.Util.setOptions;
 
 
+
 /*
  * L.Class powers the OOP facilities of the library.
  * Thanks to John Resig and Dean Edwards for inspiration!
@@ -336,6 +338,7 @@ L.Class.addInitHook = function (fn) { // (Function) || (String, args...)
 	this.prototype._initHooks = this.prototype._initHooks || [];
 	this.prototype._initHooks.push(init);
 };
+
 
 
 /*
@@ -568,6 +571,7 @@ proto.hasEventListeners = proto.listens;
 L.Mixin = {Events: proto};
 
 
+
 /*
  * L.Browser handles different browser and feature detections for internal Leaflet use.
  */
@@ -627,6 +631,7 @@ L.Mixin = {Events: proto};
 	};
 
 }());
+
 
 
 /*
@@ -768,6 +773,7 @@ L.point = function (x, y, round) {
 };
 
 
+
 /*
  * L.Bounds represents a rectangular area on the screen in pixel coordinates.
  */
@@ -878,6 +884,7 @@ L.bounds = function (a, b) { // (Bounds) or (Point, Point) or (Point[])
 };
 
 
+
 /*
  * L.Transformation is an utility class to perform simple point transformations through a 2d-matrix.
  */
@@ -909,6 +916,7 @@ L.Transformation.prototype = {
 		        (point.y / scale - this._d) / this._c);
 	}
 };
+
 
 
 /*
@@ -1154,6 +1162,7 @@ L.DomUtil = {
 })();
 
 
+
 /*
  * L.LatLng represents a geographical point with latitude and longitude coordinates.
  */
@@ -1240,6 +1249,7 @@ L.latLng = function (a, b, c) {
 	}
 	return new L.LatLng(a, b, c);
 };
+
 
 
 /*
@@ -1419,6 +1429,7 @@ L.latLngBounds = function (a, b) { // (LatLngBounds) or (LatLng, LatLng)
 };
 
 
+
 /*
  * Simple equirectangular (Plate Carree) projection, used by CRS like EPSG:4326 and Simple.
  */
@@ -1438,6 +1449,7 @@ L.Projection.LonLat = {
 };
 
 
+
 /*
  * Spherical Mercator is the most popular map projection, used by EPSG:3857 CRS used by default.
  */
@@ -1445,11 +1457,13 @@ L.Projection.LonLat = {
 L.Projection.SphericalMercator = {
 
 	R: 6378137,
+	MAX_LATITUDE: 85.0511287798,
 
 	project: function (latlng) {
 		var d = Math.PI / 180,
-		    max = 1 - 1E-15,
-		    sin = Math.max(Math.min(Math.sin(latlng.lat * d), max), -max);
+		    max = this.MAX_LATITUDE,
+		    lat = Math.max(Math.min(max, latlng.lat), -max),
+		    sin = Math.sin(lat * d);
 
 		return new L.Point(
 				this.R * latlng.lng * d,
@@ -1469,6 +1483,7 @@ L.Projection.SphericalMercator = {
 		return L.bounds([-d, -d], [d, d]);
 	})()
 };
+
 
 
 /*
@@ -1537,6 +1552,7 @@ L.CRS = {
 };
 
 
+
 /*
  * A simple CRS that can be used for flat non-Earth maps like panoramas or game maps.
  */
@@ -1558,6 +1574,7 @@ L.CRS.Simple = L.extend({}, L.CRS, {
 
 	infinite: true
 });
+
 
 
 /*
@@ -1582,6 +1599,7 @@ L.CRS.Earth = L.extend({}, L.CRS, {
 });
 
 
+
 /*
  * L.CRS.EPSG3857 (Spherical Mercator) is the most common CRS for web mapping and is used by Leaflet by default.
  */
@@ -1601,6 +1619,7 @@ L.CRS.EPSG900913 = L.extend({}, L.CRS.EPSG3857, {
 });
 
 
+
 /*
  * L.CRS.EPSG4326 is a CRS popular among advanced GIS specialists.
  */
@@ -1610,6 +1629,7 @@ L.CRS.EPSG4326 = L.extend({}, L.CRS.Earth, {
 	projection: L.Projection.LonLat,
 	transformation: new L.Transformation(1 / 180, 1, -1 / 180, 0.5)
 });
+
 
 
 /*
@@ -2230,7 +2250,7 @@ L.Map = L.Evented.extend({
 	_onResize: function () {
 		L.Util.cancelAnimFrame(this._resizeRequest);
 		this._resizeRequest = L.Util.requestAnimFrame(
-		        function () { this.invalidateSize({debounceMoveend: true}); }, this, false, this._container);
+		        function () { this.invalidateSize({debounceMoveend: true}); }, this);
 	},
 
 	_onScroll: function () {
@@ -2428,6 +2448,7 @@ L.map = function (id, options) {
 
 
 
+
 L.Layer = L.Evented.extend({
 
 	options: {
@@ -2597,6 +2618,7 @@ L.Map.include({
 });
 
 
+
 /*
  * Mercator projection that takes into account that the Earth is not a perfect sphere.
  * Less popular than spherical mercator; used by projections like EPSG:3395.
@@ -2642,6 +2664,7 @@ L.Projection.Mercator = {
 };
 
 
+
 /*
  * L.CRS.EPSG3857 (World Mercator) CRS implementation.
  */
@@ -2655,6 +2678,7 @@ L.CRS.EPSG3395 = L.extend({}, L.CRS.Earth, {
 		return new L.Transformation(scale, 0.5, -scale, 0.5);
 	}())
 });
+
 
 
 /*
@@ -3334,6 +3358,7 @@ L.gridLayer = function (options) {
 };
 
 
+
 /*
  * L.TileLayer is used for standard xyz-numbered tile layers.
  */
@@ -3494,6 +3519,7 @@ L.tileLayer = function (url, options) {
 };
 
 
+
 /*
  * L.TileLayer.WMS is used for WMS tile layers.
  */
@@ -3578,6 +3604,7 @@ L.TileLayer.WMS = L.TileLayer.extend({
 L.tileLayer.wms = function (url, options) {
 	return new L.TileLayer.WMS(url, options);
 };
+
 
 
 /*
@@ -3748,6 +3775,7 @@ L.imageOverlay = function (url, bounds, options) {
 };
 
 
+
 /*
  * L.Icon is an image-based icon class that you can use with L.Marker for custom markers.
  */
@@ -3831,6 +3859,7 @@ L.icon = function (options) {
 };
 
 
+
 /*
  * L.Icon.Default is the blue marker icon used by default in Leaflet.
  */
@@ -3876,6 +3905,7 @@ L.Icon.Default.imagePath = (function () {
 		}
 	}
 }());
+
 
 
 /*
@@ -4145,6 +4175,7 @@ L.marker = function (latlng, options) {
 };
 
 
+
 /*
  * L.DivIcon is a lightweight HTML-based icon class (as opposed to the image-based L.Icon)
  * to use with L.Marker.
@@ -4185,6 +4216,7 @@ L.DivIcon = L.Icon.extend({
 L.divIcon = function (options) {
 	return new L.DivIcon(options);
 };
+
 
 
 /*
@@ -4522,6 +4554,7 @@ L.Map.include({
 });
 
 
+
 /*
  * Adds popup-related methods to all layers.
  */
@@ -4676,6 +4709,7 @@ L.Layer.include({
 });
 
 
+
 /*
  * Popup extension to L.Marker, adding popup-related methods.
  */
@@ -4685,6 +4719,7 @@ L.Marker.include({
 		return this.options.icon.options.popupAnchor || [0, 0];
 	}
 });
+
 
 
 /*
@@ -4802,6 +4837,7 @@ L.layerGroup = function (layers) {
 };
 
 
+
 /*
  * L.FeatureGroup extends L.LayerGroup by introducing mouse events and additional methods
  * shared between a group of interactive layers (like vectors or markers).
@@ -4862,6 +4898,7 @@ L.FeatureGroup = L.LayerGroup.extend({
 L.featureGroup = function (layers) {
 	return new L.FeatureGroup(layers);
 };
+
 
 
 /*
@@ -4976,6 +5013,7 @@ L.Map.include({
 });
 
 
+
 /*
  * L.Path is the base class for all Leaflet vector layers like polygons and circles.
  */
@@ -5064,6 +5102,7 @@ L.Path = L.Layer.extend({
 		return (this.options.stroke ? this.options.weight / 2 : 0) + (L.Browser.touch ? 10 : 0);
 	}
 });
+
 
 
 /*
@@ -5277,6 +5316,7 @@ L.LineUtil = {
 		return sqDist ? dx * dx + dy * dy : new L.Point(x, y);
 	}
 };
+
 
 
 /*
@@ -5522,6 +5562,7 @@ L.Polyline._flat = function (latlngs) {
 };
 
 
+
 /*
  * L.PolyUtil contains utility functions for polygons (clipping, etc.).
  */
@@ -5575,6 +5616,7 @@ L.PolyUtil.clipPolygon = function (points, bounds, round) {
 
 	return points;
 };
+
 
 
 /*
@@ -5670,6 +5712,7 @@ L.polygon = function (latlngs, options) {
 };
 
 
+
 /*
  * L.Rectangle extends Polygon and creates a rectangle when passed a LatLngBounds object.
  */
@@ -5697,6 +5740,7 @@ L.Rectangle = L.Polygon.extend({
 L.rectangle = function (latLngBounds, options) {
 	return new L.Rectangle(latLngBounds, options);
 };
+
 
 
 /*
@@ -5775,6 +5819,7 @@ L.circleMarker = function (latlng, options) {
 };
 
 
+
 /*
  * L.Circle is a circle overlay (with a certain radius in meters).
  * It's an approximation and starts to diverge from a real circle closer to poles (due to projection distortion)
@@ -5842,6 +5887,7 @@ L.Circle = L.CircleMarker.extend({
 L.circle = function (latlng, radius, options) {
 	return new L.Circle(latlng, radius, options);
 };
+
 
 
 /*
@@ -6019,6 +6065,7 @@ L.svg = function (options) {
 };
 
 
+
 /*
  * Vector rendering for IE7-8 through VML.
  * Thanks to Dmitry Baranovsky and his Raphael library for inspiration!
@@ -6162,6 +6209,7 @@ if (L.Browser.vml) {
 		}
 	})();
 }
+
 
 
 /*
@@ -6478,6 +6526,7 @@ L.CircleMarker.prototype._containsPoint = function (p) {
 };
 
 
+
 /*
  * L.GeoJSON turns any GeoJSON data into a Leaflet layer.
  */
@@ -6758,6 +6807,7 @@ L.geoJson = function (geojson, options) {
 };
 
 
+
 /*
  * L.DomEvent contains functions for working with DOM events.
  * Inspired by John Resig, Dean Edwards and YUI addEvent implementations.
@@ -7011,6 +7061,7 @@ L.DomEvent.addListener = L.DomEvent.on;
 L.DomEvent.removeListener = L.DomEvent.off;
 
 
+
 /*
  * L.Draggable allows you to add dragging capabilities to any element. Supports mobile devices too.
  */
@@ -7115,7 +7166,7 @@ L.Draggable = L.Evented.extend({
 
 		L.Util.cancelAnimFrame(this._animRequest);
 		this._lastEvent = e;
-		this._animRequest = L.Util.requestAnimFrame(this._updatePosition, this, true, this._dragStartTarget);
+		this._animRequest = L.Util.requestAnimFrame(this._updatePosition, this, true);
 	},
 
 	_updatePosition: function () {
@@ -7155,6 +7206,7 @@ L.Draggable = L.Evented.extend({
 });
 
 
+
 /*
 	L.Handler is a base class for handler classes that are used internally to inject
 	interaction features like dragging to classes like Map and Marker.
@@ -7183,6 +7235,7 @@ L.Handler = L.Class.extend({
 		return !!this._enabled;
 	}
 });
+
 
 
 /*
@@ -7373,6 +7426,7 @@ L.Map.Drag = L.Handler.extend({
 L.Map.addInitHook('addHandler', 'dragging', L.Map.Drag);
 
 
+
 /*
  * L.Handler.DoubleClickZoom is used to handle double-click zoom on the map, enabled by default.
  */
@@ -7404,6 +7458,7 @@ L.Map.DoubleClickZoom = L.Handler.extend({
 });
 
 L.Map.addInitHook('addHandler', 'doubleClickZoom', L.Map.DoubleClickZoom);
+
 
 
 /*
@@ -7476,6 +7531,7 @@ L.Map.ScrollWheelZoom = L.Handler.extend({
 });
 
 L.Map.addInitHook('addHandler', 'scrollWheelZoom', L.Map.ScrollWheelZoom);
+
 
 
 /*
@@ -7553,6 +7609,7 @@ L.extend(L.DomEvent, {
 		return this;
 	}
 });
+
 
 
 /*
@@ -7678,6 +7735,7 @@ L.extend(L.DomEvent, {
 });
 
 
+
 /*
  * L.Handler.TouchZoom is used by L.Map to add pinch zoom on supported mobile browsers.
  */
@@ -7759,7 +7817,7 @@ L.Map.TouchZoom = L.Handler.extend({
 		L.Util.cancelAnimFrame(this._animRequest);
 
 		var moveFn = L.bind(map._move, map, this._center, this._zoom, {pinch: true, round: false});
-		this._animRequest = L.Util.requestAnimFrame(moveFn, this, true, map._container);
+		this._animRequest = L.Util.requestAnimFrame(moveFn, this, true);
 
 		L.DomEvent.preventDefault(e);
 	},
@@ -7786,6 +7844,7 @@ L.Map.TouchZoom = L.Handler.extend({
 });
 
 L.Map.addInitHook('addHandler', 'touchZoom', L.Map.TouchZoom);
+
 
 
 /*
@@ -7903,6 +7962,7 @@ if (L.Browser.touch && !L.Browser.pointer) {
 }
 
 
+
 /*
  * L.Handler.ShiftDragZoom is used to add shift-drag zoom interaction to the map
   * (zoom to a selected bounding box), enabled by default.
@@ -8018,6 +8078,7 @@ L.Map.BoxZoom = L.Handler.extend({
 });
 
 L.Map.addInitHook('addHandler', 'boxZoom', L.Map.BoxZoom);
+
 
 
 /*
@@ -8179,6 +8240,7 @@ L.Map.Keyboard = L.Handler.extend({
 L.Map.addInitHook('addHandler', 'keyboard', L.Map.Keyboard);
 
 
+
 /*
  * L.Handler.MarkerDrag is used internally by L.Marker to make the markers draggable.
  */
@@ -8252,6 +8314,7 @@ L.Handler.MarkerDrag = L.Handler.extend({
 		    .fire('dragend', e);
 	}
 });
+
 
 
 /*
@@ -8377,6 +8440,7 @@ L.Map.include({
 });
 
 
+
 /*
  * L.Control.Zoom is used for the default zoom buttons on the map.
  */
@@ -8479,6 +8543,7 @@ L.Map.addInitHook(function () {
 L.control.zoom = function (options) {
 	return new L.Control.Zoom(options);
 };
+
 
 
 /*
@@ -8584,6 +8649,7 @@ L.control.attribution = function (options) {
 };
 
 
+
 /*
  * L.Control.Scale is used for displaying metric/imperial scale on the map.
  */
@@ -8686,6 +8752,7 @@ L.Control.Scale = L.Control.extend({
 L.control.scale = function (options) {
 	return new L.Control.Scale(options);
 };
+
 
 
 /*
@@ -8956,6 +9023,7 @@ L.control.layers = function (baseLayers, overlays, options) {
 };
 
 
+
 /*
  * L.PosAnimation powers Leaflet pan animations internally.
  */
@@ -9025,6 +9093,7 @@ L.PosAnimation = L.Evented.extend({
 		return 1 - Math.pow(1 - t, this._easeOutPower);
 	}
 });
+
 
 
 /*
@@ -9129,6 +9198,7 @@ L.Map.include({
 		return true;
 	}
 });
+
 
 
 /*
@@ -9253,6 +9323,7 @@ L.Map.include(!zoomAnimated ? {} : {
 
 
 
+
 L.Map.include({
 	flyTo: function (targetCenter, targetZoom, options) {
 
@@ -9273,7 +9344,7 @@ L.Map.include({
 
 		var w0 = Math.max(size.x, size.y),
 		    w1 = w0 * this.getZoomScale(startZoom, targetZoom),
-		    u1 = to.distanceTo(from) || 1,
+		    u1 = (to.distanceTo(from)) || 1,
 		    rho = 1.42,
 		    rho2 = rho * rho;
 
@@ -9328,6 +9399,7 @@ L.Map.include({
 });
 
 
+
 /*
  * Provides L.Map with convenient shortcuts for using browser geolocation features.
  */
@@ -9367,7 +9439,7 @@ L.Map.include({
 	},
 
 	stopLocate: function () {
-		if (navigator.geolocation) {
+		if (navigator.geolocation && navigator.geolocation.clearWatch) {
 			navigator.geolocation.clearWatch(this._locationWatchId);
 		}
 		if (this._locateOptions) {
@@ -9422,3 +9494,4 @@ L.Map.include({
 
 
 }(window, document));
+//# sourceMappingURL=leaflet-src.map
