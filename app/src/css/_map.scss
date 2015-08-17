@@ -85,16 +85,26 @@
 .hp-range,
 .hp-attribution {
     @include fs-textSans(2);
-    line-height: 1.25;
     width: 100%;
 }
-.hp-range { font-size: 12px; }
-.hp-attribution { font-size: 10px; }
-
+.hp-range { 
+    font-size: 12px; 
+    overflow: hidden; 
+    width: 60%;
+    float: right;
+}
+.hp-attribution { 
+    font-size: 10px; 
+    line-height: 1.3em;
+    width: calc(40% - 10px);
+    border-right: 1px dotted $c-neutral-5;
+    margin-bottom: 2px;
+    padding-top: 7px;
+}
 .hp-range__desc {
     font-weight: bold;
     margin: 0;
-    padding: 3px;
+    padding: 3px 0;
 }
 
 $pips: (
@@ -140,39 +150,28 @@ $pips-width: 100% / (length($pips) + 2);
     width: ($pips-width * 2);
 }
 
-.hp-location-label {
-    display: inline-block;
-    width: 135px; //tune num
-}
-
 .hp-location {
+    position: relative;
+    height: 35px;
+    border-bottom: 1px dotted $c-neutral-5;
+}
+.hp-location__label {
+    font-size: 14px;
+    display: inline-block;
+    width: calc(40% - 2px);
+    margin-top: 3px;
+}
+.hp-location__form {
     font-size: 20px;
     float: right;
-    width: (100% / 2);
+    width: 60%;
     margin-top: -3px;
     
     .hp-madlib__input__text {
         text-transform: uppercase;
     }
-    .hp-madlib__input__btn {
-        margin-top: 1.5px; 
-    }
     svg {
         transform: translate(-3px, -3px);
-    }
-}
-.hp-location-mobile {
-    @extend .hp-location;
-    float: none;
-    visibility: hidden;
-
-    position: absolute;
-    top: 100%;
-    max-width: 146px;
-    margin-top: 10px;
-
-    .is-map-active & {
-        visibility: visible;    
     }
 }
 

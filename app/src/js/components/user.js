@@ -48,18 +48,6 @@ export default function User(el, onUpdate, tooltip, map) {
         madlib(el.querySelector('.js-wage'), $$('.js-wage-preset'), validThreshold, formatThreshold,
             parseThreshold, changeThreshold);
 
-        //TODO: move temp code to proper place
-        madlib(el.querySelector('.js-location'), [], () => true, v => v, v => v, postcode => {
-            if (postcode.length > 0) {
-                var district = (postcode.length > 4 ? postcode.substring(0, postcode.length - 3) : postcode)
-                    .trim().toUpperCase();
-                tooltip.show(currentValue, district/*, coord*/);
-                map.flyTo(district);
-            } else {
-                tooltip.hide();
-            }
-        });
-
         currentWageEls = $$('.js-current-wage', document);
         yearEls = $$('.js-year');
         ratioEls = $$('.js-user-ratio');
@@ -102,7 +90,6 @@ export default function User(el, onUpdate, tooltip, map) {
         }
 
         tooltip.show(currentValue, district/*, coord*/);
-        //tooltip.hide();
     }
 
     function changeThreshold(threshold) {
@@ -152,6 +139,10 @@ export default function User(el, onUpdate, tooltip, map) {
         chart.updateWidth("." + el + " svg", width);
         chart.updateLine(data, cn, [0, width], [0, height], null, [0, 100]);
     }
-
+    
+    this.getCurrentValue = function() {
+        return currentValue;
+    };
+    
     init();
 }

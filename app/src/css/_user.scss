@@ -39,13 +39,7 @@
         margin: 0 0 0 auto;
     } 
 }
-.hp-user__inner--location {
-    padding: 16px 20px 15px 20px;
-    
-    @include mq($until: tablet) {
-    display: none;
-    }
-}
+
 .hp-user__inner--shares {
     padding: 10px 20px 8px 20px;
 }
