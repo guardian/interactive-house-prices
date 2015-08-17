@@ -15,7 +15,7 @@ const DISTRICT_HEIGHT = 18;
 const SPRITE_CHUNK_SIZE = districtCodes.length / 2;
 
 export default function Minimap(el) {
-    var ctx, translateEl;
+    var ctx, translateEl, districtsOnLoad, showOnLoad = false;
 
     function init() {
         minimapLoaded = true;
@@ -27,10 +27,16 @@ export default function Minimap(el) {
 
         el.appendChild(canvas);
         ctx = canvas.getContext('2d');
+
+        if (districtsOnLoad) draw(districtsOnLoad);
+        if (showOnLoad) show();
     }
 
-    this.draw = function (districtNos) {
-        if (!ctx) return;
+    var draw = this.draw = function (districtNos) {
+        if (!ctx) {
+            districtsOnLoad = districtNos;
+            return;
+        }
 
         ctx.clearRect(0, 0, MINIMAP_WIDTH, MINIMAP_HEIGHT);
         districtNos.forEach(districtNo => {
@@ -42,12 +48,14 @@ export default function Minimap(el) {
         });
     };
 
-    this.show = function () {
+    var show = this.show = function () {
         if (translateEl) translateEl(0, 0);
+        else showOnLoad = true;
     };
 
     this.hide = function () {
         if (translateEl) translateEl(-2000, -2000);
+        else showOnLoad = false;
     }
 
     if (!minimapImg) {
