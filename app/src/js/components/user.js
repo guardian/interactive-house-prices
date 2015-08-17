@@ -4,7 +4,7 @@ import throttle from '../lib/throttle';
 import { startYear, endYear, getPeriodSplits } from '../lib/region';
 import { config } from '../lib/cfg';
 
-import { stickyBar, setBottomNotSticky } from '../lib/sticky-bar';
+import { stickyBar } from '../lib/sticky-bar';
 import madlib from '../lib/madlib';
 import range from '../lib/range';
 import share from '../lib/share';

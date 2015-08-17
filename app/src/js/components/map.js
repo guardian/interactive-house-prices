@@ -81,7 +81,7 @@ export default function Map(el, tooltip) {
 
         if (price) {
             let index = Math.floor(price / userInput.threshold) - 1;
-            if (index > 8) color = '#c33e5a';
+            if (index > 8) color = '#c13d59';
             else color = colors[Math.max(0, Math.min(5, index))];
         } else {
             color = '#cccccc';
