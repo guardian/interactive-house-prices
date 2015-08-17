@@ -22,8 +22,7 @@ export function init(el, config) {
     var tooltip = new Tooltip(mapEl);
     var map = new Map(mapEl, tooltip);
     var user = new User(el.querySelector('.js-user'), map.update, tooltip);
-    var controls = new Controls(el.querySelector('.js-map-controls'), map);
-
+    
     el.querySelector('.js-map-activate').addEventListener('click', evt => {
         el.className += ' is-map-active';
         scrollTo(mapEl);
@@ -32,4 +31,7 @@ export function init(el, config) {
         el.className = el.className.replace(/is-map-active/g, '').trim();
         scrollTo(document.body);
     });
+    
+    //TODO: check again
+    var controls = new Controls(el.querySelector('.js-map-controls'), map);
 }
