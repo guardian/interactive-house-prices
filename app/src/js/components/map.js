@@ -13,10 +13,10 @@ export default function Map(el, tooltip) {
         // Hacky way of using presimiplified, preprojected points
         L.Polygon.prototype._simplifyPoints = function () {};
 
-        var setContainerSize = throttle(() => {
+        function setContainerSize() {
             el.style.height = (window.innerHeight - (isMobile() ? 0 : 48)) + 'px';
-        }, 100);
-        window.addEventListener('resize', setContainerSize);
+        }
+        window.addEventListener('resize', throttle(setContainerSize, 100));
         setContainerSize();
 
         var map = L.map(el, {
