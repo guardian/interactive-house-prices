@@ -149,7 +149,6 @@ $pips-width: 100% / (length($pips) + 2);
     font-size: 20px;
     float: right;
     width: (100% / 2);
-    max-width: 160px;
     margin-top: -3px;
     
     .hp-madlib__input__text {
@@ -160,6 +159,20 @@ $pips-width: 100% / (length($pips) + 2);
     }
     svg {
         transform: translate(-3px, -3px);
+    }
+}
+.hp-location-mobile {
+    @extend .hp-location;
+    float: none;
+    visibility: hidden;
+
+    position: absolute;
+    top: 100%;
+    max-width: 146px;
+    margin-top: 10px;
+
+    .is-map-active & {
+        visibility: visible;    
     }
 }
 
