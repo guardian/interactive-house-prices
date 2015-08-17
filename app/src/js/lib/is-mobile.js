@@ -1,4 +1,4 @@
-var mobile;
+var mobile = window.innerWidth < 740;
 
 window.addEventListener('resize', () => {
     mobile = window.innerWidth < 740;

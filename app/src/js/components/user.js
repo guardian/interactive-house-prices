@@ -92,17 +92,14 @@ export default function User(el, onUpdate, tooltip) {
 
     function change(type) {
         // height of thumb
-        var ratio = periodSplits[currentValue.year].ratio,
-            bottomNotSticky = 30 + ratio/2 + '%',
-            isSticky = document.querySelector(".js-summary-bar").classList.contains("is-sticky");
+        var ratio = periodSplits[currentValue.year].ratio;
         ratioEls.forEach(el => el.textContent = Math.floor(ratio) + '%');
-        thumbEl.style.bottom = isSticky ? "25px" : bottomNotSticky;
-        setBottomNotSticky(bottomNotSticky);
-        
+        thumbEl.style.bottom = 30 + ratio / 2 + '%';
+
         if (type === 'end' || !isMobile()) {
             setTimeout(() => onUpdate(currentValue), 0);
         }
-        
+
         tooltip.show(currentValue, district/*, coord*/);
         //tooltip.hide();
     }

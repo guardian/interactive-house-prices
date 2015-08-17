@@ -5,9 +5,6 @@ function getOffset(el) {
 }
 
 var bottomNotSticky;
-function getBottomNotSticky() {
-    return bottomNotSticky;
-}
 export function setBottomNotSticky(value) {
     bottomNotSticky = value;
 }
@@ -26,13 +23,10 @@ export function stickyBar(el, anchorEl) {
                 el.className += ' is-sticky';
                 anchorEl.className += ' is-sticky';
                 shareEl.className += ' d-n';
-                setBottomNotSticky(thumbEl.style.bottom);
-                thumbEl.style.bottom = "25px";
             } else {
                 el.className = el.className.replace(/is-sticky/g, '').trim();
                 anchorEl.className = anchorEl.className.replace(/is-sticky/g, '').trim();
                 shareEl.className = shareEl.className.replace(/d-n/g, '').trim();
-                thumbEl.style.bottom = getBottomNotSticky();
             }
         }
     });

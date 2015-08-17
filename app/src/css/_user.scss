@@ -123,6 +123,10 @@
     @include mq(mobileLandscape) {
         padding: 10px 20px;
     }
+
+    .hp-range-slider__thumb {
+        bottom: 25px !important;
+    }
 }
 
 .hp-sticky-bar-bg {
