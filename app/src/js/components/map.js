@@ -17,8 +17,6 @@ export default function Map(el) {
     window.addEventListener('resize', throttle(setContainerSize, 100));
     setContainerSize();
 
-    var that = this;
-
     function init(L) {
         // Hacky way of using presimiplified, preprojected points
         L.Polygon.prototype._simplifyPoints = function () {};
@@ -79,7 +77,7 @@ export default function Map(el) {
         });
 
         tooltip = new Tooltip(el);
-        var controls = new Controls(el.querySelector('.js-map-controls'), that);
+        var controls = new Controls(el.querySelector('.js-map-controls'), showDistrict, showPosition);
     }
 
     function setStyle(district) {
@@ -101,15 +99,16 @@ export default function Map(el) {
         };
     }
 
+    function highlight(feature, evt=null) {
+        highlightLayer.clearLayers();
+        highlightLayer.addData([feature]);
+        tooltip.show(userInput, feature.id, evt);
+    }
+
     function setOnEachFeature(feature, layer) {
         layer.on({
-            mouseover: evt => {
-                highlightLayer.addData([feature]);
-                tooltip.show(userInput, evt.target.feature.id, evt);
-            },
-            mousemove: evt => {
-                tooltip.move(evt);
-            },
+            mouseover: evt => highlight(feature, evt),
+            mousemove: evt => tooltip.move(evt),
             mouseout: () => {
                 highlightLayer.clearLayers();
                 tooltip.hide();
@@ -124,18 +123,23 @@ export default function Map(el) {
         }
     };
 
-    this.flyToDistrict = function (districtCode) {
+    function showDistrict(districtCode) {
         districtLayer.eachLayer(district => {
             if (district.feature.id === districtCode) {
-                flyToPosition(district.getCenter());
-                tooltip.show(userInput, districtCode);
+                highlight(district.feature);
+                map.flyTo(district.getCenter(), 12);
             }
         });
     };
 
-    var flyToPosition = this.flyToPosition = function (latlng) {
-        map.flyTo(latlng, 12);
-        // TODO: show tooltip
+    function showPosition(latlng) {
+        var point = map.latLngToLayerPoint(latlng);
+        districtLayer.eachLayer(district => {
+            if (district._containsPoint(point)) {
+                highlight(district.feature);
+                map.flyTo(latlng, 12);
+            }
+        });
     };
 
     var script = document.createElement('script');

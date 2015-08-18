@@ -67,18 +67,18 @@
 
 .hp-map-controls {
     z-index: 1000;
-    background-color: rgba(255, 255, 255, 0.7);
+    background-color: rgba(255, 255, 255, 0.8);
     padding: 10px 10px 0;
     position: absolute;
-    
+
     left: 0;
     bottom: 0;
     width: 300px;
-    
+
     @include mq(tablet) {
-    left: 10px;
-    bottom: 10px;
-    width: 280px;
+        left: 10px;
+        bottom: 10px;
+        width: 280px;
     }
 }
 

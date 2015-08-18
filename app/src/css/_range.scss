@@ -40,6 +40,11 @@ $line-offset: 22px;
     z-index: 5;
 }
 
+@keyframes arrow {
+    0%, 100% { margin: 0;  }
+    50% { margin: 0 5px; }
+}
+
 .hp-range-slider__thumbline {
     position: absolute;
     left: 100%;
@@ -51,6 +56,31 @@ $line-offset: 22px;
     @include mq($until: tablet) {
         .is-sticky & {
             display: none;
+        }
+    }
+
+    &::before,
+    &::after {
+        position: absolute;
+        line-height: 52px;
+        top: 0;
+        opacity: 1;
+        animation: arrow 1s infinite;
+        transition: opacity 0.2s ease-out;
+    }
+    &::before {
+        content: "\2190";
+        right: 1px;
+    }
+    &::after {
+        content: "\2192";
+        left: 0;
+    }
+
+    .hp-range-slider:hover & {
+        &::before,
+        &::after {
+            opacity: 0;
         }
     }
 }

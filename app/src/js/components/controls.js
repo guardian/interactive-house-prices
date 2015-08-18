@@ -1,14 +1,14 @@
 import madlib from '../lib/madlib';
 import template from './templates/controls.html!text';
 
-export default function Controls(el, map) {
+export default function Controls(el, showDistrict, showPosition) {
     function init() {
         el.innerHTML += template;
 
         madlib(el.querySelector('.js-location'), [], () => true, v => v, v => v, postcode => {
             if (postcode.length > 0) {
                 let district = (postcode.length > 4 ? postcode.substring(0, postcode.length - 3) : postcode)
-                map.flyToDistrict(district.trim().toUpperCase());
+                showDistrict(district.trim().toUpperCase());
             }
         });
 
@@ -17,7 +17,7 @@ export default function Controls(el, map) {
             userLocationEl.style.display = 'block';
             userLocationEl.addEventListener('click', () => {
                 navigator.geolocation.getCurrentPosition(function (position) {
-                    map.flyToPosition([position.coords.latitude, position.coords.longitude]);
+                    showPosition([position.coords.latitude, position.coords.longitude]);
                 });
             });
         }
