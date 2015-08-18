@@ -11,7 +11,7 @@ export default function Controls(el, tooltip, map, currentValue) {
                 .trim().toUpperCase();
                 tooltip.show(currentValue, district);
                 //tooltip.show(wentValue, district, coordi);
-                map.flyTo(district);
+                map.flyToDistrict(district);
             } else {
                 tooltip.hide();
             }

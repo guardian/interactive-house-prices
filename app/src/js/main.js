@@ -8,8 +8,6 @@ import scrollTo from './lib/scroll-to';
 
 import Map from './components/map';
 import User from './components/user';
-import Controls from './components/controls';
-import Tooltip from './components/tooltip';
 
 import mainHTML from './templates/main.html!text';
 
@@ -17,13 +15,11 @@ export function init(el, config) {
     setConfig(config);
 
     el.innerHTML = mainHTML;
-    var mapEl = el.querySelector('.js-map');
-    
-    var tooltip = new Tooltip(mapEl);
-    var map = new Map(mapEl, tooltip);
-    var user = new User(el.querySelector('.js-user'), map.update, tooltip, map); // TODO: map/tooltip is temp
-    var controls = new Controls(el.querySelector('.js-map-controls'), tooltip, map, user.getCurrentValue());
-    
+    var mapEl = el.querySelector('.js-map-container');
+
+    var map = new Map(mapEl);
+    var user = new User(el.querySelector('.js-user'), map);
+
     el.querySelector('.js-map-activate').addEventListener('click', evt => {
         el.className += ' is-map-active';
         scrollTo(mapEl);

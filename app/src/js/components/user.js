@@ -31,10 +31,10 @@ function parseThreshold(value) {
 }
 
 
-export default function User(el, onUpdate, tooltip, map) {
+export default function User(el, map) {
     const $$ = (s, root=el) => [].slice.call(root.querySelectorAll(s));
 
-    var currentWageEls, yearEls, ratioEls, thumbEl, minimapImgs = [], summaryEl;
+    var currentWageEls, yearEls, ratioEls, thumbEl, minimapImgs = [];
     var periodSplits;
     var currentValue = {'year': endYear, 'threshold': 0};
     var linechart, areachart, lineData, width, height = 55;
@@ -52,7 +52,7 @@ export default function User(el, onUpdate, tooltip, map) {
         yearEls = $$('.js-year');
         ratioEls = $$('.js-user-ratio');
         thumbEl = document.querySelector('.js-thumb');
-        
+
         minimap = el.querySelector('.js-minimap');
         for (year = startYear; year <= endYear; year++) {
             img = document.createElement('img');
@@ -68,7 +68,6 @@ export default function User(el, onUpdate, tooltip, map) {
             });
         });
 
-        summaryEl = el.querySelector('.js-summary');
         stickyBar(el.querySelector('.js-summary-bar'), el.querySelector('.js-summary-anchor'));
 
         areachart = new Linechart('js-area', 'line-area', 266, height, 5, 0);
@@ -86,19 +85,15 @@ export default function User(el, onUpdate, tooltip, map) {
         thumbEl.style.bottom = 30 + ratio / 2 + '%';
 
         if (type === 'end' || !isMobile()) {
-            setTimeout(() => onUpdate(currentValue), 0);
+            map.update(currentValue);
         }
-
-        tooltip.show(currentValue, district/*, coord*/);
     }
 
     function changeThreshold(threshold) {
         lineData = [];
 
         currentValue.threshold = threshold;
-        
-        //TODO: maybe remove this! .. fix due to one of els doesn't exisit at init stage
-        currentWageEls = $$('.js-current-wage', document); 
+
         currentWageEls.forEach(el => el.textContent = threshold.toLocaleString());
 
         periodSplits = getPeriodSplits(threshold);

@@ -4,20 +4,23 @@ import throttle from '../lib/throttle';
 import isMobile from '../lib/is-mobile';
 import locationTemplate from './templates/mapLocation.html!text';
 
+import Controls from './controls';
+import Tooltip from './tooltip';
+
 const colors = ['#39a4d8', '#8ac7cd', '#daeac1', '#fdd09e', '#f58680', '#ed3d61'];
 
 export default function Map(el, tooltip) {
-    var map, districtLayer, highlightLayer, userInput;
+    var map, tooltip, districtLayer, highlightLayer, userInput;
+
+    function setContainerSize() {
+        el.style.height = (window.innerHeight - (isMobile() ? 0 : 48)) + 'px';
+    }
+    window.addEventListener('resize', throttle(setContainerSize, 100));
+    setContainerSize();
 
     function init(L) {
         // Hacky way of using presimiplified, preprojected points
         L.Polygon.prototype._simplifyPoints = function () {};
-
-        function setContainerSize() {
-            el.style.height = (window.innerHeight - (isMobile() ? 0 : 48)) + 'px';
-        }
-        window.addEventListener('resize', throttle(setContainerSize, 100));
-        setContainerSize();
 
         map = L.map(el, {
             'center': [53, -2.3],
@@ -73,6 +76,9 @@ export default function Map(el, tooltip) {
                 res.more();
             }
         });
+
+        var controls = new Controls(el.querySelector('.js-map-controls'), map);
+        tooltip = new Tooltip(el);
     }
 
     function setStyle(district) {
@@ -119,12 +125,16 @@ export default function Map(el, tooltip) {
         }
     };
 
-    this.flyTo = function (districtCode) {
+    this.flyToDistrict = function (districtCode) {
         districtLayer.eachLayer(district => {
             if (district.feature.id === districtCode) {
                 map.flyTo(district.getCenter(), 12);
             }
         });
+    };
+
+    this.flyToPosition = function (lat, lng) {
+        map.flyTo([lat, lng], 12);
     };
 
     var script = document.createElement('script');
