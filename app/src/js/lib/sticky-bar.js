@@ -4,12 +4,7 @@ function getOffset(el) {
     return el ? el.offsetTop + getOffset(el.offsetParent) : 0;
 }
 
-var bottomNotSticky;
-export function setBottomNotSticky(value) {
-    bottomNotSticky = value;
-}
-
-export function stickyBar(el, anchorEl) {
+export default function stickyBar(el, anchorEl) {
     var sticky = false;
 
     var thumbEl = document.querySelector('.js-thumb');

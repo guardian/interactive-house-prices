@@ -9,7 +9,7 @@ import Tooltip from './tooltip';
 
 const colors = ['#39a4d8', '#8ac7cd', '#daeac1', '#fdd09e', '#f58680', '#ed3d61'];
 
-export default function Map(el, tooltip) {
+export default function Map(el) {
     var map, tooltip, districtLayer, highlightLayer, userInput;
 
     function setContainerSize() {
@@ -22,7 +22,7 @@ export default function Map(el, tooltip) {
         // Hacky way of using presimiplified, preprojected points
         L.Polygon.prototype._simplifyPoints = function () {};
 
-        map = L.map(el, {
+        map = L.map(el.querySelector('.js-map'), {
             'center': [53, -2.3],
             //'maxBounds': [[50, -6.5], [56, 1.8]],
             'maxZoom': 17,
@@ -77,8 +77,8 @@ export default function Map(el, tooltip) {
             }
         });
 
-        var controls = new Controls(el.querySelector('.js-map-controls'), map);
         tooltip = new Tooltip(el);
+        var controls = new Controls(el.querySelector('.js-map-controls'), map);
     }
 
     function setStyle(district) {
@@ -131,6 +131,7 @@ export default function Map(el, tooltip) {
                 map.flyTo(district.getCenter(), 12);
             }
         });
+        tooltip.show(userInput, districtCode);
     };
 
     this.flyToPosition = function (lat, lng) {
