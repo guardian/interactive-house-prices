@@ -6,11 +6,11 @@ import positions from '../data/positions.json!json'
 
 var minimapImg, minimapLoaded = false;
 
-const MINIMAP_WIDTH = 200
-const MINIMAP_HEIGHT = 240;
+const MINIMAP_WIDTH = 180
+const MINIMAP_HEIGHT = 216;
 
-const DISTRICT_WIDTH = 20;
-const DISTRICT_HEIGHT = 18;
+const DISTRICT_WIDTH = 18;
+const DISTRICT_HEIGHT = 17;
 
 const SPRITE_CHUNK_SIZE = districtCodes.length / 2;
 
