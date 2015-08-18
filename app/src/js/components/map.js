@@ -118,9 +118,8 @@ export default function Map(el) {
     this.update = function (data) {
         userInput = data;
 
-        // TODO: only update regions that need updating
         if (districtLayer) {
-            districtLayer.eachLayer(district => districtLayer.resetStyle(district));
+            districtLayer.setStyle(setStyle);
         }
     };
 
