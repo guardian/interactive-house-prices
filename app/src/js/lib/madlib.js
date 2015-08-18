@@ -28,10 +28,7 @@ export default function (el, presets, valid, format, parse, onchange) {
 
     function submit() {
         if (valid(text.value)) {
-            var value = parse(text.value);
-            if (value !== currentValue) {
-                change(value, null, true);
-            }
+            change(parse(text.value), null, true);
             text.blur();
             btn.removeAttribute('data-focus');
             return true;

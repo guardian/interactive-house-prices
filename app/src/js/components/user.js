@@ -51,7 +51,7 @@ export default function User(el, map) {
         currentWageEls = $$('.js-current-wage', document);
         yearEls = $$('.js-year');
         ratioEls = $$('.js-user-ratio');
-        thumbEl = document.querySelector('.js-thumb');
+        thumbEl = el.querySelector('.js-thumb');
 
         minimap = el.querySelector('.js-minimap');
         for (year = startYear; year <= endYear; year++) {
@@ -90,23 +90,25 @@ export default function User(el, map) {
     }
 
     function changeThreshold(threshold) {
-        lineData = [];
+        if (threshold !== currentValue.threshold) {
+            lineData = [];
 
-        currentValue.threshold = threshold;
+            currentValue.threshold = threshold;
 
-        currentWageEls.forEach(el => el.textContent = threshold.toLocaleString());
+            currentWageEls.forEach(el => el.textContent = threshold.toLocaleString());
 
-        periodSplits = getPeriodSplits(threshold);
-        minimapImgs[currentValue.year].draw(periodSplits[currentValue.year].unaffordable);
+            periodSplits = getPeriodSplits(threshold);
+            minimapImgs[currentValue.year].draw(periodSplits[currentValue.year].unaffordable);
 
-        periodSplits.forEach((yearSplit, year) => {
-            lineData.push({'x': year, 'y': yearSplit.ratio});
-            window.requestAnimationFrame(() => minimapImgs[year].draw(yearSplit.unaffordable));
-        }); 
+            periodSplits.forEach((yearSplit, year) => {
+                lineData.push({'x': year, 'y': yearSplit.ratio});
+                window.requestAnimationFrame(() => minimapImgs[year].draw(yearSplit.unaffordable));
+            });
 
-        drawAreachart(); 
-        //drawLinechart(linechart, "js-line", "line", lineData); 
-        change('end');   
+            drawAreachart();
+            //drawLinechart(linechart, "js-line", "line", lineData);
+            change('end');
+        }
     }
 
     function changeYear(year, type) {
@@ -118,26 +120,26 @@ export default function User(el, map) {
             change(type);
         });
     }
-    
+
     function drawAreachart() {
         var areaData = [{x:lineData[0].x, y:-0}].concat(
             lineData,
-            {x: lineData[lineData.length-1].x, y: 0} 
+            {x: lineData[lineData.length-1].x, y: 0}
         );
-        
+
         drawLinechart(areachart, "js-area", "line-area", areaData);
     }
 
     function drawLinechart(chart, el, cn, data) {
         width  = document.querySelector("." + el).parentElement.clientWidth + 1; //1, tweak
-        
+
         chart.updateWidth("." + el + " svg", width);
         chart.updateLine(data, cn, [0, width], [0, height], null, [0, 100]);
     }
-    
+
     this.getCurrentValue = function() {
         return currentValue;
     };
-    
+
     init();
 }

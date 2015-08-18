@@ -145,7 +145,7 @@
     position: relative;
     height: 40px;
     opacity: 0;
-    .is-sticky & {
+    .has-sticky & {
         transition: 0.5s opacity ease-out;
         opacity: 1;
     }
@@ -197,7 +197,7 @@
     clear: both;
 }
 
-.hp-summary-anchor.is-sticky + .hp-range-line-affordable {
+.has-sticky .hp-range-line-affordable {
     margin-bottom: 12px;
     transition: 0.5s opacity ease-out;
     opacity: 0.3;
