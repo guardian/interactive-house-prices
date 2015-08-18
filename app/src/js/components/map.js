@@ -2,7 +2,6 @@ import { periodMedians, getDistricts, getRegionPrices } from '../lib/region';
 import { config } from '../lib/cfg';
 import throttle from '../lib/throttle';
 import isMobile from '../lib/is-mobile';
-import locationTemplate from './templates/mapLocation.html!text';
 
 import Controls from './controls';
 import Tooltip from './tooltip';
