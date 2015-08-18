@@ -166,12 +166,29 @@ $pips-width: 100% / (length($pips) + 2);
     float: right;
     width: 60%;
     margin-top: -3px;
-    
+
     .hp-madlib__input__text {
         text-transform: uppercase;
     }
-    svg {
-        transform: translate(-3px, -3px);
+    .hp-location__form__gps,
+    .hp-madlib__input__btn {
+        margin: 3px;
+    }
+}
+
+.hp-location__form__gps {
+    float: left;
+    border: 0;
+    border-radius: 100px;
+    outline: 0;
+    padding: 0;
+    font-size: 0;
+
+    transition: 0.1s background ease-out;
+    color: #333;
+    background: #dcdcdc;
+    &:hover {
+        background: #bdbdbd;
     }
 }
 

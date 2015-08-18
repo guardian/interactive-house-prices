@@ -140,8 +140,6 @@ export default function Map(el) {
 
     var script = document.createElement('script');
     script.src = config.assetPath + '/leaflet.js';
-    script.onload = function (evt) {
-        init(window.L);
-    };
+    script.onload = () => init(window.L);
     document.body.appendChild(script);
 }
