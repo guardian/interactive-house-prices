@@ -17,6 +17,8 @@ export default function Map(el) {
     window.addEventListener('resize', throttle(setContainerSize, 100));
     setContainerSize();
 
+    var that = this;
+
     function init(L) {
         // Hacky way of using presimiplified, preprojected points
         L.Polygon.prototype._simplifyPoints = function () {};
@@ -77,7 +79,7 @@ export default function Map(el) {
         });
 
         tooltip = new Tooltip(el);
-        var controls = new Controls(el.querySelector('.js-map-controls'), map);
+        var controls = new Controls(el.querySelector('.js-map-controls'), that);
     }
 
     function setStyle(district) {
@@ -117,7 +119,6 @@ export default function Map(el) {
 
     this.update = function (data) {
         userInput = data;
-
         if (districtLayer) {
             districtLayer.setStyle(setStyle);
         }
@@ -126,14 +127,15 @@ export default function Map(el) {
     this.flyToDistrict = function (districtCode) {
         districtLayer.eachLayer(district => {
             if (district.feature.id === districtCode) {
-                map.flyTo(district.getCenter(), 12);
+                flyToPosition(district.getCenter());
+                tooltip.show(userInput, districtCode);
             }
         });
-        tooltip.show(userInput, districtCode);
     };
 
-    this.flyToPosition = function (lat, lng) {
-        map.flyTo([lat, lng], 12);
+    var flyToPosition = this.flyToPosition = function (latlng) {
+        map.flyTo(latlng, 12);
+        // TODO: show tooltip
     };
 
     var script = document.createElement('script');

@@ -62,10 +62,7 @@ export default function User(el, map) {
 
         $$('.js-share').forEach(shareEl => {
             var network = shareEl.getAttribute('data-network');
-            shareEl.addEventListener('click', () => {
-                var msg = ratioEls[0].textContent + ' of the country is beyond my means in ' + currentValue.year + '. ';
-                share(network, msg);
-            });
+            shareEl.addEventListener('click', () => share(network));
         });
 
         stickyBar(el.querySelector('.js-summary-bar'), el.querySelector('.js-summary-anchor'));
@@ -79,7 +76,6 @@ export default function User(el, map) {
     }
 
     function change(type) {
-        // height of thumb
         var ratio = periodSplits[currentValue.year].ratio;
         ratioEls.forEach(el => el.textContent = Math.floor(ratio) + '%');
         thumbEl.style.bottom = 30 + ratio / 2 + '%';

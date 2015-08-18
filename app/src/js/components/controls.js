@@ -17,7 +17,7 @@ export default function Controls(el, map) {
             userLocationEl.style.display = 'block';
             userLocationEl.addEventListener('click', () => {
                 navigator.geolocation.getCurrentPosition(function (position) {
-                    map.flyToPosition(position.coords.latitude, position.coords.longitude);
+                    map.flyToPosition([position.coords.latitude, position.coords.longitude]);
                 });
             });
         }
