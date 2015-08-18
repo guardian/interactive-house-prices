@@ -166,11 +166,12 @@ $pips-width: 100% / (length($pips) + 2);
     float: right;
     width: 60%;
     margin-top: -3px;
+    padding-left: 6px;
 
     .hp-madlib__input__text {
         text-transform: uppercase;
+        padding-left: 4px;
     }
-    .hp-location__form__gps,
     .hp-madlib__input__btn {
         margin: 3px;
     }
@@ -183,6 +184,9 @@ $pips-width: 100% / (length($pips) + 2);
     outline: 0;
     padding: 0;
     font-size: 0;
+    margin: 3px 3px 3px -3px;
+
+    display: none;
 
     transition: 0.1s background ease-out;
     color: #333;
