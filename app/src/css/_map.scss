@@ -37,8 +37,7 @@
 
 .hp-map-container {
     @include mq($until: tablet) {
-        .leaflet-bottom,
-        .hp-range {
+        .hp-map-controls {
             transition: opacity 0.2s ease-out;
             opacity: 0;
         }
@@ -48,8 +47,7 @@
         .hp-map-container__overlay {
             display: none;
         }
-        .leaflet-bottom,
-        .hp-range {
+        .hp-map-controls {
             opacity: 1;
         }
     }
