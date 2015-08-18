@@ -32,10 +32,10 @@ var districtCodes = _(districtStats)
 
 // {year: [{median, ...}, ...], ...}
 var periodStats = _(districtStats)
-    .groupBy(function (stat) { return stat.year_of_sale; })
+    .groupBy('year_of_sale')
     .mapValues(function (yearStats) {
         var districts = _(yearStats)
-            .indexBy(function (stat) { return stat.postcode_district; })
+            .indexBy('postcode_district')
             .mapValues(function (stat, district) {
                 var limits = [stat.min, stat.max, stat.actual_max];
                 var histogram = stat.histogram.replace(/\[0:\d+\]={/, '').replace('}', '')
