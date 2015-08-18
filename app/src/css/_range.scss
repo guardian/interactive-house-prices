@@ -113,12 +113,6 @@ $line-offset: 22px;
     }
 }
 
-.hp-range-option {
-    @include fs-textSans(1);
-    line-height: 1em;
-    color: #767676;
-}
-
 .hp-range-line-affordable {
     margin: 5px 4px 0 12px;
     //margin: 5px ($thumb-size / 2) 0 ($thumb-size /2);
