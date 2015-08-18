@@ -167,6 +167,7 @@ $pips-width: 100% / (length($pips) + 2);
     width: 60%;
     margin-top: -3px;
     padding-left: 6px;
+    box-sizing: border-box;
 
     .hp-madlib__input__text {
         text-transform: uppercase;
