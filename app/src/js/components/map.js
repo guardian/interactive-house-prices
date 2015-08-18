@@ -58,12 +58,15 @@ export default function Map(el) {
             noClip: true
         }).addTo(map);
 
+        // Leaflet's retina test
+        var retina =
+            (window.devicePixelRatio || (window.screen.deviceXDPI / window.screen.logicalXDPI)) > 1 ? '@2x' : '';
+
         // Label layer
-        L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+        L.tileLayer(`https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}${retina}.png?access_token={accessToken}`, {
             pane: 'overlayPane',
             id: 'guardian.b71bdefa',
-            accessToken: 'pk.eyJ1IjoiZ3VhcmRpYW4iLCJhIjoiNHk1bnF4OCJ9.25tK75EuDdgq5GxQKyD6Fg',
-            detectRetina: true
+            accessToken: 'pk.eyJ1IjoiZ3VhcmRpYW4iLCJhIjoiNHk1bnF4OCJ9.25tK75EuDdgq5GxQKyD6Fg'
         }).addTo(map);
 
         getDistricts(res => {
