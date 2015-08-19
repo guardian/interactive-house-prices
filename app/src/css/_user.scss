@@ -219,6 +219,10 @@
 }
 
 .has-sticky {
+    .hp-user__inner--shares {
+        border-color: rgba(189, 189, 189, 0.3);
+        transition: 0.5s border-color ease-out;
+    }
     .hp-shares,
     .hp-share-notice,
     .hp-range-line-affordable {
