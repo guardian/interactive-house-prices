@@ -65,7 +65,8 @@ export default function User(el, map) {
             shareEl.addEventListener('click', () => share(network));
         });
 
-        stickyBar(el.querySelector('.js-summary-bar'), el.querySelector('.js-summary-anchor'));
+        stickyBar(el.querySelector('.js-summary-bar'), el.querySelector('.js-summary-anchor'), el);
+        stickyBar(el.querySelector('.js-toggle'), el.querySelector('.js-toggle-anchor'));
 
         areachart = new Linechart('js-area', 'line-area', 266, height, 5, 0);
         range(el.querySelector('.js-date'), startYear, endYear, changeYear, 5);

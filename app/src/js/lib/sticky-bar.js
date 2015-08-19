@@ -4,20 +4,19 @@ function getOffset(el) {
     return el ? el.offsetTop + getOffset(el.offsetParent) : 0;
 }
 
-export default function stickyBar(el, anchorEl) {
+export default function stickyBar(el, anchorEl, flagEl) {
     var sticky = false;
-    var parentEl = el.parentNode;
 
     var eventHandler = throttle(function () {
-        var newSticky = window.pageYOffset >= getOffset(parentEl) + anchorEl.offsetTop;
+        var newSticky = window.pageYOffset >= getOffset(anchorEl);
         if (newSticky != sticky) {
             sticky = newSticky;
             if (sticky) {
                 el.className += ' is-sticky';
-                parentEl.className += ' has-sticky';
+                if (flagEl) flagEl.className += ' has-sticky';
             } else {
                 el.className = el.className.replace(/is-sticky/g, '').trim();
-                parentEl.className = parentEl.className.replace(/has-sticky/g, '').trim();
+                if (flagEl) flagEl.className = flagEl.className.replace(/has-sticky/g, '').trim();
             }
         }
     });
