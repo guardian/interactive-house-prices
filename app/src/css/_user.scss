@@ -92,18 +92,19 @@
     height: 108px;
     margin-top: -5px;
     @include mq(tablet) {
-    margin-top: -15px;
+        margin-top: -15px;
     }
 
-    & > canvas {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        transform: translate(-2000px, -2000px);
-        -ms-transform: translate(-2000px, -2000px);
-        -webkit-transform: translate(-2000px, -2000px);
-    }
+}
+
+.hp-results-minimap__year {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    -webkit-transform: translate(-2000px, -2000px);
+    -ms-transform: translate(-2000px, -2000px);
+    transform: translate(-2000px, -2000px);
 }
 
 .hp-results-stat {

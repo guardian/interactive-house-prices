@@ -176,6 +176,11 @@ $pips-width: 100% / (length($pips) + 2);
     }
 }
 
+@keyframes loading {
+    0%, 100% { background: #dcdcdc; }
+    50% { background: #bdbdbd; }
+}
+
 .hp-location__form__gps {
     float: left;
     border: 0;
@@ -192,6 +197,10 @@ $pips-width: 100% / (length($pips) + 2);
     background: #dcdcdc;
     &:hover {
         background: #bdbdbd;
+    }
+
+    &.is-loading {
+        animation: loading 0.5s infinite;
     }
 }
 

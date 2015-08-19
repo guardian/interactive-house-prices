@@ -23,6 +23,7 @@ export default function Minimap(el) {
         var canvas = document.createElement('canvas');
         canvas.width = MINIMAP_WIDTH;
         canvas.height = MINIMAP_HEIGHT;
+        canvas.className = 'hp-results-minimap__year';
         translateEl = translate(canvas);
 
         el.appendChild(canvas);
