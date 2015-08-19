@@ -15,6 +15,7 @@ System.config({
 
 System.config({
   "map": {
+    "ded/bowser": "github:ded/bowser@1.0.0",
     "ded/reqwest": "github:ded/reqwest@1.1.5",
     "guardian/iframe-messenger": "github:guardian/iframe-messenger@master",
     "json": "github:systemjs/plugin-json@0.1.0",

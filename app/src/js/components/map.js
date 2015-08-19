@@ -6,13 +6,20 @@ import isMobile from '../lib/is-mobile';
 import Controls from './controls';
 import Tooltip from './tooltip';
 
+import bowser from 'ded/bowser';
+
 const colors = ['#39a4d8', '#8ac7cd', '#daeac1', '#fdd09e', '#f58680', '#ed3d61'];
 
 export default function Map(el) {
     var map, tooltip, districtLayer, highlightLayer, userInput;
 
+    var lastWidth, lastHeight = 0;
     function setContainerSize() {
-        el.style.height = (window.innerHeight - (isMobile() ? 0 : 48)) + 'px';
+        if (!bowser.mobile || window.innerWidth !== lastWidth || lastHeight < window.innerHeight) {
+            lastWidth = window.innerWidth;
+            lastHeight = window.innerHeight;
+            el.style.height = (window.innerHeight - (isMobile() ? 0 : 48)) + 'px';
+        }
     }
     window.addEventListener('resize', throttle(setContainerSize, 100));
     setContainerSize();
