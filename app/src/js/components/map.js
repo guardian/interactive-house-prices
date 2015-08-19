@@ -13,6 +13,7 @@ const colors = ['#39a4d8', '#8ac7cd', '#daeac1', '#fdd09e', '#f58680', '#ed3d61'
 export default function Map(el) {
     var map, tooltip, districtLayer, highlightLayer, userInput;
 
+    // Stop resizing from showing address bar/keyboard but allow from hiding address bar
     var lastWidth, lastHeight = 0;
     function setContainerSize() {
         if (!bowser.mobile || window.innerWidth !== lastWidth || lastHeight < window.innerHeight) {
