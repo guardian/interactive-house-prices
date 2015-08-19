@@ -11,6 +11,10 @@ import User from './components/user';
 
 import mainHTML from './templates/main.html!text';
 
+function preventScroll(evt) {
+    evt.preventDefault();
+}
+
 export function init(el, config) {
     setConfig(config);
 
@@ -23,10 +27,11 @@ export function init(el, config) {
     el.querySelector('.js-map-activate').addEventListener('click', evt => {
         el.className += ' is-map-active';
         scrollTo(mapEl);
+        document.body.addEventListener('touchmove', preventScroll);
     });
     el.querySelector('.js-map-deactivate').addEventListener('click', evt => {
         el.className = el.className.replace(/is-map-active/g, '').trim();
         scrollTo(document.body);
+        document.body.removeEventListener('touchmove', preventScroll);
     });
-
 }
