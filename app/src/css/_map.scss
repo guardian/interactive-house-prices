@@ -176,9 +176,14 @@ $pips-width: 100% / (length($pips) + 2);
     }
 }
 
-@keyframes loading {
+@keyframes hp-loading {
     0%, 100% { background: #dcdcdc; }
-    50% { background: #bdbdbd; }
+    50% { background: #aad8f1; }
+}
+
+@keyframes hp-error {
+    0%, 100% { background: #dcdcdc; color: #333; }
+    50% { background: #d61d00; color: white; }
 }
 
 .hp-location__form__gps {
@@ -200,7 +205,11 @@ $pips-width: 100% / (length($pips) + 2);
     }
 
     &.is-loading {
-        animation: loading 0.5s infinite;
+        animation: hp-loading 0.5s infinite;
+    }
+
+    &.has-error {
+        animation: hp-error 0.5s 1;
     }
 }
 

@@ -16,14 +16,19 @@ export default function Controls(el, showDistrict, showPosition) {
             let userLocationEl = el.querySelector('.js-user-location');
             userLocationEl.style.display = 'block';
             userLocationEl.addEventListener('click', () => {
+                userLocationEl.classList.remove('has-error');
                 userLocationEl.classList.add('is-loading');
+
                 navigator.geolocation.getCurrentPosition(function (position) {
                     showPosition([position.coords.latitude, position.coords.longitude]);
                     userLocationEl.classList.remove('is-loading');
                 }, function (err) {
                     console.log(err);
                     userLocationEl.classList.remove('is-loading');
+                    userLocationEl.classList.add('has-error');
                 });
+
+                userLocationEl.blur();
             });
         }
     }
