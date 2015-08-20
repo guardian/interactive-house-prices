@@ -27,11 +27,13 @@ export function init(el, config) {
     el.querySelector('.js-map-activate').addEventListener('click', evt => {
         el.className += ' is-map-active';
         scrollTo(mapEl);
+        document.body.addEventListener('touchstart', preventScroll);
         document.body.addEventListener('touchmove', preventScroll);
     });
     el.querySelector('.js-map-deactivate').addEventListener('click', evt => {
         el.className = el.className.replace(/is-map-active/g, '').trim();
         scrollTo(document.body);
+        document.body.removeEventListener('touchstart', preventScroll);
         document.body.removeEventListener('touchmove', preventScroll);
     });
 }
