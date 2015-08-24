@@ -5,6 +5,22 @@ html {
     }
 }
 
+p {
+    margin: 0 0 8px 0;
+}
+
+a {
+    &,
+    &:hover,
+    &:active {
+        color: #005689;
+    }
+    text-decoration: none;
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
 body,
 figure.interactive {
     margin: 0;
