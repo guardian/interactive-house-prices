@@ -47,13 +47,13 @@
 
 .hp-title {
     @include fs-headline(6);
-    margin-bottom: 12px;
+    margin: 0 0 12px 0;
 }
 
 .hp-subtitle {
     @include f-header;
     font-size: 14px;
-    margin-bottom: 3px;
+    margin: 0 0 3px 0;
     line-height: 1;
 }
 
