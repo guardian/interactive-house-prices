@@ -23,7 +23,6 @@ export function init(el, config) {
 
     function deactivateMap() {
         el.className = el.classList.remove('is-map-active');
-        document.body.removeEventListener('touchstart', preventScroll);
         document.body.removeEventListener('touchmove', preventScroll);
     }
 
@@ -39,7 +38,6 @@ export function init(el, config) {
     el.querySelector('.js-map-activate').addEventListener('click', evt => {
         scrollY = scrollTo(mapEl);
         el.classList.add('is-map-active');
-        document.body.addEventListener('touchstart', preventScroll);
         document.body.addEventListener('touchmove', preventScroll);
     });
     el.querySelector('.js-map-deactivate').addEventListener('click', evt => {
