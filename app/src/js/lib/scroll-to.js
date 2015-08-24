@@ -18,5 +18,7 @@ export default function scrollTo(el) {
             window.requestAnimationFrame(scrollHandler);
         }
     });
+
+    return end;
 };
 

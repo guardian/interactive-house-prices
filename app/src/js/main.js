@@ -11,10 +11,7 @@ import User from './components/user';
 
 import mainHTML from './templates/main.html!text';
 
-function preventScroll(evt) {
-    evt.preventDefault();
-}
-
+var scrollY;
 export function init(el, config) {
     setConfig(config);
 
@@ -24,16 +21,29 @@ export function init(el, config) {
     var map = new Map(mapEl);
     var user = new User(el.querySelector('.js-user'), map);
 
+    function deactivateMap() {
+        el.className = el.classList.remove('is-map-active');
+        document.body.removeEventListener('touchstart', preventScroll);
+        document.body.removeEventListener('touchmove', preventScroll);
+    }
+
+    function preventScroll(evt) {
+        if (window.pageYOffset === scrollY) {
+            evt.preventDefault();
+        } else {
+            deactivateMap();
+        }
+    }
+
+
     el.querySelector('.js-map-activate').addEventListener('click', evt => {
-        el.className += ' is-map-active';
-        scrollTo(mapEl);
+        scrollY = scrollTo(mapEl);
+        el.classList.add('is-map-active');
         document.body.addEventListener('touchstart', preventScroll);
         document.body.addEventListener('touchmove', preventScroll);
     });
     el.querySelector('.js-map-deactivate').addEventListener('click', evt => {
-        el.className = el.className.replace(/is-map-active/g, '').trim();
         scrollTo(document.body);
-        document.body.removeEventListener('touchstart', preventScroll);
-        document.body.removeEventListener('touchmove', preventScroll);
+        deactivateMap();
     });
 }
