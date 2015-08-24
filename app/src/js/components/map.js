@@ -81,6 +81,7 @@ export default function Map(el) {
             if (res.districts.length === 0) {
                 districtRenderer.suspendDraw = false;
                 districtLayer.setStyle(setStyle);
+                document.querySelector('.js-map-activate').style.display = 'block';
             } else {
                 districtLayer.addData(res.districts);
                 res.more();
@@ -158,6 +159,8 @@ export default function Map(el) {
             }
             if (i < districts.length) {
                 window.requestAnimationFrame(check.bind(null, i));
+            } else {
+                cb();
             }
         }
 

@@ -188,8 +188,9 @@
         background: #00456E
     }
 
+    display: none;
+
     &.hp-toggle__btn--up {
-        display: none;
         .is-map-active & {
             display: block;
         }
@@ -200,7 +201,16 @@
     }
 
     .is-map-active &.hp-toggle__btn--down {
-        display: none;
+        display: none !important;
+    }
+
+    &.hp-toggle__btn--loading {
+        display: block;
+        cursor: auto;
+        line-height: 30px;
+        padding: 0 15px;
+        background: #bdbdbd;
+        color: #333;
     }
 
     @include mq(tablet) {
