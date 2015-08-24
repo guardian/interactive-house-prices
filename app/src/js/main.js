@@ -27,7 +27,7 @@ export function init(el, config) {
     }
 
     function preventScroll(evt) {
-        if (window.pageYOffset === scrollY) {
+        if (window.pageYOffset >= scrollY) {
             evt.preventDefault();
         } else {
             deactivateMap();
@@ -36,7 +36,7 @@ export function init(el, config) {
 
 
     el.querySelector('.js-map-activate').addEventListener('click', evt => {
-        scrollY = scrollTo(mapEl);
+        scrollY = scrollTo(mapEl) - 10;
         el.classList.add('is-map-active');
         document.body.addEventListener('touchmove', preventScroll);
     });

@@ -4,8 +4,7 @@ $line-offset: 22px;
 .hp-range-slider {
     position: relative;
     cursor: pointer;
-    margin: -128px 4px 0 12px;
-    //margin: -128px ($thumb-size / 2) 0 ($thumb-size / 2);
+    margin: -121px 4px 0 12px;
     padding-bottom: $line-offset;
     height: 70px;
 
@@ -139,6 +138,6 @@ $line-offset: 22px;
     border-bottom: 1px solid rgba(118, 118, 118, 0.25);
 
     &.label-100 { top: -9px; }
-    &.label-50  { top: 16px; }
-    &.label-0   { bottom: 11px; }
+    &.label-50  { top: 17px; }
+    &.label-0   { bottom: 3px; }
 }
