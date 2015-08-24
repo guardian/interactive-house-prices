@@ -111,9 +111,12 @@ $pips: (
     3: #daeac1,
     4: #fdd09e,
     5: #f58680,
-    '6+': #ed3d61
+    6: #ed3d61,
+    '10+': #ca2345
 );
-$pips-width: 100% / (length($pips) + 2);
+$pips-large: (0, 6, '10+');
+
+$pips-width: 100% / (length($pips) + length($pips-large));
 
 .hp-range__pips {
     margin-bottom: 25px;
@@ -143,9 +146,10 @@ $pips-width: 100% / (length($pips) + 2);
     }
 }
 
-.hp-range__pips__pip:first-child,
-.hp-range__pips__pip:last-child {
-    width: ($pips-width * 2);
+@each $no in (0, 6, '10+') {
+    .hp-range__pips__pip[data-range='#{$no}'] {
+        width: ($pips-width * 2);
+    }
 }
 
 .hp-location {
