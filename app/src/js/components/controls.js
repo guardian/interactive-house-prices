@@ -20,8 +20,9 @@ export default function Controls(el, showDistrict, showPosition) {
                 userLocationEl.classList.add('is-loading');
 
                 navigator.geolocation.getCurrentPosition(function (position) {
-                    showPosition([position.coords.latitude, position.coords.longitude]);
-                    userLocationEl.classList.remove('is-loading');
+                    showPosition([position.coords.latitude, position.coords.longitude], () => {
+                        userLocationEl.classList.remove('is-loading');
+                    });
                 }, function (err) {
                     console.log(err);
                     userLocationEl.classList.remove('is-loading');

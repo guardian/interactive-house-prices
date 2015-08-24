@@ -143,14 +143,21 @@ export default function Map(el) {
         });
     };
 
-    function showPosition(latlng) {
+    function showPosition(latlng, cb) {
         var point = map.latLngToLayerPoint(latlng);
-        districtLayer.eachLayer(district => {
-            if (district._containsPoint(point)) {
-                highlight(district.feature);
+        var districts = districtLayer.getLayers();
+
+        function check(i) {
+            if (districts[i]._containsPoint(point)) {
+                highlight(districts[i].feature);
                 map.flyTo(latlng, 12);
+                cb();
+            } else if (i < districts.length - 1) {
+                window.requestAnimationFrame(check.bind(null, i + 1));
             }
-        });
+        }
+
+        window.requestAnimationFrame(check.bind(null, 0));
     };
 
     var script = document.createElement('script');
