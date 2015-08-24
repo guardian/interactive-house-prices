@@ -180,11 +180,19 @@ $pips-width: 100% / (length($pips) + length($pips-large));
     }
 }
 
+@-webkit-keyframes hp-loading {
+    0%, 100% { background: #dcdcdc; }
+    50% { background: #aad8f1; }
+}
 @keyframes hp-loading {
     0%, 100% { background: #dcdcdc; }
     50% { background: #aad8f1; }
 }
 
+@-webkit-keyframes hp-error {
+    0%, 100% { background: #dcdcdc; color: #333; }
+    50% { background: #d61d00; color: white; }
+}
 @keyframes hp-error {
     0%, 100% { background: #dcdcdc; color: #333; }
     50% { background: #d61d00; color: white; }
@@ -209,10 +217,12 @@ $pips-width: 100% / (length($pips) + length($pips-large));
     }
 
     &.is-loading {
+        -webkit-animation: hp-loading 0.5s infinite;
         animation: hp-loading 0.5s infinite;
     }
 
     &.has-error {
+        -webkit-animation: hp-error 0.5s 1;
         animation: hp-error 0.5s 1;
     }
 }

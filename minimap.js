@@ -79,7 +79,7 @@ console.log(width, height);
 
 // Cairo can't handle PNGs with a large dimension, so we need to create
 // multiple columns in our sprite
-var codeChunks = _.chunk(common.districtCodes, Math.ceil(common.districtCodes.length / 4));
+var codeChunks = _.chunk(common.districtCodes, Math.ceil(common.districtCodes.length / 10));
 
 var positionChunks = codeChunks.map(function (codes, i) {
     var canvas = new Canvas(width, height * codes.length);

@@ -12,7 +12,7 @@ const MINIMAP_HEIGHT = 216;
 const DISTRICT_WIDTH = 18;
 const DISTRICT_HEIGHT = 17;
 
-const SPRITE_CHUNKS = [0, 1, 2, 3];
+const SPRITE_CHUNKS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 const SPRITE_CHUNK_SIZE = Math.ceil(districtCodes.length / SPRITE_CHUNKS.length);
 
 export default function Minimap(el) {

@@ -40,6 +40,10 @@ $line-offset: 22px;
     z-index: 5;
 }
 
+@-webkit-keyframes hp-arrow {
+    0%, 100% { margin: 0;  }
+    50% { margin: 0 5px; }
+}
 @keyframes hp-arrow {
     0%, 100% { margin: 0;  }
     50% { margin: 0 5px; }
@@ -65,6 +69,7 @@ $line-offset: 22px;
         line-height: 52px;
         top: 0;
         opacity: 1;
+        -webkit-animation: hp-arrow 1s infinite;
         animation: hp-arrow 1s infinite;
         transition: opacity 0.2s ease-out;
     }
