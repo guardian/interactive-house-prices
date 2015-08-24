@@ -4,7 +4,7 @@ import translate from '../lib/translate';
 import districtCodes from '../data/codes.json!json'
 import positions from '../data/positions.json!json'
 
-var minimapImg, minimapLoaded = false;
+var sprites, inits = [];
 
 const MINIMAP_WIDTH = 180
 const MINIMAP_HEIGHT = 216;
@@ -12,14 +12,13 @@ const MINIMAP_HEIGHT = 216;
 const DISTRICT_WIDTH = 18;
 const DISTRICT_HEIGHT = 17;
 
-const SPRITE_CHUNK_SIZE = districtCodes.length / 2;
+const SPRITE_CHUNKS = [0, 1, 2, 3];
+const SPRITE_CHUNK_SIZE = Math.ceil(districtCodes.length / SPRITE_CHUNKS.length);
 
 export default function Minimap(el) {
     var ctx, translateEl, districtsOnLoad, showOnLoad = false;
 
     function init() {
-        minimapLoaded = true;
-
         var canvas = document.createElement('canvas');
         canvas.width = MINIMAP_WIDTH;
         canvas.height = MINIMAP_HEIGHT;
@@ -42,9 +41,9 @@ export default function Minimap(el) {
         ctx.clearRect(0, 0, MINIMAP_WIDTH, MINIMAP_HEIGHT);
         districtNos.forEach(districtNo => {
             var pos = positions[districtNo];
-            var x = Math.floor(districtNo / SPRITE_CHUNK_SIZE) * DISTRICT_WIDTH;
+            var chunk = Math.floor(districtNo / SPRITE_CHUNK_SIZE);
             var y = (districtNo % SPRITE_CHUNK_SIZE) * DISTRICT_HEIGHT;
-            ctx.drawImage(minimapImg, x, y, DISTRICT_WIDTH, DISTRICT_HEIGHT, pos[0], pos[1],
+            ctx.drawImage(sprites[chunk].img, 0, y, DISTRICT_WIDTH, DISTRICT_HEIGHT, pos[0], pos[1],
                 DISTRICT_WIDTH, DISTRICT_HEIGHT);
         });
     };
@@ -59,16 +58,23 @@ export default function Minimap(el) {
         else showOnLoad = false;
     }
 
-    if (!minimapImg) {
-        minimapImg = document.createElement('img');
-        minimapImg.src = config.assetPath + '/assets/minimap/districts.png';
-        minimapImg.style.display = 'none';
-        document.body.appendChild(minimapImg);
+    if (!sprites) {
+        sprites = SPRITE_CHUNKS.map(function (chunk) {
+            var img = document.createElement('img');
+            var sprite = {'img': img, 'loaded': false};
+            img.src = `${config.assetPath}/assets/minimap/districts-${chunk}.png`;
+            img.style.display = 'none';
+            img.addEventListener('load', () => {
+                sprite.loaded = true;
+                if (sprites.reduce((loaded, sprite) => loaded && sprite.loaded, true)) {
+                    inits.forEach(init => init());
+                }
+            });
+
+            document.body.appendChild(img);
+            return sprite;
+        });
     }
 
-    if (minimapLoaded) {
-        init();
-    } else {
-        minimapImg.addEventListener('load', init);
-    }
+    inits.push(init);
 }

@@ -15,7 +15,7 @@ module.exports = function(grunt) {
                 tasks: ['buildInteractive', 'copy:interactive'],
             },
             assets: {
-                files: ['src/assets/*', '!src/assets/minimap', 'src/assets/minimap/bg.png', 'src/assets/minimap/districts.png'],
+                files: ['src/assets/*', '!src/assets/minimap', 'src/assets/minimap/bg.png', 'src/assets/minimap/districts*.png'],
                 tasks: ['copy:assets']
             },
             css: {
@@ -83,7 +83,7 @@ module.exports = function(grunt) {
                 ]
             },
             assets: {
-                files: [{expand: true, cwd: 'src/', src: ['assets/*', '!assets/minimap', 'assets/minimap/bg.png', 'assets/minimap/districts.png'], dest: 'build'}]
+                files: [{expand: true, cwd: 'src/', src: ['assets/*', '!assets/minimap', 'assets/minimap/bg.png', 'assets/minimap/districts*.png'], dest: 'build'}]
             },
             deploy: {
                 files: [
