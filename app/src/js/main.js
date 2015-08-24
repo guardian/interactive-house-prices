@@ -22,7 +22,7 @@ export function init(el, config) {
     var user = new User(el.querySelector('.js-user'), map);
 
     function deactivateMap() {
-        el.className = el.classList.remove('is-map-active');
+        el.classList.remove('is-map-active');
         document.body.removeEventListener('touchmove', preventScroll);
     }
 
