@@ -148,12 +148,16 @@ export default function Map(el) {
         var districts = districtLayer.getLayers();
 
         function check(i) {
-            if (districts[i]._containsPoint(point)) {
-                highlight(districts[i].feature);
-                map.flyTo(latlng, 12);
-                cb();
-            } else if (i < districts.length - 1) {
-                window.requestAnimationFrame(check.bind(null, i + 1));
+            var max = Math.min(districts.length, i + 100);
+            for (; i < max; i++) {
+                if (districts[i]._containsPoint(point)) {
+                    highlight(districts[i].feature);
+                    map.flyTo(latlng, 12);
+                    cb();
+                }
+            }
+            if (i < districts.length) {
+                window.requestAnimationFrame(check.bind(null, i));
             }
         }
 
