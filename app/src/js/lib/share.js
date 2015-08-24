@@ -1,5 +1,5 @@
 const title = 'Can you afford to live here?';
-const shareURL = encodeURIComponent('http://gu.com/p/46mqa'); // TODO: short url
+const shareURL = encodeURIComponent('http://gu.com/p/49p77');
 const hashTag = '#UnaffordableCountry';
 
 const twitterBaseUrl = 'https://twitter.com/intent/tweet?text=';
