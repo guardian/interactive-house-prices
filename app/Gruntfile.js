@@ -10,9 +10,13 @@ module.exports = function(grunt) {
         visuals: { },
 
         watch: {
-            js: {
-                files: ['src/js/**/*', 'src/worker.html'],
-                tasks: ['buildInteractive', 'buildEmbed', 'copy:interactive'],
+            mainJS: {
+                files: ['src/js/**/*', '!src/js/embed/**/*.js', 'src/worker.html'],
+                tasks: ['buildInteractive', 'copy:interactive']
+            },
+            embedJS: {
+                files: ['src/js/**/*', '!src/js/main.js'],
+                tasks: ['buildEmbed']
             },
             assets: {
                 files: ['src/assets/*', '!src/assets/minimap', 'src/assets/minimap/bg.png', 'src/assets/minimap/districts*.png'],
