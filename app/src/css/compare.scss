@@ -1,12 +1,65 @@
 @import "fonts";
+@import "mq";
 
 main {
     @include fs-bodyCopy(2);
+    max-width: 800px;
 
     margin: 0;
     padding: 0;
 }
 
-@import "mq";
+p {
+    margin: 0 0 8px 0;
+}
+
+.cmp-title {
+    @include fs-headline(5);
+    margin: 0 0 8px 0;
+}
+
+.cmp-time {
+    position: relative;
+    box-sizing: border-box;
+    margin: 0 auto;
+    @include mq(mobileLandscape) {
+        width: 50%;
+        float: left;
+    }
+}
+
+.cmp-time__year {
+    @include fs-bodyHeading(2);
+    margin: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #333;
+    color: white;
+    padding: 2px 5px;
+
+    @include mq(mobileLandscape) {
+        .cmp-time--left & {
+            left: auto;
+            right: 0;
+        }
+    }
+}
+
+.cmp-time__img {
+    width: 100%;
+    box-sizing: border-box;
+    display: block;
+    border-bottom: 2px solid #333;
+    @include mq(mobileLandscape) {
+        border-bottom: 0;
+        border-right: 2px solid #333;
+    }
+
+    .cmp-time--right & {
+        border: 0;
+    }
+}
+
 @import "madlib";
 @import "embed";

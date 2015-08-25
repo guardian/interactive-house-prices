@@ -6,8 +6,6 @@ var Canvas = require('canvas');
 var d3 = require('d3');
 require('d3-geo-projection')(d3);
 
-var colors = ['#39a4d8', '#8ac7cd', '#daeac1', '#fdd09e', '#f58680', '#ed3d61'];
-
 var f_header = 'DE5 Display Egyptian SemiBold';
 var f_headline = 'DE3 Display Egyptian';
 var f_bodyHeading = 'TE4 Text Egyptian Medium';
@@ -112,8 +110,7 @@ _.forEach(common.periodStats, function (yearStats, year) {
     yearStats
         .filter(function (stat) { return stat; })
         .forEach(function (stat) {
-            var index = Math.floor(stat.median / threshold) - 1;
-            ctx.strokeStyle = ctx.fillStyle = colors[Math.max(0, Math.min(5, index))];
+            ctx.strokeStyle = ctx.fillStyle = common.color(stat.median, threshold);
             ctx.beginPath();
             path(districtFeatures[stat.district]);
             ctx.fill('evenodd');

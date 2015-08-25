@@ -1,8 +1,11 @@
 .go-to-interactive {
     clear: both;
     float: right;
+    margin-top: 10px;
     a {
-        @include fs-bodyCopy(2);
+        @include f-textSans;
+        font-size: 16px;
+        line-height: 20px;
         display: inline-block;
 
         font-weight: bold;
@@ -31,10 +34,4 @@
     span {
         margin-top: 2px;
     }
-}
-
-.col {
-    float: left;
-    width: 50%;
-    margin-bottom: 20px;
 }

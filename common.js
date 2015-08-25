@@ -62,6 +62,9 @@ var districtFeatures = districtGeo.features.filter(function (district) {
     return districtCodes.indexOf(district.properties.name) !== -1;
 });
 
+
+var colors = ['#39a4d8', '#8ac7cd', '#daeac1', '#fdd09e', '#f58680', '#ed3d61'];
+
 module.exports = {
     'periodStats': periodStats,
     'districtCodes': districtCodes,
@@ -78,5 +81,10 @@ module.exports = {
     'writePNG': function (canvas, fn, ncolors) {
         fs.writeFileSync('out.png', canvas.toBuffer());
         child_process.execFileSync('pngquant', ['-f', '-o', 'app/src/assets/' + fn, ncolors, 'out.png']);
+    },
+    'color': function (median, threshold) {
+        var index = Math.floor(median / threshold) - 1;
+        if (index > 8) return '#ca2345';
+        return colors[Math.max(0, Math.min(5, index))];
     }
 };
