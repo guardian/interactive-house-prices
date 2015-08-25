@@ -12,7 +12,7 @@ module.exports = function(grunt) {
         watch: {
             js: {
                 files: ['src/js/**/*', 'src/worker.html'],
-                tasks: ['buildInteractive', 'copy:interactive'],
+                tasks: ['buildInteractive', 'buildEmbed', 'copy:interactive'],
             },
             assets: {
                 files: ['src/assets/*', '!src/assets/minimap', 'src/assets/minimap/bg.png', 'src/assets/minimap/districts*.png'],
@@ -25,7 +25,11 @@ module.exports = function(grunt) {
             harness: {
                 files: ['harness/**/*'],
                 tasks: ['harness']
-            }
+            },
+            embed: {
+                files: ['src/html/embed/**/*.html'],
+                tasks: ['template:embed']
+            },
         },
 
         clean: {
@@ -37,10 +41,9 @@ module.exports = function(grunt) {
                 sourceMap: true
             },
             interactive: {
-                files: {
-                    'build/main.css': 'src/css/main.scss',
-                    'build/snap.css': 'src/css/snap.scss'
-                }
+                files: [
+                    {expand: true, cwd: 'src/css', src: ['*.scss', '!_*.scss'], ext: '.css', dest: 'build'}
+                ]
             },
             harness: {
                 files: {
@@ -65,6 +68,9 @@ module.exports = function(grunt) {
                 'files': {
                     'build/boot.js': ['src/js/boot.js.tpl'],
                 }
+            },
+            'embed': {
+                'files': [{expand: true, cwd: 'src/html/', src: ['**/*.html'], dest: 'build'}]
             }
         },
 
@@ -89,13 +95,12 @@ module.exports = function(grunt) {
                 files: [
                     { // BOOT
                         expand: true, cwd: 'build/',
-                        src: ['boot.js'],
+                        src: ['boot.js', 'embed/**/*.html'],
                         dest: 'deploy/<%= visuals.timestamp %>'
                     },
                     { // ASSETS
                         expand: true, cwd: 'build/',
-                        src: ['main.js', 'districts.js', 'main.css', 'main.js.map', 'main.css.map', 'worker.html',
-                            'topojson.js', 'leaflet.js', 'assets/**/*'],
+                        src: ['*.js', '!boot.js', '*.js.map', '*.css', '*.css.map', 'worker.html', 'assets/**/*'],
                         dest: 'deploy/<%= visuals.timestamp %>/<%= visuals.timestamp %>'
                     }
                 ]
@@ -173,10 +178,11 @@ module.exports = function(grunt) {
                     { // BOOT
                         expand: true,
                         cwd: 'deploy/<%= visuals.timestamp %>',
-                        src: ['boot.js'],
+                        src: ['boot.js', 'embed/**/*.html'],
                         dest: '<%= visuals.s3.path %>',
                         params: { CacheControl: 'max-age=60' }
-                    }]
+                    }
+                ]
             }
         },
 
@@ -216,6 +222,26 @@ module.exports = function(grunt) {
         });
     });
 
+    grunt.registerTask('buildEmbed', function () {
+        var builder = new Builder();
+        var minified = grunt.config('visuals.minified');
+        builder.loadConfig('./src/js/config.js').then(function () {
+            var promises = grunt.file.expand('./src/js/embed/*.js').map(function (embed) {
+                console.log(embed, embed.replace('src/js/embed/', 'build/'));
+                return builder.buildSFX(embed, embed.replace('src/js/embed/', 'build/'), {
+                    'sfxFormat': 'amd',
+                    'runtime': false,
+                    'minify': minified,
+                    'mangle': minified,
+                    'sourceMaps': minified ? true : 'inline'
+                });
+            });
+            return Promise.all(promises);
+        }).then(this.async()).catch(function (e) {
+            grunt.fail.fatal(e);
+        });
+    });
+
     grunt.registerTask('loadDeployConfig', function() {
         if (!grunt.file.exists('cfg/aws-keys.json')) grunt.fail.fatal('./cfg/aws-keys.json missing');
         grunt.config('visuals', {
@@ -233,7 +259,7 @@ module.exports = function(grunt) {
     })
 
     grunt.registerTask('harness', ['copy:harness', 'template:harness', 'sass:harness', 'symlink:fonts'])
-    grunt.registerTask('interactive', ['buildInteractive', 'copy:interactive', 'template:bootjs', 'sass:interactive', 'copy:assets'])
+    grunt.registerTask('interactive', ['buildInteractive', 'buildEmbed', 'copy:interactive', 'template:bootjs', 'template:embed', 'sass:interactive', 'copy:assets'])
     grunt.registerTask('default', ['clean', 'harness', 'interactive', 'connect', 'watch']);
     grunt.registerTask('build', ['clean', 'interactive']);
     grunt.registerTask('deploy', ['loadDeployConfig', 'prompt:visuals', 'build', 'copy:deploy', 'aws_s3', 'boot_url']);
