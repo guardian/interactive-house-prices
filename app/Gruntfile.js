@@ -11,7 +11,7 @@ module.exports = function(grunt) {
 
         watch: {
             mainJS: {
-                files: ['src/js/**/*', '!src/js/embed/**/*.js', 'src/worker.html'],
+                files: ['src/js/**/*', '!src/js/embed/**/*', 'src/worker.html'],
                 tasks: ['buildInteractive', 'copy:interactive']
             },
             embedJS: {

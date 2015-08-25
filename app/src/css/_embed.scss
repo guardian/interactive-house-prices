@@ -1,0 +1,40 @@
+.go-to-interactive {
+    clear: both;
+    float: right;
+    a {
+        @include fs-bodyCopy(2);
+        display: inline-block;
+
+        font-weight: bold;
+        border-radius: 100px;
+        background: 0;
+        border: 0;
+        outline: 0;
+        padding: 0 5px 0 10px;
+        text-decoration: none;
+        margin-right: 6px;
+
+        transition: 0.1s background-color ease-out;
+        color: white;
+        background-color: #005689;
+        &:hover {
+            background-color: #00456e;
+        }
+    }
+
+    span,
+    svg {
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    span {
+        margin-top: 2px;
+    }
+}
+
+.col {
+    float: left;
+    width: 50%;
+    margin-bottom: 20px;
+}
