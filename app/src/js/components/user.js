@@ -31,14 +31,13 @@ function parseThreshold(value) {
 }
 
 
-export default function User(el, map) {
+export default function User(el, map, tooltip) {
     const $$ = (s, root=el) => [].slice.call(root.querySelectorAll(s));
 
     var currentWageEls, yearEls, ratioEls, thumbEl, minimapImgs = [];
     var periodSplits;
     var currentValue = {'year': endYear, 'threshold': 0};
     var linechart, areachart, lineData, width, height = 55;
-    var district;
 
     function init() {
         var minimap, year, img;
@@ -84,6 +83,8 @@ export default function User(el, map) {
         if (type === 'end' || !isMobile()) {
             map.update(currentValue);
         }
+    
+        tooltip.show(currentValue);
     }
 
     function changeThreshold(threshold) {

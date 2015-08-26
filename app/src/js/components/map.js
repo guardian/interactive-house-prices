@@ -2,16 +2,14 @@ import { periodMedians, getDistricts } from '../lib/region';
 import { config } from '../lib/cfg';
 import throttle from '../lib/throttle';
 import isMobile from '../lib/is-mobile';
+import bowser from 'ded/bowser';
 
 import Controls from './controls';
-import Tooltip from './tooltip';
-
-import bowser from 'ded/bowser';
 
 const colors = ['#39a4d8', '#8ac7cd', '#daeac1', '#fdd09e', '#f58680', '#ed3d61'];
 
-export default function Map(el) {
-    var map, tooltip, districtLayer, highlightLayer, userInput;
+export default function Map(el, tooltip) {
+    var map, districtLayer, highlightLayer, userInput;
 
     // Stop resizing from showing address bar/keyboard but allow from hiding address bar
     var lastWidth, lastHeight = 0;
@@ -88,7 +86,6 @@ export default function Map(el) {
             }
         });
 
-        tooltip = new Tooltip(el);
         var controls = new Controls(el.querySelector('.js-map-controls'), showDistrict, showPosition);
     }
 

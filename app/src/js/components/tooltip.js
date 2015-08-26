@@ -18,9 +18,11 @@ export default function Tooltip(mapEl) {
         factorEl, yearUserEl, yearAffordableEl, pipeRangeEl, pipeOutlierEl, outlierEl;
     var translateEl;
     var upfPos, medPos;
-    var linechart;
-    var hidden = true, viewWidth, viewHeight;
+    var viewWidth, viewHeight;
+    var hidden = true;
     var tooltipNames, tooltipStats;
+    var linechart;
+    var curDistrict, curEvt;
 
     function getDistrictStats(district, year) {
         var stats = tooltipStats[year][districtCodes.indexOf(district)];
@@ -47,6 +49,8 @@ export default function Tooltip(mapEl) {
         // header
         areaEl = el.querySelector('.js-area');
         districtEl = el.querySelector('.js-district');
+        el.querySelector('.js-btn-clear').addEventListener('click', ()=> hide());
+        
         // body
         numEl = el.querySelector('.js-num'); //number of sales
         upfEl = el.querySelector('.js-upf'); //upper fence
@@ -84,6 +88,8 @@ export default function Tooltip(mapEl) {
     }
 
     this.show = function (userInput, district, evt) {
+        district = district ? district:curDistrict;
+        
         // return if json is not yet loaded
         if (!tooltipStats) { return; }
         if (!district) { return; }
@@ -184,6 +190,7 @@ export default function Tooltip(mapEl) {
         linechart.updateHeight(".chart-pin-upf", dataBins[numBins-1].y);
 
         hidden = false;
+        curDistrict = district;
         this.move(evt);
     };
 
@@ -195,6 +202,7 @@ export default function Tooltip(mapEl) {
     this.move = function (evt) {
         var x = evt ? evt.containerPoint.x : 10;
         var y = evt ? evt.containerPoint.y : (document.querySelector(".js-map-controls").offsetTop) -  230;
+        console.log(x, y);
         if (x + tooltipWidth > viewWidth) {
             x -= tooltipWidth;
         }

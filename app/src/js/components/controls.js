@@ -7,7 +7,7 @@ export default function Controls(el, showDistrict, showPosition) {
 
         madlib(el.querySelector('.js-location'), [], () => true, v => v, v => v, postcode => {
             if (postcode.length > 0) {
-                let district = (postcode.length > 4 ? postcode.substring(0, postcode.length - 3) : postcode)
+                let district = (postcode.length > 4 ? postcode.substring(0, postcode.length - 3) : postcode);
                 showDistrict(district.trim().toUpperCase());
             }
         });
