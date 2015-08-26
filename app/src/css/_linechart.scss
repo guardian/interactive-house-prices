@@ -88,18 +88,18 @@
 .color-extra {
     width: 105%;
     height: 100%;
-    background-color: #ed3d61;
+    background-color: #ca2345;
 }
 .color-pipes {
     height: 100%;
     background-image: url('assets/gradient-ie9.svg');
     background-image: linear-gradient(90deg,
-    #39a4d8  0%,   #39a4d8 25%,
-    #8ac7cd 25%,   #8ac7cd 37.5%,
-    #daeac1 37.5%, #daeac1 50%, 
-    #fdd09e 50%,   #fdd09e 62.5%,
-    #f58680 62.5%, #f58680 75%, 
-    #ed3d62 75%,   #ed3d61 100%
+    #39a4d8  0%, #39a4d8 20%,
+    #8ac7cd 20%, #8ac7cd 30%,
+    #daeac1 30%, #daeac1 40%, 
+    #fdd09e 40%, #fdd09e 50%,
+    #f58680 50%, #f58680 60%, 
+    #ed3d62 60%, #ed3d61 100%
     );
     
 } 
@@ -108,15 +108,3 @@
     transition: width 0.25s ease;
 }
 
-.color-pipes-blur {
-    height: 60px;
-    transition: width 0.25s ease;
-    background-image: linear-gradient(90deg,
-    #39a4d8  0%,   #39a4d8 20%,
-    #8ac7cd 30%,   #8ac7cd 32.5%,
-    #daeac1 42.5%, #daeac1 45%, 
-    #fdd09e 55%,   #fdd09e 57.5%,
-    #f58680 67.5%, #f58680 70%, 
-    #ed3d62 80%,   #ed3d61 100%
-    );
-}

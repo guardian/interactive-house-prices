@@ -115,7 +115,8 @@ $pips: (
 );
 $pips-large: (0, 6, '10+');
 
-$pips-width: 100% / (length($pips) + length($pips-large));
+$pips-width: 100% / 12;
+//$pips-width: 100% / (length($pips) + length($pips-large));
 
 .hp-range__pips {
     margin-bottom: 25px;
@@ -145,9 +146,14 @@ $pips-width: 100% / (length($pips) + length($pips-large));
     }
 }
 
-@each $no in (0, 6, '10+') {
+@each $no in (0, '10+') {
     .hp-range__pips__pip[data-range='#{$no}'] {
         width: ($pips-width * 2);
+    }
+}
+@each $no in (6) {
+    .hp-range__pips__pip[data-range='#{$no}'] {
+        width: ($pips-width * 4);
     }
 }
 

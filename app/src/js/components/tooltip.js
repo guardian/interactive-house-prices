@@ -114,7 +114,7 @@ export default function Tooltip(mapEl) {
             hasOutlier = false;
         }
         
-        var pipeEnd = salary*8,
+        var pipeEnd = salary*10,
             pipeRangeWidth = Math.round(pipeEnd*(rangeWidth-2)/(prices.upper_fence-prices.min)),
             pipeOutlierWidth = Math.round(pipeEnd*(outlierWidth-2)/(prices.max-prices.upper_fence));
 
