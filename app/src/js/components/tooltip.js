@@ -203,7 +203,7 @@ export default function Tooltip(mapEl) {
 
     this.move = function (evt) {
         var x = evt ? evt.containerPoint.x : 10;
-        var y = evt ? evt.containerPoint.y : (document.querySelector(".js-map-controls").offsetTop) - 240;
+        var y = evt ? evt.containerPoint.y : 80;//(document.querySelector(".js-map-controls").offsetTop) - 240;
         
         if (x + tooltipWidth > viewWidth) {
             x -= tooltipWidth;

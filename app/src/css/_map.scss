@@ -62,20 +62,28 @@
     }
 }
 
-.hp-map-controls {
-    z-index: 1000;
-    background-color: rgba(255, 255, 255, 0.8);
-    margin: 0 0 0 auto;
-    padding: 10px 20px 5px;
+.hp-map-user-control {
+    @extend .hp-user;
+    @include mq($until: tablet) {
+    width: 100%;
     position: absolute;
-    left: 0;
     bottom: 0;
-    width: calc(100% - 20px);
+    z-index: 5;
+    }
+}
 
-    @include mq(tablet) {
-        left: 10px;
-        bottom: 10px;
-        width: 280px;
+.hp-map-space {
+    width: 320px;
+    height: 10px;
+    margin: 440px 0 0 auto; 
+}
+.hp-map-controls {
+    background-color: rgba(255, 255, 255, 0.8);
+    width: 280px;
+    margin: 0 0 0 auto; 
+    padding: 10px 20px;
+    @include mq($until: tablet) {
+    width: calc(100% - 40px);
     }
 }
 
@@ -157,6 +165,24 @@ $pips-width: 100% / 12;
     }
 }
 
+@-webkit-keyframes hp-loading {
+    0%, 100% { background: #dcdcdc; }
+    50% { background: #aad8f1; }
+}
+@keyframes hp-loading {
+    0%, 100% { background: #dcdcdc; }
+    50% { background: #aad8f1; }
+}
+
+@-webkit-keyframes hp-error {
+    0%, 100% { background: #dcdcdc; color: #333; }
+    50% { background: #d61d00; color: white; }
+}
+@keyframes hp-error {
+    0%, 100% { background: #dcdcdc; color: #333; }
+    50% { background: #d61d00; color: white; }
+}
+
 .hp-location {
     position: relative;
     height: 35px;
@@ -183,24 +209,6 @@ $pips-width: 100% / 12;
     .hp-madlib__input__btn {
         margin: 3px;
     }
-}
-
-@-webkit-keyframes hp-loading {
-    0%, 100% { background: #dcdcdc; }
-    50% { background: #aad8f1; }
-}
-@keyframes hp-loading {
-    0%, 100% { background: #dcdcdc; }
-    50% { background: #aad8f1; }
-}
-
-@-webkit-keyframes hp-error {
-    0%, 100% { background: #dcdcdc; color: #333; }
-    50% { background: #d61d00; color: white; }
-}
-@keyframes hp-error {
-    0%, 100% { background: #dcdcdc; color: #333; }
-    50% { background: #d61d00; color: white; }
 }
 
 .hp-location__form__gps {
