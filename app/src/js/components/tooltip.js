@@ -91,6 +91,7 @@ export default function Tooltip(mapEl) {
     this.show = function (userInput, district, evt) {
         //TODO: debug!!!!!!
         district = district ? district:curDistrict;
+        curDistrict = district;
         
         // return if json is not yet loaded
         if (!tooltipStats) { return; }

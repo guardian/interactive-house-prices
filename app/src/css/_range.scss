@@ -106,6 +106,7 @@ $line-offset: 22px;
     &.hp-range-slider__tics__tic--major {
         @include fs-textSans(1);
         color: #767676;
+        font-size: 11px;
         padding-top: 10px;
 
         & > span {
@@ -118,11 +119,11 @@ $line-offset: 22px;
 }
 
 .hp-range-line-affordable {
-    margin: 5px 4px 0 12px;
+    margin: 18px 4px 0 12px;
     //margin: 5px ($thumb-size / 2) 0 ($thumb-size /2);
     
     @include mq(tablet) {
-    margin: 5px 5px 0 12px;
+    margin: 18px 5px 0 12px;
     }
 }
 
