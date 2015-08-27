@@ -92,7 +92,9 @@ export default function User(el, map, tooltip) {
             lineData = [];
 
             currentValue.threshold = threshold;
-
+            
+            //TODO: remove hotfix that get js-current-wage every time
+            currentWageEls = $$('.js-current-wage', document);
             currentWageEls.forEach(el => el.textContent = threshold.toLocaleString());
 
             periodSplits = getPeriodSplits(threshold);

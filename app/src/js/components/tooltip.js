@@ -181,7 +181,7 @@ export default function Tooltip(mapEl) {
         var dataDiff = rangeWidth / (numBins-1),
             dataBins = prices.histogram.map((l, i, arr) => {
             //TODO: remove outlier if value is 0
-            if (i===(numBins-1) && l===0) console.log(i, l);
+            //if (i===(numBins-1) && l===0) console.log(i, l);
             return {
                 x: dataDiff*(i+0.5), //Range
                 y: l                 //count
