@@ -9,7 +9,7 @@
     box-sizing: border-box;
     padding: 5px 10px;
     position: absolute;
-    top: 0;
+    top: 56px;
     left: 0;
     z-index: 11; //legend of range is 10 
 
@@ -18,6 +18,7 @@
     -webkit-transform: translate(-1000px, -1000px);
 
     @include mq(tablet) {
+        top: 0;
         pointer-events: none;
     }
 
@@ -33,6 +34,11 @@
         display: inline-block;
         width: 50px;
     }
+    .w-40 {
+        display: inline-block;
+        width: 40px;
+    }
+   
     .h-50 {
         display: inline-block;
         height: 58px;
@@ -47,6 +53,20 @@
         top: 0;
         right: 13px;
 
+        @include mq(tablet) {
+            display: none;
+        }
+    }
+    
+    .txt-desktop {
+        display: none;
+        @include mq(tablet) {
+            display: block;
+        }
+    }
+    .txt-mobile {
+        width: 260px;
+        display: block;
         @include mq(tablet) {
             display: none;
         }

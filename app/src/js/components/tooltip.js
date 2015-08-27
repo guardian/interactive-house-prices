@@ -14,10 +14,10 @@ const chartHeight = 64;
 const outlierWidth = 30;
 
 export default function Tooltip(mapEl) {
-    var areaEl, districtEl, numEl, upfEl, minEl, maxEl, medEls, salaryEls, 
-        factorEl, yearUserEl, yearAffordableEl, pipeRangeEl, pipeOutlierEl, outlierEl;
+    var areaEls, districtEl, numEls, upfEl, minEl, maxEl, medEls, salaryEls, 
+        factorEls, yearUserEls, yearAffordableEl, pipeRangeEl, pipeOutlierEl, outlierEl;
     var translateEl;
-    var upfPos, medPos;
+    var factorFZ, upfPos, medPos;
     var viewWidth, viewHeight;
     var hidden = true;
     var tooltipNames, tooltipStats;
@@ -47,23 +47,24 @@ export default function Tooltip(mapEl) {
 
         // els for data
         // header
-        areaEl = el.querySelector('.js-area');
         districtEl = el.querySelector('.js-district');
+        areaEls = [].slice.call(el.querySelectorAll('.js-area'));
         el.querySelector('.js-btn-clear').addEventListener('click', ()=> hide());
         
         // body
-        numEl = el.querySelector('.js-num'); //number of sales
         upfEl = el.querySelector('.js-upf'); //upper fence
         minEl = el.querySelector('.js-min');
         maxEl = el.querySelector('.js-max');
         medEls = [].slice.call(el.querySelectorAll('.js-med'));
         salaryEls = [].slice.call(el.querySelectorAll('.js-salary'));
         
-        factorEl = el.querySelector('.js-factor');
-        yearUserEl = el.querySelector('.js-year-user');
+        numEls = [].slice.call(el.querySelectorAll('.js-num')); //number of sales
+        yearUserEls = [].slice.call(el.querySelectorAll('.js-year-user'));
         yearAffordableEl = el.querySelector('.js-year-affordable');
+        factorEls = [].slice.call(el.querySelectorAll('.js-factor'));
 
         // els for styles
+        factorFZ = el.querySelector('.fz-factor');
         upfPos = el.querySelector('.pos-a-upf'); //upper fence
         medPos = el.querySelector('.pos-a-med');
 
@@ -88,6 +89,7 @@ export default function Tooltip(mapEl) {
     }
 
     this.show = function (userInput, district, evt) {
+        //TODO: debug!!!!!!
         district = district ? district:curDistrict;
         
         // return if json is not yet loaded
@@ -144,20 +146,20 @@ export default function Tooltip(mapEl) {
         upfPos.style.right = outlierWidth + "px";
         medPos.style.left  = ((prices.med-prices.min)*pipeRangeWidth/pipeEnd) + "px";
         
-        factorEl.style.fontSize = 12 + ((factor<20) ? factor/2 : 12) + "px";
+        factorFZ.style.fontSize = 12 + ((factor<20) ? factor/2 : 12) + "px";
         
         // load data
-        areaEl.textContent = tooltipNames[district];
         districtEl.textContent = district;
+        areaEls.forEach(el => el.textContent = tooltipNames[district]);
 
-        numEl.textContent = prices.count;
         minEl.textContent = prices.min.toLocaleString();
         maxEl.textContent = prices.max.toLocaleString();
         upfEl.textContent = prices.upper_fence.toLocaleString();
 
         medEls.forEach(el => el.textContent = prices.med.toLocaleString());
+        numEls.forEach(el => el.textContent = prices.count);
         salaryEls.forEach(el => el.textContent = salary.toLocaleString());
-        factorEl.textContent = Math.round(factor*10)/10;
+        factorEls.forEach(el => el.textContent = Math.round(factor*10)/10);
 
         var textAffordable = "";
         for (var yr=userInput.year; yr>=1995; yr--) {
@@ -171,7 +173,7 @@ export default function Tooltip(mapEl) {
                 textAffordable = "You would not have been able to afford it even back in 1995.";
             }
         }
-        yearUserEl.textContent = userInput.year;
+        yearUserEls.forEach(el => el.textContent = userInput.year);
         yearAffordableEl.textContent = textAffordable;
 
         // update line chart
@@ -190,7 +192,6 @@ export default function Tooltip(mapEl) {
         linechart.updateHeight(".chart-pin-upf", dataBins[numBins-1].y);
 
         hidden = false;
-        curDistrict = district;
         this.move(evt);
     };
 
@@ -201,8 +202,8 @@ export default function Tooltip(mapEl) {
 
     this.move = function (evt) {
         var x = evt ? evt.containerPoint.x : 10;
-        var y = evt ? evt.containerPoint.y : (document.querySelector(".js-map-controls").offsetTop) -  230;
-        console.log(x, y);
+        var y = evt ? evt.containerPoint.y : (document.querySelector(".js-map-controls").offsetTop) - 240;
+        
         if (x + tooltipWidth > viewWidth) {
             x -= tooltipWidth;
         }
