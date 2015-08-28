@@ -89,10 +89,16 @@ export default function Tooltip(mapEl) {
     }
 
     this.show = function (userInput, district, evt) {
-        //TODO: debug!!!!!!
-        district = district ? district:curDistrict;
-        curDistrict = district;
         
+        // HOTFIX: 
+        // case: triggered by mouseevent
+        if (evt!==null) { curDistrict = null; }
+        // case: triggered by map controller (entering postcode)
+        else if (district!==null && evt===null) { curDistrict = district; }
+        // case: triggered by user controller with previously map controller
+        else if (district===null) { district = curDistrict; }
+        //console.log(userInput, district, evt);
+
         // return if json is not yet loaded
         if (!tooltipStats) { return; }
         if (!district) { return; }
@@ -107,7 +113,7 @@ export default function Tooltip(mapEl) {
         var count = prices.count,               // number of sales
             numBins = prices.histogram.length;  // number of bins
         
-        //hotfix: move outlier to the last bin if upf is max
+        // HOTFIX: move outlier to the last bin if upf is max
         var hasOutlier = true,
             rangeWidth = 250;
         
@@ -125,7 +131,7 @@ export default function Tooltip(mapEl) {
         pipeRangeEl.style.width = pipeRangeWidth + "px";
         pipeRangeEl.style.marginLeft = Math.round((-prices.min*pipeRangeWidth/pipeEnd)) + "px";
  
-        // hotfix: move outlier to the last bin if upf is max
+        // HOTFIX: move outlier to the last bin if upf is max
         if (prices.upper_fence === prices.max) {
             prices.histogram[numBins-2] += prices.histogram[numBins-1];
             rangeWidth = chartWidth;
@@ -180,8 +186,6 @@ export default function Tooltip(mapEl) {
         // update line chart
         var dataDiff = rangeWidth / (numBins-1),
             dataBins = prices.histogram.map((l, i, arr) => {
-            //TODO: remove outlier if value is 0
-            //if (i===(numBins-1) && l===0) console.log(i, l);
             return {
                 x: dataDiff*(i+0.5), //Range
                 y: l                 //count

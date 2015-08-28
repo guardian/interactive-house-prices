@@ -84,7 +84,7 @@ export default function User(el, map, tooltip) {
             map.update(currentValue);
         }
     
-        tooltip.show(currentValue);
+        tooltip.show(currentValue, null, null);
     }
 
     function changeThreshold(threshold) {
