@@ -1,6 +1,7 @@
 const title = 'Can you afford to live here?';
 const shareURL = encodeURIComponent('http://gu.com/p/49p77');
 const hashTag = '#UnaffordableCountry';
+const twitterPic = 'pic.twitter.com/RDRlYZs7r2';
 
 const twitterBaseUrl = 'https://twitter.com/intent/tweet?text=';
 const facebookBaseUrl = 'https://www.facebook.com/sharer/sharer.php?ref=responsive&u=';
@@ -11,7 +12,7 @@ export default function share(network, extra='') {
     var shareWindow;
 
     if (network === 'twitter') {
-        shareWindow = twitterBaseUrl + encodeURIComponent(twitterMessage + ' ') + shareURL;
+        shareWindow = twitterBaseUrl + encodeURIComponent(twitterMessage + ' ') + shareURL + ' ' + twitterPic;
     } else if (network === 'facebook') {
         shareWindow = facebookBaseUrl + shareURL;
     } else if (network === 'email') {
