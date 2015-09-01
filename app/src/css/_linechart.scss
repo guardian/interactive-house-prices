@@ -21,7 +21,7 @@
 
     width: 280px;
     height: 110px;
-    margin-top: 18px;
+    margin-top: 12px;
 }    
 
 .chart-color {
@@ -61,8 +61,8 @@
         position: absolute; 
     }
     .pos-a-min { bottom:    0; left:  0; }
-    .pos-a-max { top:  1.15em; right: 0; }
-    .pos-a-med { top: -1.15em; transition: left  0.25s ease; }
+    .pos-a-max { top:  1.2em; right: 0; }
+    .pos-a-med { top: -0.8em; transition: left  0.25s ease; }
     .pos-a-upf { bottom:    0; margin-right: -1px; }
 }
 
@@ -77,7 +77,7 @@
 }
 .chart-pin-med {
     width: 1px;
-    height: 66px;
+    height: 62px;
     border-left: 1px solid $c-neutral-1;
 }
 .chart-pin-upf {

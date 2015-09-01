@@ -169,15 +169,18 @@ export default function Tooltip(mapEl) {
         factorEls.forEach(el => el.textContent = Math.round(factor*10)/10);
 
         var textAffordable = "";
+        var priceNeeded = Math.round(prices.med/4).toLocaleString();
         for (var yr=userInput.year; yr>=1995; yr--) {
             var median = periodMedians[yr][district];
             var rateAffordable = Math.round((median/userInput.threshold)*10)/10;
             if (yr===userInput.year && rateAffordable <=4 ) { break; }
             if (rateAffordable <= 4) {
-                textAffordable = "You would have been able to afford it in " + yr + " when it was " + rateAffordable + ".";
+                //textAffordable = "You would have been able to afford it in " + yr + " when it was " + rateAffordable + ".";
+                textAffordable = "You'd need at least £" + priceNeeded + " to afford it. Or time travel to " + yr + " when it was only " + rateAffordable + " times.";
                 break;
             } else {
-                textAffordable = "You would not have been able to afford it even back in 1995.";
+                //textAffordable = "You would not have been able to afford it even back in 1995.";
+                textAffordable = "You'd need at least £" + priceNeeded + " to afford it.";
             }
         }
         yearUserEls.forEach(el => el.textContent = userInput.year);
@@ -192,8 +195,8 @@ export default function Tooltip(mapEl) {
             };
         });
         linechart.updateMask(dataBins, "line-mask", "monotone", hasOutlier);
-        linechart.updateAxis(dataBins.slice(0, -1), rangeWidth);
-        linechart.updateText(dataBins);
+        //linechart.updateAxis(dataBins.slice(0, -1), rangeWidth);
+        //linechart.updateText(dataBins);
         linechart.updateHeight(".chart-pin-upf", dataBins[numBins-1].y);
 
         hidden = false;
@@ -207,7 +210,7 @@ export default function Tooltip(mapEl) {
 
     this.move = function (evt) {
         var x = evt ? evt.containerPoint.x : 10;
-        var y = evt ? evt.containerPoint.y : 80;//(document.querySelector(".js-map-controls").offsetTop) - 240;
+        var y = evt ? evt.containerPoint.y : 10;//(document.querySelector(".js-map-controls").offsetTop) - 240;
         
         if (x + tooltipWidth > viewWidth) {
             x -= tooltipWidth;

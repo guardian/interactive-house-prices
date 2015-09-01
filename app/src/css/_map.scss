@@ -65,6 +65,7 @@
 .hp-map-user-control {
     @extend .hp-user;
     @include mq($until: tablet) {
+    pointer-events: none;
     width: 100%;
     position: absolute;
     bottom: 0;
@@ -78,12 +79,14 @@
     margin: 495px 0 0 auto; 
 }
 .hp-map-controls {
+    pointer-events: all;
     background-color: rgba(255, 255, 255, 0.8);
     width: 280px;
     margin: 0 0 0 auto; 
     padding: 10px 20px 3px;
     @include mq($until: tablet) {
-    width: calc(100% - 40px);
+    width: calc(100% - 20px);
+    padding: 10px 10px 3px;
     }
 }
 

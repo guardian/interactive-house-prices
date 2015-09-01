@@ -9,8 +9,12 @@
     box-sizing: border-box;
     padding: 5px 10px;
     position: absolute;
-    top: 56px;
-    left: 0;
+    top: auto;
+    right: 20px;
+    bottom: 115px;
+    left: auto;
+    //bottom: 100px;
+    //right: 10px;
     z-index: 11; //legend of range is 10 
 
     transform: translate(-1000px, -1000px);
@@ -19,6 +23,9 @@
 
     @include mq(tablet) {
         top: 0;
+        right: auto;
+        bottom: auto;
+        left: 0;
         pointer-events: none;
     }
 
