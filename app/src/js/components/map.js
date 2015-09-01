@@ -56,7 +56,7 @@ export default function Map(el, tooltip) {
         var districtRenderer = L.canvas();
         districtRenderer.suspendDraw = true;
         districtRenderer.skipClear = true;
-
+        
         districtLayer = L.geoJson(undefined, {
             renderer: districtRenderer,
             style: setStyle,
@@ -139,7 +139,7 @@ export default function Map(el, tooltip) {
                 map.flyTo(district.getCenter(), 12);
             }
         });
-    };
+    }
 
     function showPosition(latlng, cb) {
         var point = map.latLngToLayerPoint(latlng);

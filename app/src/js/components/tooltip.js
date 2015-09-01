@@ -15,7 +15,7 @@ const outlierWidth = 30;
 
 export default function Tooltip(mapEl) {
     var areaEls, districtEl, numEls, upfEl, minEl, maxEl, medEls, salaryEls, 
-        factorEls, yearUserEls, yearAffordableEl, pipeRangeEl, pipeOutlierEl, outlierEl;
+        factorEls, yearUserEls, yearAffordableEls, pipeRangeEl, pipeOutlierEl, outlierEl;
     var translateEl;
     var factorFZ, upfPos, medPos;
     var viewWidth, viewHeight;
@@ -60,7 +60,7 @@ export default function Tooltip(mapEl) {
         
         numEls = [].slice.call(el.querySelectorAll('.js-num')); //number of sales
         yearUserEls = [].slice.call(el.querySelectorAll('.js-year-user'));
-        yearAffordableEl = el.querySelector('.js-year-affordable');
+        yearAffordableEls = [].slice.call(el.querySelectorAll('.js-year-affordable'));
         factorEls = [].slice.call(el.querySelectorAll('.js-factor'));
 
         // els for styles
@@ -81,7 +81,7 @@ export default function Tooltip(mapEl) {
         }.bind(this), 200);
 
         window.addEventListener('resize', () => {
-            if (!hidden) hide();
+            //if (!hidden) hide();
             resize();
         });
 
@@ -184,7 +184,7 @@ export default function Tooltip(mapEl) {
             }
         }
         yearUserEls.forEach(el => el.textContent = userInput.year);
-        yearAffordableEl.textContent = textAffordable;
+        yearAffordableEls.forEach(el => el.textContent = textAffordable);
 
         // update line chart
         var dataDiff = rangeWidth / (numBins-1),

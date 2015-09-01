@@ -6,8 +6,8 @@ import positions from '../data/positions.json!json';
 
 var sprites, inits = [];
 
-const MINIMAP_WIDTH = 180 + 18;    //TODO: check this num fix
-const MINIMAP_HEIGHT = 216 + 21.6; //TODO: check this num fix
+const MINIMAP_WIDTH = 180 + 18;  //TODO: check this num fix
+const MINIMAP_HEIGHT = 216 + 20; //TODO: check this num fix
 
 const DISTRICT_WIDTH = 18;
 const DISTRICT_HEIGHT = 17;
