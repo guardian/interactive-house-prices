@@ -1,5 +1,5 @@
 .hp-madlib {
-    border: 1px solid #bdbdbd;
+    border: 1px solid #eaeaea;//#bdbdbd;
     border-radius: 100px;
     background: white;
 
@@ -30,9 +30,9 @@
 
     transition: 0.1s color ease-out, 0.1s background ease-out;
     color: #333;
-    background: #dcdcdc;
+    background: #eaeaea;//#dcdcdc;
     &:hover {
-        background: #bdbdbd;
+        background: #dcdcdc;//#bdbdbd;
     }
 
     visibility: hidden;
@@ -88,9 +88,9 @@
     transition: 0.1s background-color ease-out;
 
     color: #333;
-    background-color: #dcdcdc;
+    background-color: #eaeaea;//#dcdcdc;
     &:hover {
-        background-color: #bdbdbd;
+        background-color: #dcdcdc;//#bdbdbd;
     }
 
     &[data-selected] {

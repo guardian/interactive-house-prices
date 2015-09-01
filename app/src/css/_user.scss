@@ -42,23 +42,25 @@
 
 .hp-user__inner--results {
     @extend .hp-user__inner;
-    padding-top: 0;
+    padding-top: 6px;
 } 
 .hp-user__inner--shares {
     @extend .hp-user__inner;
-    padding: 8px 20px;
+    padding: 6px 20px;
     z-index: 2000;
 }
 
 .hp-title {
     @include fs-headline(6);
+    font-size: 28px;
+    line-height: 30px;
     margin: 0 0 12px 0;
 }
 
 .hp-subtitle {
     @include f-header;
     font-size: 14px;
-    margin: 0 0 12px 0;
+    margin: 0 0 6px 0;
     line-height: 1;
 }
 
@@ -90,7 +92,7 @@
     background-image: url('assets/minimap/bg.png');
     background-size: cover;
     width: 90px;
-    height: 105px;
+    height: 108px;
     //margin-top: -5px;
     @include mq(tablet) {
         margin-top: -5px;

@@ -75,13 +75,13 @@
 .hp-map-space {
     width: 320px;
     height: 10px;
-    margin: 440px 0 0 auto; 
+    margin: 495px 0 0 auto; 
 }
 .hp-map-controls {
     background-color: rgba(255, 255, 255, 0.8);
     width: 280px;
     margin: 0 0 0 auto; 
-    padding: 10px 20px;
+    padding: 10px 20px 3px;
     @include mq($until: tablet) {
     width: calc(100% - 40px);
     }
@@ -102,7 +102,7 @@
     font-size: 10px; 
     line-height: 1.3em;
     width: calc(40% - 10px);
-    border-right: 1px dotted $c-neutral-3;
+    border-right: 1px dotted $c-neutral-5;
     margin-bottom: 2px;
     padding-top: 7px;
 }
@@ -186,7 +186,7 @@ $pips-width: 100% / 12;
 .hp-location {
     position: relative;
     height: 35px;
-    border-bottom: 1px dotted $c-neutral-3;
+    border-bottom: 1px dotted $c-neutral-5;
 }
 .hp-location__label {
     font-size: 14px;
@@ -224,9 +224,9 @@ $pips-width: 100% / 12;
 
     transition: 0.1s background ease-out;
     color: #333;
-    background: #dcdcdc;
+    background: #eaeaea;//#dcdcdc;
     &:hover {
-        background: #bdbdbd;
+        background: #dcdcdc;//#bdbdbd;
     }
 
     &.is-loading {

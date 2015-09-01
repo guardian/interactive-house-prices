@@ -119,11 +119,11 @@ $line-offset: 22px;
 }
 
 .hp-range-line-affordable {
-    margin: 18px 4px 0 12px;
+    margin: 6px 4px 0 12px;
     //margin: 5px ($thumb-size / 2) 0 ($thumb-size /2);
     
     @include mq(tablet) {
-    margin: 18px 5px 0 12px;
+    margin: 6px 5px 0 12px;
     }
 }
 
@@ -139,6 +139,6 @@ $line-offset: 22px;
     border-bottom: 1px solid rgba(118, 118, 118, 0.25);
 
     &.label-100 { top: -9px; }
-    &.label-50  { top: 15px; }
+    &.label-50  { top: 16px; }
     &.label-0   { bottom: 5px; }
 }
