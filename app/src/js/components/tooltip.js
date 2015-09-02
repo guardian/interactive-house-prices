@@ -170,7 +170,7 @@ export default function Tooltip(mapEl) {
         factorEls.forEach(el => el.textContent = Math.round(factor*10)/10);
 
         var textAffordable = "";
-        var priceNeeded = formatNumber(Math.round(prices.med/4)); // 4 is still ok
+        var priceNeeded = formatNumber(Math.round(prices.med/4.05)); // 4 is still ok
         for (var yr=userInput.year; yr>=1995; yr--) {
             var median = periodMedians[yr][district];
             var rateAffordable = Math.round((median/userInput.threshold)*10)/10;
