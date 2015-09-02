@@ -33,8 +33,8 @@
 	}
 /* hack that prevents hw layers "stretching" when loading new tiles */
 .leaflet-safari .leaflet-tile-container {
-	width: 1600px;
-	height: 1600px;
+	width: 0;//1600px;  //TODO: check with Will!
+	height: 0;//1600px; //it's blocking mouseevent on desktop safari!!
 	-webkit-transform-origin: 0 0;
 	}
 .leaflet-marker-icon,
