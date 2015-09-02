@@ -63,7 +63,7 @@
     .pos-a-min { bottom:    0; left:  0; }
     .pos-a-max { top:  1.2em; right: 0; }
     .pos-a-med { top: -0.8em; transition: left  0.25s ease; }
-    .pos-a-upf { bottom:    0; margin-right: -1px; }
+    .pos-a-upf { bottom:    0; }
 }
 
 .chart-pin-min {
@@ -81,7 +81,8 @@
     border-left: 1px solid $c-neutral-1;
 }
 .chart-pin-upf {
-    border-right: 3px solid #454545;//$c-neutral-1;
+    border-right: 1px solid #454545;//$c-neutral-1;
+    box-shadow: 3px 0 white, 4px 0 #454545;
     transition: height 0.25s ease;
 }
 

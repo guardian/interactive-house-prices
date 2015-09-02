@@ -32,12 +32,12 @@ export default function Linechart(elClassName, styleClassName, width, height, ma
             .attr("class", styleClassName);
 
         // Add axis
-        /*if (isAxis) {
+        if (isAxis) {
             svg.append("g")
             .attr("class", "x axis")
             .attr("transform", "translate(0," + (height - marginTop + 2) + ")")
             .call(xAxis);
-        }*/
+        }
     }
     
     this.updateWidth = function(el, width) {
@@ -45,7 +45,7 @@ export default function Linechart(elClassName, styleClassName, width, height, ma
     };
     
     this.updateHeight = function(el, height) {
-        d3.select(el).style("height", (64-y(height)) + "px");
+        d3.select(el).style("height", (68-y(height)) + "px");
     };
 
     this.updateLine = function(data, el, rangeX, rangeY, domainX, domainY, lineType) {

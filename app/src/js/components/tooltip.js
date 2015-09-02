@@ -73,7 +73,7 @@ export default function Tooltip(mapEl) {
         outlierEl = el.querySelector('.js-outlier');
 
         // init line chart
-        linechart = new Linechart("js-lines", "line-mask", chartWidth, chartHeight, 9, 5, true);
+        linechart = new Linechart("js-lines", "line-mask", chartWidth, chartHeight, 9, 5, false);
 
         var resize = debounce(function () {
             viewWidth = mapEl.clientWidth;
