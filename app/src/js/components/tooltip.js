@@ -1,5 +1,6 @@
 import { periodMedians, getTooltips } from '../lib/region';
 import debounce from '../lib/debounce';
+import formatNumber from '../lib/formatNumber';
 import translate from '../lib/translate';
 import Linechart from './linechart';
 
@@ -159,17 +160,17 @@ export default function Tooltip(mapEl) {
         districtEl.textContent = district;
         areaEls.forEach(el => el.textContent = tooltipNames[district]);
 
-        minEl.textContent = prices.min.toLocaleString();
-        maxEl.textContent = prices.max.toLocaleString();
-        upfEl.textContent = prices.upper_fence.toLocaleString();
+        minEl.textContent = formatNumber(prices.min);
+        maxEl.textContent = formatNumber(prices.max);
+        upfEl.textContent = formatNumber(prices.upper_fence);
 
-        medEls.forEach(el => el.textContent = prices.med.toLocaleString());
+        medEls.forEach(el => el.textContent = formatNumber(prices.med));
         numEls.forEach(el => el.textContent = prices.count);
-        salaryEls.forEach(el => el.textContent = salary.toLocaleString());
+        salaryEls.forEach(el => el.textContent = formatNumber(salary));
         factorEls.forEach(el => el.textContent = Math.round(factor*10)/10);
 
         var textAffordable = "";
-        var priceNeeded = Math.round(prices.med/4).toLocaleString();
+        var priceNeeded = formatNumber(Math.round(prices.med/4)); // 4 is still ok
         for (var yr=userInput.year; yr>=1995; yr--) {
             var median = periodMedians[yr][district];
             var rateAffordable = Math.round((median/userInput.threshold)*10)/10;

@@ -1,6 +1,7 @@
 import template from './templates/user.html!text';
 
 import throttle from '../lib/throttle';
+import formatNumber from '../lib/formatNumber';
 import { startYear, endYear, getPeriodSplits } from '../lib/region';
 import { config } from '../lib/cfg';
 
@@ -15,15 +16,6 @@ import Minimap from './minimap';
 
 function validThreshold(value) {
     return value.length && value.replace(/[,0-9]+/, '').length === 0;
-}
-
-function formatThreshold(value) {
-    var newValue = '';
-    while (value.length > 3) {
-        newValue = ',' + value.substr(-3) + newValue;
-        value = value.substr(0, value.length - 3);
-    }
-    return value + newValue;
 }
 
 function parseThreshold(value) {
@@ -44,7 +36,7 @@ export default function User(el, map, tooltip) {
 
         el.innerHTML = template;
 
-        madlib(el.querySelector('.js-wage'), $$('.js-wage-preset'), validThreshold, formatThreshold,
+        madlib(el.querySelector('.js-wage'), $$('.js-wage-preset'), validThreshold, formatNumber,
             parseThreshold, changeThreshold);
 
         currentWageEls = $$('.js-current-wage', document);
@@ -96,7 +88,7 @@ export default function User(el, map, tooltip) {
             
             //TODO: remove hotfix that get js-current-wage every time
             currentWageEls = $$('.js-current-wage', document);
-            currentWageEls.forEach(el => el.textContent = threshold.toLocaleString());
+            currentWageEls.forEach(el => el.textContent = formatNumber(threshold));
 
             periodSplits = getPeriodSplits(threshold);
             minimapImgs[currentValue.year].draw(periodSplits[currentValue.year].unaffordable);
