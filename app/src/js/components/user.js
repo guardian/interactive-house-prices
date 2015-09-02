@@ -70,9 +70,10 @@ export default function User(el, map, tooltip) {
         areachart = new Linechart('js-area', 'line-area', 266, height, 5, 0);
         range(el.querySelector('.js-date'), startYear, endYear, changeYear, 5);
 
-        window.addEventListener('resize', throttle(drawAreachart, 200));
+        window.addEventListener('resize', throttle(drawAreachart, 250));
 
         changeThreshold(25000); // ugly way to initialise line chart
+        window.setTimeout(drawAreachart, 100); // ugly way to fix width issue on certain devices
     }
 
     function change(type) {
@@ -131,8 +132,8 @@ export default function User(el, map, tooltip) {
     }
 
     function drawLinechart(chart, el, cn, data) {
-        width  = document.querySelector("." + el).parentElement.clientWidth + 1; //1, tweak
-
+        width = document.querySelector("." + el).parentElement.clientWidth + 1; //1, tweak
+        
         chart.updateWidth("." + el + " svg", width);
         chart.updateLine(data, cn, [0, width], [0, height], null, [0, 100]);
     }
