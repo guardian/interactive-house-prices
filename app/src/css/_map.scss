@@ -84,6 +84,7 @@
     width: 280px;
     margin: 0 0 0 auto; 
     padding: 10px 20px 3px;
+    overflow: hidden;
     @include mq($until: tablet) {
     width: calc(100% - 20px);
     padding: 10px 10px 3px;
@@ -102,12 +103,12 @@
     float: right;
 }
 .hp-attribution { 
-    font-size: 10px; 
+    font-size: 11px; 
     line-height: 1.3em;
     width: calc(40% - 10px);
     border-right: 1px dotted $c-neutral-5;
     margin-bottom: 2px;
-    padding-top: 7px;
+    padding-top: 6px;
 }
 .hp-range__desc {
     font-weight: bold;
