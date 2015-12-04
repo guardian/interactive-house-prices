@@ -7,8 +7,8 @@ var deasync = require('deasync');
 var d3 = require('d3');
 require('d3-geo-projection')(d3);
 
-var IMG_WIDTH = 180;
-var IMG_HEIGHT = 216;
+var IMG_WIDTH = 180 + 20;
+var IMG_HEIGHT = 216 + 24;
 
 var canvas = new Canvas(IMG_WIDTH, IMG_HEIGHT),
     ctx = canvas.getContext('2d');

@@ -9,8 +9,8 @@ var sprites, inits = [];
 const MINIMAP_WIDTH = 180 + 20;  //TODO: check this num fix
 const MINIMAP_HEIGHT = 216 + 24; //TODO: check this num fix
 
-const DISTRICT_WIDTH = 18;
-const DISTRICT_HEIGHT = 17;
+const DISTRICT_WIDTH = 20;
+const DISTRICT_HEIGHT = 18;
 
 const SPRITE_CHUNKS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 const SPRITE_CHUNK_SIZE = Math.ceil(districtCodes.length / SPRITE_CHUNKS.length);
