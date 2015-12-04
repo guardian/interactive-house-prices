@@ -64,7 +64,7 @@ export default function User(el, map, tooltip) {
 
         window.addEventListener('resize', throttle(drawAreachart, 250));
 
-        changeThreshold(25000); // ugly way to initialise line chart
+        changeThreshold(26500); // ugly way to initialise line chart
         window.setTimeout(drawAreachart, 100); // ugly way to fix width issue on certain devices
     }
 
