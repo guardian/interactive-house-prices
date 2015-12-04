@@ -1,4 +1,4 @@
-const title = 'Can you afford to live here?';
+const title = 'Can you afford to buy here?';
 const shareURL = encodeURIComponent('http://gu.com/p/49p77');
 const hashTag = '#UnaffordableCountry';
 const twitterPic = 'pic.twitter.com/RDRlYZs7r2';
